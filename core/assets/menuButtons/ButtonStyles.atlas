@@ -1,0 +1,48 @@
+
+ButtonStyles.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Load_Button
+  rotate: false
+  xy: 603, 1401
+  size: 600, 200
+  orig: 600, 200
+  offset: 0, 0
+  index: -1
+New_Game_Button
+  rotate: false
+  xy: 1, 1603
+  size: 600, 200
+  orig: 600, 200
+  offset: 0, 0
+  index: -1
+Quit_Button
+  rotate: false
+  xy: 1205, 1603
+  size: 600, 200
+  orig: 600, 200
+  offset: 0, 0
+  index: -1
+Load_col_Button
+  rotate: false
+  xy: 1, 1199
+  size: 600, 200
+  orig: 600, 200
+  offset: 0, 0
+  index: -1
+New_Game_col_Button
+  rotate: false
+  xy: 1, 1401
+  size: 600, 200
+  orig: 600, 200
+  offset: 0, 0
+  index: -1
+Quit_col_Button
+  rotate: false
+  xy: 603, 1603
+  size: 600, 200
+  orig: 600, 200
+  offset: 0, 0
+  index: -1
