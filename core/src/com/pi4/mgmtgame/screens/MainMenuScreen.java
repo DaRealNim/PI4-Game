@@ -70,7 +70,7 @@ public class MainMenuScreen implements Screen {
         });
 		
 		
-		 
+
 		 mainTable.add(newGameButton).size(300, 100).padBottom(50);
 	     
 		 mainTable.row();
