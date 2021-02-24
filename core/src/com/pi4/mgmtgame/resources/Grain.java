@@ -8,4 +8,6 @@ public abstract class Grain extends Resources {
 	}
 	abstract int getPrice();
 
+	//TODO: Besoin d'une méthode getGrowingTime(), implémentée dans chaque type de graines
+
 }

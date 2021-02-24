@@ -1,5 +1,7 @@
 package com.pi4.mgmtgame.blocks;
 
-abstract class Block {
-    //Skeleton
+public class Block {
+
+    private Environment environment;
+    private Structure structure;
 }
