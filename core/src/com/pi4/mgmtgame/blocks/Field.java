@@ -39,6 +39,7 @@ public class Field extends Structure {
             Grain ret = plantedSeed;
             this.plantedSeed = null;
             this.growingState = 0;
+            return ret;
         } else {
             return null;
         }
