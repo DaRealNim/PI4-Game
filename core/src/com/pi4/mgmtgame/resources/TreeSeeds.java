@@ -1,6 +1,6 @@
 package com.pi4.mgmtgame.resources;
 
-public class Wheat extends Grain {
+public class TreeSeeds extends Grain {
 	int basePrice = 1;
 
 	int getPrice() {
