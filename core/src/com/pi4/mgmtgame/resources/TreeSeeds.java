@@ -4,17 +4,17 @@ public class TreeSeeds extends Grain {
 	int growingTime = 1;
 	int basePrice = 1;
 
-	int getPrice() {
+	public int getPrice() {
 		return basePrice;
 	}
 
 	@Override
-	int getGrowingTime() {
+	public int getGrowingTime() {
 		return growingTime;
 	}
 
 	@Override
-	Plant getGrownPlant() {
+	public Plant getGrownPlant() {
 		return new Wood();
 	}
 }

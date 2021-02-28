@@ -6,11 +6,11 @@ public abstract class Grain extends Resources {
 	int getInventoryVolume() {
 		return inventoryVolume;
 	}
-	abstract int getPrice();
+	public abstract int getPrice();
 
-	abstract int getGrowingTime();
+	public abstract int getGrowingTime();
 
-	abstract Plant getGrownPlant();
-	
+	public abstract Plant getGrownPlant();
+
 
 }

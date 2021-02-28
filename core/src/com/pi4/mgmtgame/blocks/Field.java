@@ -1,6 +1,7 @@
 package com.pi4.mgmtgame.blocks;
 
 import com.pi4.mgmtgame.resources.Grain;
+import com.pi4.mgmtgame.resources.Plant;
 
 public class Field extends Structure {
     private Grain plantedSeed;
@@ -34,12 +35,9 @@ public class Field extends Structure {
         this.growingState++;
     }
 
-    public Grain harvest() {
+    public Plant harvest() {
         if (hasSeedGrown()) {
-            Grain ret = plantedSeed;
-            this.plantedSeed = null;
-            this.growingState = 0;
-            return ret;
+            return plantedSeed.getGrownPlant();
         } else {
             return null;
         }
