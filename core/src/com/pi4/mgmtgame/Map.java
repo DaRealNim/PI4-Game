@@ -17,6 +17,32 @@ class Map {
 		}
 	}
 	
+	Environment getEnvironmentAt(int w, int h) {
+		return envnmt_map[w][h];
+	}
 	
+	Structure getStructAt(int w, int h) {
+		return struct_map[w][h];
+	}
+	
+	void setEnvironmentAt(int w, int h, Environment e) {
+		envnmt_map[w][h] = e;
+	}
+	
+	void setStructAt(int w, int h, Structure s) {
+		struct_map[w][h] = s;
+	}
+	
+	/*
+	 * @Override
+	 * public void draw(Batch batch, float parentAlpha) {
+	 * 	    for(Environmnent e : envnmt_map) {
+	 * 	        e.draw();
+	 * 	    }
+	 * 	    for(Structure s : struct_map) {
+	 * 	        s.draw();
+	 * 	    }
+	 * 	}
+	 */
 	
 }
