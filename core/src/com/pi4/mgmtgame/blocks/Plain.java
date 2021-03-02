@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.blocks;
 
 import com.pi4.mgmtgame.resources.Grain;
 
-abstract class Plain extends Environment {
+public class Plain extends Environment {
     //Skeleton
 
     @Override

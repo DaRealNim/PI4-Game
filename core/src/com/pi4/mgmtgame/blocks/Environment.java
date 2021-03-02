@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.blocks;
 
 import com.pi4.mgmtgame.resources.Grain;
 
-abstract class Environment extends Block {
+public abstract class Environment extends Block {
     //Skeleton
 
     //Returns a growing penalty for fields in months
