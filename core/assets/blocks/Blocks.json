@@ -1,0 +1,19 @@
+{
+ButtonStyle: {
+	plain: {
+		up: plain
+	}
+	field_wheat: {
+		up: field_wheat
+	}
+	field_carrots: {
+		up: field_carrots
+	}
+	field_potatoes: {
+		up: field_potatoes
+	}
+	field_empty: {
+		up: field_empty
+	}
+}
+}
