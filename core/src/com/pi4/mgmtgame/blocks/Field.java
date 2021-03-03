@@ -1,13 +1,21 @@
 package com.pi4.mgmtgame.blocks;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
+
 
 public class Field extends Structure {
     private Grain plantedSeed;
     private int growingState;
 
-    public Field() {
+    public Field(AssetManager manager) {
+        super(manager);
+        Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
+        setButton(button);
         this.growingState = 0;
     }
 

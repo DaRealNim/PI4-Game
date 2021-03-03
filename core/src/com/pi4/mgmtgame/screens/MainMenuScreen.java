@@ -53,7 +53,6 @@ public class MainMenuScreen implements Screen {
 	    mainTable.setFillParent(true);
 	    mainTable.top();
 
-		TextureAtlas buttonAtlas = manager.get("menuButtons/ButtonStyles.atlas", TextureAtlas.class);
 		Skin buttonSkins = manager.get("menuButtons/ButtonStyles.json", Skin.class);
 
 		Button quitButton = new Button(buttonSkins, "quit");

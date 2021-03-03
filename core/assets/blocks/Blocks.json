@@ -1,5 +1,5 @@
 {
-ButtonStyle: {
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	plain: {
 		up: plain
 	}

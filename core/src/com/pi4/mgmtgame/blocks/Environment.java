@@ -1,9 +1,16 @@
 package com.pi4.mgmtgame.blocks;
 
+import com.badlogic.gdx.assets.AssetManager;
+
 import com.pi4.mgmtgame.resources.Grain;
+
 
 public abstract class Environment extends Block {
     //Skeleton
+
+    public Environment(AssetManager manager) {
+        super(manager);
+    }
 
     //Returns a growing penalty for fields in months
     abstract public int getGrowingPenalty();
