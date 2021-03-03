@@ -41,12 +41,14 @@ public class Map extends Actor {
 	public void draw(Batch batch, float parentAlpha) {
 	    for(Environment[] row : envnmt_map) {
 			for(Environment block : row) {
-	        	block.draw(batch, parentAlpha);
+				if (block != null)
+					block.draw(batch, parentAlpha);
 			}
 	    }
 		for(Structure[] row : struct_map) {
 			for(Structure block : row) {
-	        	block.draw(batch, parentAlpha);
+				if (block != null)
+					block.draw(batch, parentAlpha);
 			}
 	    }
 	}

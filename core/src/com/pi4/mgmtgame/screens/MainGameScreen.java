@@ -4,10 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.assets.AssetManager;
 
 import com.pi4.mgmtgame.ManagementGame;
+import com.pi4.mgmtgame.Map;
 
 
 public class MainGameScreen implements Screen	{
@@ -20,11 +26,27 @@ public class MainGameScreen implements Screen	{
 	Texture img;
 	ManagementGame game;
 	AssetManager manager;
+	Map map;
+    private Viewport viewport;
+    private OrthographicCamera camera;
+    private SpriteBatch batch;
+    protected Stage stage;
 
-
-	public MainGameScreen (ManagementGame game, AssetManager manager) {
+	public MainGameScreen (ManagementGame game, AssetManager manager, Map map) {
+		this.map = map;
 		this.game = game;
 		this.manager = manager;
+		this.batch = game.batch;
+		
+		camera = new OrthographicCamera();
+
+		viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
+		viewport.apply();
+
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
+
+		stage = new Stage(viewport, batch);
 	}
 	@Override
 	public void show() {
@@ -33,30 +55,20 @@ public class MainGameScreen implements Screen	{
 
 	@Override
 	public void render(float delta) {
-
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			imgPosY += SPEED * Gdx.graphics.getDeltaTime();
-		}
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			imgPosY -= SPEED * Gdx.graphics.getDeltaTime();
-		}
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			imgPosX -= SPEED * Gdx.graphics.getDeltaTime();
-		}
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			imgPosX += SPEED * Gdx.graphics.getDeltaTime();
-		}
-
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		game.batch.begin();
-		game.batch.draw(img, imgPosX, imgPosY);
+		map.draw(game.batch, delta);
 		game.batch.end();
 	}
 
 	@Override
-	public void resize(int width, int height) {}
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
+	}
 
 	@Override
 	public void pause() {}

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.assets.AssetManager;
 
 import com.pi4.mgmtgame.ManagementGame;
+import com.pi4.mgmtgame.Map;
 
 
 public class MainMenuScreen implements Screen {
@@ -49,7 +51,7 @@ public class MainMenuScreen implements Screen {
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
 
-		Table mainTable = new Table();
+		final Table mainTable = new Table();
 	    mainTable.setFillParent(true);
 	    mainTable.top();
 
@@ -69,7 +71,10 @@ public class MainMenuScreen implements Screen {
 		newGameButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	game.setScreen(new MainGameScreen(game, manager));
+            	mainTable.clear();
+            	stage.clear();
+            	stage.dispose();
+            	game.setScreen(new MainGameScreen(game, manager, new Map(10, 10, manager)));
             }
         });
 
