@@ -1,11 +1,17 @@
 package com.pi4.mgmtgame.resources;
 
-public abstract class Plant extends Resources{
+public abstract class Plant extends Resources {
 
-	@Override
 	abstract int getPrice();
 
-	@Override
-	abstract int getInventoryVolume();
-	
+	abstract int getvolume();
+
+	abstract void addVolume(int v);
+
+	abstract void subVolume(int v);
+
+	abstract void addPrice(int p);
+
+	abstract void subPrice(int p);
+
 }

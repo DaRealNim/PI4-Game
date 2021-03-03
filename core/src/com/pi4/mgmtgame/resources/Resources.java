@@ -1,10 +1,16 @@
 package com.pi4.mgmtgame.resources;
 
 public abstract class Resources {
-	int price;
-	int timeToGrow; // maybe make it a method with the season as argument ?
 
 	abstract int getPrice();
 
-	abstract int getInventoryVolume();
+	abstract int getvolume();
+
+	abstract void addVolume(int v);
+
+	abstract void subVolume(int v);
+
+	abstract void addPrice(int p);
+
+	abstract void subPrice(int p);
 }

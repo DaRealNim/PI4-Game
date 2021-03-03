@@ -1,14 +1,32 @@
 package com.pi4.mgmtgame.resources;
 
 public class Wheat extends Plant {
-	int price = 1;
-	int inventoryVolume = 1;
+	int basePrice = 1;
+	int volume = 1;
+	static int price;
 
-	public int getPrice() {
+	int getPrice() {
 		return price;
 	}
 
-	public int getInventoryVolume() {
-		return inventoryVolume;
+	void addVolume(int v) {
+		volume += v;
+	}
+
+	void subVolume(int v) {
+		volume -= v;
+	}
+
+	void addPrice(int p) {
+		price += p;
+	}
+
+	void subPrice(int p) {
+		price -= p;
+	}
+
+	@Override
+	int getvolume() {
+		return volume;
 	}
 }

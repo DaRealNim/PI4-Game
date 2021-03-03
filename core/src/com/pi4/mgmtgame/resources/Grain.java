@@ -1,16 +1,20 @@
 package com.pi4.mgmtgame.resources;
 
 public abstract class Grain extends Resources {
-	String price;
-	int inventoryVolume = 1;
-	int getInventoryVolume() {
-		return inventoryVolume;
-	}
-	public abstract int getPrice();
+	abstract int getPrice();
 
-	public abstract int getGrowingTime();
+	abstract int getGrowingTime();
 
-	public abstract Plant getGrownPlant();
+	abstract Plant getGrownPlant();
 
+	abstract int getvolume();
+
+	abstract void addVolume(int v);
+
+	abstract void subVolume(int v);
+
+	abstract void addPrice(int p);
+
+	abstract void subPrice(int p);
 
 }
