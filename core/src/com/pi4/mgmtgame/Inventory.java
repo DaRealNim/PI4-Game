@@ -15,19 +15,19 @@ public class Inventory {
 	}
 	
 	public void removePlant(int index, int value) {
-		this.plants[index].sub(value);
+		this.plants[index].subVolume(value);
 	}
 	
 	public void addPlant(int index, int value) {
-		this.plants[index].add(value);
+		this.plants[index].addVolume(value);
 	}
 	
 	public void removeGrain(int index, int value) {
-		this.plants[index].sub(value);
+		this.seeds[index].subVolume(value);
 	}
 	
 	public void addGrain(int index, int value) {
-		this.plants[index].add(value);
+		this.seeds[index].addVolume(value);
 	}
 	
 	public void giveMoney(int value) {
