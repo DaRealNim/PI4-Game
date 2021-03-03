@@ -3,8 +3,9 @@ import com.pi4.mgmtgame.blocks.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.Group;
 
-public class Map extends Actor {
+public class Map extends Group {
 	private Environment[][] envnmt_map;
 	private Structure[][] struct_map;
 
@@ -15,7 +16,9 @@ public class Map extends Actor {
 
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				envnmt_map[i][j] = new Plain(i, j, manager);
+				Plain p = new Plain(i, j, manager);
+				envnmt_map[i][j] = p;
+				addActor(p);
 			}
 		}
 	}
@@ -37,21 +40,41 @@ public class Map extends Actor {
 	}
 
 
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
-	    for(Environment[] row : envnmt_map) {
-			for(Environment block : row) {
-				if (block != null)
-					block.draw(batch, parentAlpha);
-			}
-	    }
-		for(Structure[] row : struct_map) {
-			for(Structure block : row) {
-				if (block != null)
-					block.draw(batch, parentAlpha);
-			}
-	    }
-	}
+	//Commented for now because just adding blocks as group children work, but may need
+	//later in case something goes horribly wrong
+	//
+	// @Override
+	// public void act(float delta) {
+	// 	for(Environment[] row : envnmt_map) {
+	// 		for(Environment block : row) {
+	// 			if (block != null)
+	// 				block.act(delta);
+	// 		}
+	//     }
+	// 	for(Structure[] row : struct_map) {
+	// 		for(Structure block : row) {
+	// 			if (block != null)
+	// 				block.act(delta);
+	// 		}
+	//     }
+	// }
+	//
+	//
+	// @Override
+	// public void draw(Batch batch, float parentAlpha) {
+	//     for(Environment[] row : envnmt_map) {
+	// 		for(Environment block : row) {
+	// 			if (block != null)
+	// 				block.draw(batch, parentAlpha);
+	// 		}
+	//     }
+	// 	for(Structure[] row : struct_map) {
+	// 		for(Structure block : row) {
+	// 			if (block != null)
+	// 				block.draw(batch, parentAlpha);
+	// 		}
+	//     }
+	// }
 
 
 }

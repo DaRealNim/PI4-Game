@@ -39,7 +39,7 @@ public class MainGameScreen implements Screen	{
 		this.game = game;
 		this.manager = manager;
 		this.batch = game.batch;
-		
+
 		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
 
 		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
@@ -53,14 +53,16 @@ public class MainGameScreen implements Screen	{
 	@Override
 	public void show() {
 		img = new Texture("badlogic.jpg");
+		Gdx.input.setInputProcessor(stage);
+		stage.addActor(map);
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		stage.addActor(map);
+
+		stage.act(delta);
 		stage.draw();
 		processCameraMovement();
 	}
@@ -71,18 +73,18 @@ public class MainGameScreen implements Screen	{
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
 	}
-	
-	
+
+
 	//Will have to add more conditions to this, plz no touchy!
 	private void processCameraMovement()
 	{
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			camera.translate(-2, 0);
-		} 
-		else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) { 
+		}
+		else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			camera.translate(2, 0);
 		}
-		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {  
+		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			camera.translate(0, -2);
 		}
 		else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
