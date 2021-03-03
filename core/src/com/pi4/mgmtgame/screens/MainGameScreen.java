@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -38,9 +39,9 @@ public class MainGameScreen implements Screen	{
 		this.manager = manager;
 		this.batch = game.batch;
 		
-		camera = new OrthographicCamera();
+		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
 
-		viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
+		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
 		viewport.apply();
 
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -58,9 +59,8 @@ public class MainGameScreen implements Screen	{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		game.batch.begin();
-		map.draw(game.batch, delta);
-		game.batch.end();
+		stage.addActor(map);
+		stage.draw();
 	}
 
 	@Override
