@@ -1,6 +1,7 @@
 package com.pi4.mgmtgame.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -61,6 +62,7 @@ public class MainGameScreen implements Screen	{
 		
 		stage.addActor(map);
 		stage.draw();
+		processCameraMovement();
 	}
 
 	@Override
@@ -68,6 +70,24 @@ public class MainGameScreen implements Screen	{
 		viewport.update(width, height);
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
+	}
+	
+	
+	//Will have to add more conditions to this, plz no touchy!
+	private void processCameraMovement()
+	{
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			camera.translate(-2, 0);
+		} 
+		else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) { 
+			camera.translate(2, 0);
+		}
+		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {  
+			camera.translate(0, -2);
+		}
+		else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			camera.translate(0, 2);
+		}
 	}
 
 	@Override
