@@ -5,21 +5,26 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.assets.AssetManager;
+
 import com.pi4.mgmtgame.ManagementGame;
 
+
 public class MainGameScreen implements Screen	{
-	
+
 	public static final float SPEED = 140;
-	
+
 	float imgPosX = 0;
 	float imgPosY = 0;
-	
+
 	Texture img;
 	ManagementGame game;
-	
-	
-	public MainGameScreen (ManagementGame game) {
+	AssetManager manager;
+
+
+	public MainGameScreen (ManagementGame game, AssetManager manager) {
 		this.game = game;
+		this.manager = manager;
 	}
 	@Override
 	public void show() {
@@ -28,7 +33,7 @@ public class MainGameScreen implements Screen	{
 
 	@Override
 	public void render(float delta) {
-		
+
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			imgPosY += SPEED * Gdx.graphics.getDeltaTime();
 		}
@@ -39,12 +44,12 @@ public class MainGameScreen implements Screen	{
 			imgPosX -= SPEED * Gdx.graphics.getDeltaTime();
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			imgPosX += SPEED * Gdx.graphics.getDeltaTime();	
+			imgPosX += SPEED * Gdx.graphics.getDeltaTime();
 		}
-		
+
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		game.batch.begin();
 		game.batch.draw(img, imgPosX, imgPosY);
 		game.batch.end();
