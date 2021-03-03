@@ -12,8 +12,8 @@ public class Field extends Structure {
     private Grain plantedSeed;
     private int growingState;
 
-    public Field(AssetManager manager) {
-        super(manager);
+    public Field(int x, int y, AssetManager manager) {
+    	super(x, y, manager);
         Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
         setButton(button);
         this.growingState = 0;

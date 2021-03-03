@@ -5,8 +5,8 @@ import com.badlogic.gdx.assets.AssetManager;
 public abstract class Structure extends Block {
     //Skeleton
 
-    public Structure(AssetManager manager) {
-        super(manager);
+    public Structure(int x, int y, AssetManager manager) {
+    	super(x, y, manager);
     }
 
     abstract public int getConstructionCost();

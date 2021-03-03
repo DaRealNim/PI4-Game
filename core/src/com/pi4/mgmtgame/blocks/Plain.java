@@ -10,8 +10,8 @@ import com.pi4.mgmtgame.resources.Grain;
 public class Plain extends Environment {
     //Skeleton
 
-    public Plain(AssetManager manager) {
-        super(manager);
+    public Plain(int x, int y, AssetManager manager) {
+    	super(x, y, manager);
         Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "plain");
         setButton(button);
     }

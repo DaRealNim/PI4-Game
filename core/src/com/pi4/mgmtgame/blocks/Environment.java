@@ -8,8 +8,8 @@ import com.pi4.mgmtgame.resources.Grain;
 public abstract class Environment extends Block {
     //Skeleton
 
-    public Environment(AssetManager manager) {
-        super(manager);
+    public Environment(int x, int y, AssetManager manager) {
+        super(x, y, manager);
     }
 
     //Returns a growing penalty for fields in months

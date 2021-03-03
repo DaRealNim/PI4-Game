@@ -9,8 +9,11 @@ import com.badlogic.gdx.assets.AssetManager;
 public class Block extends Actor {
     private Button displayedButton;
     protected AssetManager manager;
+    private int x, y;
 
-    public Block(AssetManager manager) {
+    public Block(int x, int y, AssetManager manager) {
+    	this.setGridX(x);
+    	this.setGridY(y);
         this.manager = manager;
     }
 
@@ -23,5 +26,21 @@ public class Block extends Actor {
         if (displayedButton != null)
             displayedButton.draw(batch, parentAlpha);
     }
+
+	public int getGridX() {
+		return x;
+	}
+
+	public void setGridX(int x) {
+		this.x = x;
+	}
+
+	public int getGridY() {
+		return y;
+	}
+
+	public void setGridY(int y) {
+		this.y = y;
+	}
 
 }
