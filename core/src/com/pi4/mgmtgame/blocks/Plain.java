@@ -8,12 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 import com.pi4.mgmtgame.resources.Grain;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.blocks.Field;
 
 
 public class Plain extends Environment {
     //Skeleton
 
-    public Plain(int x, int y, AssetManager manager) {
+    public Plain(int x, int y, final AssetManager manager) {
     	super(x, y, manager);
         Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "plain");
         button.setX(x*16);
@@ -22,6 +24,10 @@ public class Plain extends Environment {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
+                Map map = (Map)getParent();
+                Field f = new Field(getGridX(), getGridY(), manager);
+                map.setStructAt(getGridX(), getGridY(), f);
+                map.addActor(f);
             }
         });
         setButton(button);

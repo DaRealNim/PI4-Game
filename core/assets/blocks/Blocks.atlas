@@ -2,7 +2,7 @@
 Blocks.png
 size: 64,64
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 field_carrots
   rotate: false

@@ -3,9 +3,12 @@ package com.pi4.mgmtgame.blocks;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
+import com.pi4.mgmtgame.Map;
 
 
 public class Field extends Structure {
@@ -14,7 +17,18 @@ public class Field extends Structure {
 
     public Field(int x, int y, AssetManager manager) {
     	super(x, y, manager);
-        Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
+        Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_wheat");
+        button.setX(x*16);
+        button.setY(y*16);
+        button.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	System.out.println("Clicked field at ("+getGridX()+", "+getGridY()+")");
+                Map map = (Map)getParent();
+                map.setStructAt(getGridX(), getGridY(), null);
+                clear();
+            }
+        });
         setButton(button);
         this.growingState = 0;
     }

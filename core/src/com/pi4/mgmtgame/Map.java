@@ -23,19 +23,19 @@ public class Map extends Group {
 		}
 	}
 
-	Environment getEnvironmentAt(int w, int h) {
+	public Environment getEnvironmentAt(int w, int h) {
 		return envnmt_map[w][h];
 	}
 
-	Structure getStructAt(int w, int h) {
+	public Structure getStructAt(int w, int h) {
 		return struct_map[w][h];
 	}
 
-	void setEnvironmentAt(int w, int h, Environment e) {
+	public void setEnvironmentAt(int w, int h, Environment e) {
 		envnmt_map[w][h] = e;
 	}
 
-	void setStructAt(int w, int h, Structure s) {
+	public void setStructAt(int w, int h, Structure s) {
 		struct_map[w][h] = s;
 	}
 
