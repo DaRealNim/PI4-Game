@@ -58,12 +58,11 @@ public class MainGameScreen implements Screen	{
 		stage = new Stage(viewport, batch);
 
 		hud = new HUD(manager);
-
 	}
 	@Override
 	public void show() {
-		multiplexer.addProcessor(stage);
 		multiplexer.addProcessor(hud.stage);
+		multiplexer.addProcessor(stage);
 
 		Gdx.input.setInputProcessor(multiplexer);
 		stage.addActor(map);

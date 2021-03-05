@@ -36,15 +36,15 @@ public class MainMenuScreen implements Screen {
 		this.batch = game.batch;
 		this.manager = manager;
 
-	    camera = new OrthographicCamera();
+	  camera = new OrthographicCamera();
 
-	    viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
-      viewport.apply();
+	  viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
+  	viewport.apply();
 
-	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-	    camera.update();
+	  camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+	  camera.update();
 
-	    stage = new Stage(viewport, batch);
+	  stage = new Stage(viewport, batch);
 	}
 
 	@Override

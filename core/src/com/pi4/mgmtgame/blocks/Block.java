@@ -15,7 +15,7 @@ public class Block extends Group {
     public Block(int x, int y, AssetManager manager) {
     	this.setGridX(x);
     	this.setGridY(y);
-        this.manager = manager;
+      this.manager = manager;
     }
 
     public void setButton(Button b) {

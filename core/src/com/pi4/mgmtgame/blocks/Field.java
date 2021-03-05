@@ -24,9 +24,9 @@ public class Field extends Structure {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked field at ("+getGridX()+", "+getGridY()+")");
-                Map map = (Map)getParent();
-                map.setStructAt(getGridX(), getGridY(), null);
-                clear();
+              Map map = (Map)getParent();
+              map.setStructAt(getGridX(), getGridY(), null);
+              clear();
             }
         });
         setButton(button);

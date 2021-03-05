@@ -25,8 +25,7 @@ public class HUD {
     private AssetManager manager;
 
 
-    public HUD (AssetManager man)
-    {
+    public HUD (AssetManager man) {
       this.manager = man;
       viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, new OrthographicCamera());
       stage = new Stage(viewport);
@@ -34,11 +33,10 @@ public class HUD {
     }
 
     public void show() {
-      Gdx.input.setInputProcessor(stage);
-
       Skin buttonSkins = manager.get("hudButtons/hudButton.json", Skin.class);
 
       passTurnButton = new Button(buttonSkins, "passTurn");
+      passTurnButton.setZIndex(1);
 
       passTurnButton.addListener(new ClickListener(){
               @Override
@@ -56,13 +54,12 @@ public class HUD {
 
       stage.addActor(table);
     }
-    public void update()
-    {
+
+    public void update() {
       //update the values when we have values to update, probably get Inventory in the constructor somewhere
     }
 
-    public void dispose()
-    {
+    public void dispose() {
       stage.dispose();
     }
 }
