@@ -1,7 +1,12 @@
 package com.pi4.mgmtgame.screens;
 
+import com.pi4.mgmtgame.ManagementGame;
+import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.HUD;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,8 +19,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.assets.AssetManager;
 
-import com.pi4.mgmtgame.ManagementGame;
-import com.pi4.mgmtgame.Map;
+
 
 
 public class MainGameScreen implements Screen	{
@@ -29,16 +33,19 @@ public class MainGameScreen implements Screen	{
 	ManagementGame game;
 	AssetManager manager;
 	Map map;
-    private Viewport viewport;
-    private OrthographicCamera camera;
-    private SpriteBatch batch;
-    protected Stage stage;
+	private Viewport viewport;
+	private OrthographicCamera camera;
+	private SpriteBatch batch;
+	private HUD hud;
+	private InputMultiplexer multiplexer;
+	protected Stage stage;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, Map map) {
 		this.map = map;
 		this.game = game;
 		this.manager = manager;
 		this.batch = game.batch;
+		this.multiplexer = new InputMultiplexer();
 
 		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
 
@@ -49,11 +56,16 @@ public class MainGameScreen implements Screen	{
 		camera.update();
 
 		stage = new Stage(viewport, batch);
+
+		hud = new HUD(manager);
+
 	}
 	@Override
 	public void show() {
-		img = new Texture("badlogic.jpg");
-		Gdx.input.setInputProcessor(stage);
+		multiplexer.addProcessor(stage);
+		multiplexer.addProcessor(hud.stage);
+
+		Gdx.input.setInputProcessor(multiplexer);
 		stage.addActor(map);
 	}
 
@@ -65,6 +77,11 @@ public class MainGameScreen implements Screen	{
 		stage.act(delta);
 		stage.draw();
 		processCameraMovement();
+		hud.update();
+
+		game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+		hud.stage.act();
+		hud.stage.draw();
 	}
 
 	@Override
@@ -76,8 +93,7 @@ public class MainGameScreen implements Screen	{
 
 
 	//Will have to add more conditions to this, plz no touchy!
-	private void processCameraMovement()
-	{
+	private void processCameraMovement() {
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			camera.translate(-2, 0);
 		}

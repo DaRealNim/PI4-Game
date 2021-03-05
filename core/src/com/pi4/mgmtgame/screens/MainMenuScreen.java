@@ -25,9 +25,9 @@ import com.pi4.mgmtgame.Map;
 public class MainMenuScreen implements Screen {
 
 	private SpriteBatch batch;
-    protected Stage stage;
-    private Viewport viewport;
-    private OrthographicCamera camera;
+  protected Stage stage;
+  private Viewport viewport;
+  private OrthographicCamera camera;
 	private AssetManager manager;
 	ManagementGame game;
 
@@ -39,7 +39,7 @@ public class MainMenuScreen implements Screen {
 	    camera = new OrthographicCamera();
 
 	    viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
-        viewport.apply();
+      viewport.apply();
 
 	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 	    camera.update();
@@ -52,8 +52,8 @@ public class MainMenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		final Table mainTable = new Table();
-	    mainTable.setFillParent(true);
-	    mainTable.top();
+	  mainTable.setFillParent(true);
+	  mainTable.top();
 
 		Skin buttonSkins = manager.get("menuButtons/ButtonStyles.json", Skin.class);
 
@@ -84,15 +84,15 @@ public class MainMenuScreen implements Screen {
 
 		 mainTable.row();
 
-	     mainTable.add(loadButton).size(300, 100);
+     mainTable.add(loadButton).size(300, 100);
 
-	     mainTable.row();
+     mainTable.row();
 
-	     mainTable.add(quitButton).size(300, 100).padTop(50);;
+     mainTable.add(quitButton).size(300, 100).padTop(50);;
 
-	     mainTable.align(Align.bottom);
+     mainTable.align(Align.bottom);
 
-	     stage.addActor(mainTable);
+     stage.addActor(mainTable);
 	}
 
 	@Override

@@ -1,0 +1,8 @@
+{
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	passTurn: {
+		up: Webp.net-resizeimage
+		down: emonji
+	}
+}
+}

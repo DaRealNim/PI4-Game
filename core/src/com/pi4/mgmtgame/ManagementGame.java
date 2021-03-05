@@ -19,11 +19,12 @@ public class ManagementGame extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		AssetManager manager = new AssetManager();
-		
+
 		manager.load("menuButtons/ButtonStyles.json", Skin.class, new SkinLoader.SkinParameter("menuButtons/ButtonStyles.atlas"));
 		manager.load("blocks/Blocks.json", Skin.class, new SkinLoader.SkinParameter("blocks/Blocks.atlas"));
+		manager.load("hudButtons/hudButton.json", Skin.class, new SkinLoader.SkinParameter("hudButtons/hudButton.atlas"));
 		manager.finishLoading();
-		
+
 		this.setScreen(new MainMenuScreen(this, manager));
 	}
 
