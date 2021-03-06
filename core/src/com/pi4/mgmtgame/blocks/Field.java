@@ -27,7 +27,7 @@ public class Field extends Structure {
                 Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
                 Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
                 Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-                final Popup p = new Popup(getGridX(), getGridY(), manager, buttonPlant, buttonHarvest, buttonDestroy);
+                final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant, buttonHarvest, buttonDestroy);
                 buttonPlant.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {

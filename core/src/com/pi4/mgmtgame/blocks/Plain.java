@@ -25,7 +25,7 @@ public class Plain extends Environment {
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
                 Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
-                final Popup p = new Popup(getGridX(), getGridY(), manager, buttonField);
+                final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonField);
                 buttonField.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {

@@ -17,8 +17,8 @@ public class Popup extends Group {
         Skin skin = manager.get("popupIcons/popup.json", Skin.class);
         Button backgroundImage = new Button(skin, "popup");
         Table table = new Table();
-        setX((x-2)*16 + 8);
-        setY((y+1)*16);
+        setX(x);
+        setY(y);
         for (Button button : buttons) {
             table.add(button).padLeft(2).padBottom(19).fillY();
         }
