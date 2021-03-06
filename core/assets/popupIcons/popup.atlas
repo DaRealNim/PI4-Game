@@ -18,6 +18,13 @@ carrotseeds_icon
   orig: 11, 11
   offset: 0, 0
   index: -1
+closeButton
+  rotate: false
+  xy: 14, 31
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
 harvest_icon
   rotate: false
   xy: 1, 31

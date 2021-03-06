@@ -1,10 +1,12 @@
 package com.pi4.mgmtgame;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,14 +22,16 @@ public class Popup extends Group {
         for (Button button : buttons) {
             table.add(button).padLeft(2).padBottom(19).fillY();
         }
-        table.top();
-        table.left();
+        Button closeButton = new Button(skin, "closeButton");
+        table.add(closeButton).padLeft(2).padBottom(19);
+        closeButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                remove();
+            }
+        });
         table.pack();
         addActor(backgroundImage);
         addActor(table);
-    }
-
-    public void close() {
-        remove();
     }
 }

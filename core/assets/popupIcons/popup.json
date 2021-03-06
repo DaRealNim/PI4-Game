@@ -24,5 +24,8 @@ ButtonStyle: {
 	carrotseeds_icon: {
 		up: carrotseeds_icon
 	}
+	closeButton: {
+		up: closeButton
+	}
 }
 }
