@@ -93,18 +93,21 @@ public class MainGameScreen implements Screen	{
 
 	//Will have to add more conditions to this, plz no touchy!
 	private void processCameraMovement() {
+		int translateX = 0;
+		int translateY = 0;
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			camera.translate(-2, 0);
+			translateX -= 2;
 		}
-		else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			camera.translate(2, 0);
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			translateX += 2;
 		}
-		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			camera.translate(0, -2);
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			translateY -= 2;
 		}
-		else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			camera.translate(0, 2);
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			translateY += 2;
 		}
+		camera.translate(translateX, translateY);
 	}
 
 	@Override
