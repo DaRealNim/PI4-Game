@@ -1,0 +1,28 @@
+{
+ButtonStyle: {
+	popup: {
+		up: popup
+	}
+	hoe_icon: {
+		up: hoe_icon
+	}
+	shovel_icon: {
+		up: shovel_icon
+	}
+	bomb_icon: {
+		up: bomb_icon
+	}
+	harvest_icon: {
+		up: harvest_icon
+	}
+	wheatseeds_icon: {
+		up: wheatseeds_icon
+	}
+	potatoseeds_icon: {
+		up: potatoseeds_icon
+	}
+	carrotseeds_icon: {
+		up: carrotseeds_icon
+	}
+}
+}

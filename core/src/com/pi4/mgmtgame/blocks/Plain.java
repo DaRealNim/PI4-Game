@@ -5,15 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import com.pi4.mgmtgame.resources.Grain;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.blocks.Field;
 
 
 public class Plain extends Environment {
-    //Skeleton
 
     public Plain(int x, int y, final AssetManager manager) {
     	super(x, y, manager);
@@ -24,10 +24,19 @@ public class Plain extends Environment {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
-                Map map = (Map)getParent();
-                Field f = new Field(getGridX(), getGridY(), manager);
-                map.setStructAt(getGridX(), getGridY(), f);
-                map.addActor(f);
+                Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
+                final Popup p = new Popup(getGridX(), getGridY(), manager, buttonField);
+                buttonField.addListener(new ClickListener(){
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        Map map = (Map)getParent();
+                        Field f = new Field(getGridX(), getGridY(), manager);
+                        map.setStructAt(getGridX(), getGridY(), f);
+                        map.addActor(f);
+                        p.remove();
+                    }
+                });
+                getStage().addActor(p);
             }
         });
         setButton(button);

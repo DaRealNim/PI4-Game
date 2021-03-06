@@ -1,0 +1,62 @@
+
+popup.png
+size: 128,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bomb_icon
+  rotate: false
+  xy: 1, 44
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+carrotseeds_icon
+  rotate: false
+  xy: 67, 78
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+harvest_icon
+  rotate: false
+  xy: 1, 31
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+hoe_icon
+  rotate: false
+  xy: 14, 44
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+popup
+  rotate: false
+  xy: 1, 57
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+potatoseeds_icon
+  rotate: false
+  xy: 67, 65
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+shovel_icon
+  rotate: false
+  xy: 80, 78
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+wheatseeds_icon
+  rotate: false
+  xy: 1, 18
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
