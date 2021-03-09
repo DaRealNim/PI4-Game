@@ -37,4 +37,8 @@ public class Inventory {
 	public void receiveMoney(int value) {
 		this.money += value;
 	}
+	
+	public int getMoney() {
+		return money;
+	}
 }
