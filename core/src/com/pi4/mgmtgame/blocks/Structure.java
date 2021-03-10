@@ -13,6 +13,5 @@ public abstract class Structure extends Block {
     
     @Override
     public void passTurn() {
-    	System.out.println("Nothing to do at (" + super.getGridX() + "," + super.getGridY() + ")");
 	}
 }

@@ -60,7 +60,7 @@ public class MainGameScreen implements Screen	{
 
 		stage = new Stage(viewport, batch);
 
-		hud = new HUD(manager);
+		hud = new HUD(manager, server);
 	}
 	@Override
 	public void show() {

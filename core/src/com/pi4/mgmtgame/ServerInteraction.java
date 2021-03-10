@@ -75,24 +75,25 @@ public class ServerInteraction {
 		return (false);
 	}
 	
-	public void nextTurn() {
+	public void passTurn() {
 		int mapWidth = map.getMapWidth();
 		int mapHeight = map.getMapHeight();
-		int widthIndex = 0;
-		int heightIndex = 0;
+		int widthIndex;
+		int heightIndex;
 		Block currBlock;
 		
-		while (widthIndex < mapWidth) {
-			while (heightIndex < mapHeight) {
-				currBlock = map.getEnvironmentAt(widthIndex, heightIndex);
-				currBlock.passTurn();
+		for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) 
+		{
+			for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) 
+			{
+				currBlock = map.getEnvironmentAt(heightIndex, widthIndex );
+				if (currBlock != null)
+					currBlock.passTurn();
 				
-				currBlock = map.getStructAt(widthIndex, heightIndex);
-				currBlock.passTurn();
-				
-				heightIndex++;
+				currBlock = map.getStructAt(heightIndex, widthIndex);
+				if (currBlock != null)
+					currBlock.passTurn();
 			}
-			widthIndex++;
 		}
 	}
 	

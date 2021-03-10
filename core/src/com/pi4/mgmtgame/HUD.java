@@ -23,13 +23,15 @@ public class HUD {
     private Viewport viewport;
     private Button passTurnButton;
     private AssetManager manager;
+    private ServerInteraction server;
 
 
-    public HUD (AssetManager man) {
+    public HUD (AssetManager man, ServerInteraction server) {
       this.manager = man;
       viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, new OrthographicCamera());
       stage = new Stage(viewport);
       this.show();
+      this.server = server;
     }
 
     public void show() {
@@ -41,6 +43,7 @@ public class HUD {
       passTurnButton.addListener(new ClickListener(){
               @Override
               public void clicked(InputEvent event, float x, float y) {
+            	  server.passTurn();
                   System.out.println("Passed a turn!");
               }
           });

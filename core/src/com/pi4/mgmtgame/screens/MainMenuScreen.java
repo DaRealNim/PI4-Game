@@ -17,9 +17,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.assets.AssetManager;
-
+import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.ManagementGame;
 import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.ServerInteraction;
 
 
 public class MainMenuScreen implements Screen {
@@ -74,8 +75,12 @@ public class MainMenuScreen implements Screen {
             	mainTable.clear();
             	stage.clear();
             	stage.dispose();
-            	ServerInteraction server = new ServerInteraction()
-            	game.setScreen(new MainGameScreen(game, manager, new Map(10, 10, manager)));
+            	
+            	Inventory inv = new Inventory();
+            	Map gameMap = new Map(10, 10, manager);
+            	ServerInteraction server = new ServerInteraction(gameMap, inv);
+            	
+            	game.setScreen(new MainGameScreen(game, manager, gameMap, server));
             }
         });
 

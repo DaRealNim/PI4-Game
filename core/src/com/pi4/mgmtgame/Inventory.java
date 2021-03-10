@@ -8,11 +8,18 @@ public class Inventory {
 	private Plant[] plants;
 	private Grain[] seeds;
 	
-	public Inventory (Plant[] plantArray, Grain[] grainArray) {
+	public Inventory () {
 		plants = new Plant[10];
 		seeds = new Grain[10];
 		money = 0;
 	}
+	
+	public Inventory (Plant[] plantArray, Grain[] grainArray, int money) {
+		plants = new Plant[10];
+		seeds = new Grain[10];
+		this.money = money;
+	}
+	
 	
 	public void removePlant(int id, int value) {
 		this.plants[id].subVolume(value);
