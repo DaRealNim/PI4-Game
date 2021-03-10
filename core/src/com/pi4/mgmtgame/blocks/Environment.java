@@ -19,4 +19,9 @@ public abstract class Environment extends Block {
 
     //Checks if a specific building can be placed on that terrain
     abstract public boolean canBuild(Structure struct);
+    
+    @Override
+    public void passTurn() {
+    	System.out.println("Nothing to do at (" + super.getGridX() + "," + super.getGridY() + ")");
+	}
 }

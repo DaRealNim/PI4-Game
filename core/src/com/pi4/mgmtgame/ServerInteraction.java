@@ -3,15 +3,16 @@ package com.pi4.mgmtgame;
 import com.badlogic.gdx.assets.AssetManager;
 import com.pi4.mgmtgame.blocks.*;
 import com.pi4.mgmtgame.resources.Grain;
+import com.pi4.mgmtgame.resources.Plant;
 
 public class ServerInteraction {
 	private Map map;
-	private Inventory inventaire;
+	private Inventory inv;
 	private int turn;
 	
-	public ServerInteraction(Map map, Inventory inventaire) {
+	public ServerInteraction(Map map, Inventory  inv) {
 		this.map = map;
-		this.inventaire = inventaire;
+		this.inv =  inv;
 		this.turn = 0;
 	}
 	
@@ -19,8 +20,8 @@ public class ServerInteraction {
 		return map;
 	}
 	
-	public Inventory getInventaire() {
-		return inventaire;
+	public Inventory getInventory() {
+		return inv;
 	}
 
 	public int getTurn() {
@@ -28,48 +29,71 @@ public class ServerInteraction {
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
-		Environment e = map.getEnvironmentAt(x, y);		
+		Environment envBlock = map.getEnvironmentAt(x, y);		
 		
-		if (e.canBuild(struct) 
-			&& inventaire.getMoney() >= struct.getConstructionCost()
-			&& e != null) 
+		if (envBlock.canBuild(struct) 
+			&& inv.getMoney() >= struct.getConstructionCost()
+			&& envBlock != null) 
 		{
 			map.setStructAt(x, y, struct);
-			inventaire.giveMoney(struct.getConstructionCost());
-			return true;
+			inv.giveMoney(struct.getConstructionCost());
+			return (true);
 		}
-		return false;
+		
+		return (false);
 	}
 	
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
-		Structure e = map.getStructAt(x, y);
+		Structure structBlock = map.getStructAt(x, y);
 	
-		if (e instanceof Field && inventaire.hasGrain(seed)
-			&& e != null) 
+		if (structBlock instanceof Field && inv.hasGrain(seed)
+			&& structBlock != null) 
 		{
-			((Field) e).plantSeed(seed);
-			inventaire.removeGrain(seed.getId(), 1);
-			return true;
+			((Field) structBlock).plantSeed(seed);
+			inv.removeGrain(seed.getId(), 1);
+			return (true);
 		}
 		
-		return false;
-		
+		return (false);
 	}
 	
 	public boolean requestHarvest(int x, int y) {
-		/*
-		 * vérifie que la case est bien un champ et que la graine a poussé, 
-		 * si oui récolte la graine (Field.harvest()) et la place dans 
-		 * l'inventaire
-		 */
+		Structure structBlock = map.getStructAt(x, y);
+		Plant harvested;
+		Field fieldBlock;
 		
-		return false;
+		if (structBlock instanceof Field && structBlock != null) {
+			fieldBlock = (Field) structBlock;
+			
+			if (fieldBlock.hasSeedGrown()) {
+				harvested = fieldBlock.harvest();
+				harvested.addVolume(4);
+				inv.addPlant(harvested.getId(), harvested.getVolume());
+			}
+			return (true);
+		}
+		return (false);
 	}
+	
 	public void nextTurn() {
-		/*
-		 * s'occupe de parcourir chaque champ et de faire pousser les 
-		 * plantes a l'intérieur d'un cran, incrémente turn
-		 */
+		int mapWidth = map.getMapWidth();
+		int mapHeight = map.getMapHeight();
+		int widthIndex = 0;
+		int heightIndex = 0;
+		Block currBlock;
+		
+		while (widthIndex < mapWidth) {
+			while (heightIndex < mapHeight) {
+				currBlock = map.getEnvironmentAt(widthIndex, heightIndex);
+				currBlock.passTurn();
+				
+				currBlock = map.getStructAt(widthIndex, heightIndex);
+				currBlock.passTurn();
+				
+				heightIndex++;
+			}
+			widthIndex++;
+		}
 	}
 	
 	

@@ -56,4 +56,9 @@ public class Plain extends Environment {
     public boolean canBuild(Structure struct) {
         return true;
     }
+    
+    @Override
+    public void passTurn() {
+    	System.out.println("Nothing to do at (" + super.getGridX() + "," + super.getGridY() + ")");
+	}
 }

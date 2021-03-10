@@ -25,9 +25,9 @@ import com.pi4.mgmtgame.Map;
 public class MainMenuScreen implements Screen {
 
 	private SpriteBatch batch;
-  protected Stage stage;
-  private Viewport viewport;
-  private OrthographicCamera camera;
+	protected Stage stage;
+  	private Viewport viewport;
+  	private OrthographicCamera camera;
 	private AssetManager manager;
 	ManagementGame game;
 
@@ -39,7 +39,7 @@ public class MainMenuScreen implements Screen {
 	  camera = new OrthographicCamera();
 
 	  viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
-  	viewport.apply();
+	  viewport.apply();
 
 	  camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 	  camera.update();
@@ -74,6 +74,7 @@ public class MainMenuScreen implements Screen {
             	mainTable.clear();
             	stage.clear();
             	stage.dispose();
+            	ServerInteraction server = new ServerInteraction()
             	game.setScreen(new MainGameScreen(game, manager, new Map(10, 10, manager)));
             }
         });

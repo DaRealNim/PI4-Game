@@ -54,5 +54,7 @@ public class Block extends Group {
 	public void setGridY(int y) {
 		this.y = y;
 	}
-
+	
+	public void passTurn() {
+	}
 }

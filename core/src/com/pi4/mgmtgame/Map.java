@@ -8,11 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 public class Map extends Group {
 	private Environment[][] envnmt_map;
 	private Structure[][] struct_map;
+	private int width;
+	private int height;
 
 
 	public Map(int w, int h, AssetManager manager) {
-		this.envnmt_map = new Environment[w][h];
-		this.struct_map = new Structure[w][h];
+		this.width = w;
+		this.height = h;
+		this.envnmt_map = new Environment[width][height];
+		this.struct_map = new Structure[width][height];
 
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
@@ -23,6 +27,14 @@ public class Map extends Group {
 		}
 	}
 
+	public int getMapWidth() {
+		return (width);
+	}
+	
+	public int getMapHeight() {
+		return (height);
+	}
+	
 	public Environment getEnvironmentAt(int w, int h) {
 		return envnmt_map[w][h];
 	}

@@ -2,6 +2,7 @@ package com.pi4.mgmtgame.screens;
 
 import com.pi4.mgmtgame.ManagementGame;
 import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.ServerInteraction;
 import com.pi4.mgmtgame.HUD;
 
 import com.badlogic.gdx.Gdx;
@@ -39,13 +40,15 @@ public class MainGameScreen implements Screen	{
 	private HUD hud;
 	private InputMultiplexer multiplexer;
 	protected Stage stage;
+	private ServerInteraction server;
 
-	public MainGameScreen (ManagementGame game, AssetManager manager, Map map) {
+	public MainGameScreen (ManagementGame game, AssetManager manager, Map map, ServerInteraction server) {
 		this.map = map;
 		this.game = game;
 		this.manager = manager;
 		this.batch = game.batch;
 		this.multiplexer = new InputMultiplexer();
+		this.server = server;
 
 		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
 
@@ -109,7 +112,7 @@ public class MainGameScreen implements Screen	{
 		}
 		camera.translate(translateX, translateY);
 	}
-
+	
 	@Override
 	public void pause() {}
 
