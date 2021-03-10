@@ -9,17 +9,17 @@ public class ServerInteraction {
 	private Map map;
 	private Inventory inv;
 	private int turn;
-	
-	public ServerInteraction(Map map, Inventory  inv) {
-		this.map = map;
+
+	public ServerInteraction(Inventory inv, AssetManager manager) {
+		this.map = new Map(10, 10, manager, this);
 		this.inv =  inv;
 		this.turn = 0;
 	}
-	
+
 	public Map getMap() {
 		return map;
 	}
-	
+
 	public Inventory getInventory() {
 		return inv;
 	}
@@ -39,32 +39,32 @@ public class ServerInteraction {
 			inv.giveMoney(struct.getConstructionCost());
 			return (true);
 		}
-		
+
 		return (false);
 	}
-	
+
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
 		Structure structBlock = map.getStructAt(x, y);
-	
+
 		if (structBlock instanceof Field && inv.hasGrain(seed)
-			&& structBlock != null) 
+			&& structBlock != null)
 		{
 			((Field) structBlock).plantSeed(seed);
 			inv.removeGrain(seed.getId(), 1);
 			return (true);
 		}
-		
+
 		return (false);
 	}
-	
+
 	public boolean requestHarvest(int x, int y) {
 		Structure structBlock = map.getStructAt(x, y);
 		Plant harvested;
 		Field fieldBlock;
-		
+
 		if (structBlock instanceof Field && structBlock != null) {
 			fieldBlock = (Field) structBlock;
-			
+
 			if (fieldBlock.hasSeedGrown()) {
 				harvested = fieldBlock.harvest();
 				harvested.addVolume(4);
@@ -74,29 +74,29 @@ public class ServerInteraction {
 		}
 		return (false);
 	}
-	
+
 	public void passTurn() {
 		int mapWidth = map.getMapWidth();
 		int mapHeight = map.getMapHeight();
 		int widthIndex;
 		int heightIndex;
 		Block currBlock;
-		
-		for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) 
+
+		for (heightIndex = 0; heightIndex < mapHeight; heightIndex++)
 		{
-			for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) 
+			for (widthIndex = 0; widthIndex < mapWidth; widthIndex++)
 			{
 				currBlock = map.getEnvironmentAt(heightIndex, widthIndex );
 				if (currBlock != null)
 					currBlock.passTurn();
-				
+
 				currBlock = map.getStructAt(heightIndex, widthIndex);
 				if (currBlock != null)
 					currBlock.passTurn();
 			}
 		}
 	}
-	
-	
-	
+
+
+
 }

@@ -1,4 +1,5 @@
 package com.pi4.mgmtgame;
+import com.pi4.mgmtgame.ServerInteraction;
 import com.pi4.mgmtgame.blocks.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -12,7 +13,7 @@ public class Map extends Group {
 	private int height;
 
 
-	public Map(int w, int h, AssetManager manager) {
+	public Map(int w, int h, AssetManager manager, ServerInteraction server) {
 		this.width = w;
 		this.height = h;
 		this.envnmt_map = new Environment[width][height];
@@ -20,9 +21,25 @@ public class Map extends Group {
 
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				Plain p = new Plain(i, j, manager);
+				Plain p = new Plain(i, j, manager, server);
 				envnmt_map[i][j] = p;
 				addActor(p);
+			}
+		}
+	}
+
+	public void updateActors() {
+		clear();
+		for(int i = 0; i < this.width; i++) {
+			for (int j = 0; j < this.height; j++) {
+				if (envnmt_map[i][j] != null) {
+					addActor(envnmt_map[i][j]);
+					envnmt_map[i][j].updateActors();
+				}
+				if (struct_map[i][j] != null) {
+					addActor(struct_map[i][j]);
+					struct_map[i][j].updateActors();
+				}
 			}
 		}
 	}
@@ -30,11 +47,11 @@ public class Map extends Group {
 	public int getMapWidth() {
 		return (width);
 	}
-	
+
 	public int getMapHeight() {
 		return (height);
 	}
-	
+
 	public Environment getEnvironmentAt(int w, int h) {
 		return envnmt_map[w][h];
 	}

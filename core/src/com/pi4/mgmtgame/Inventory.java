@@ -7,11 +7,11 @@ public class Inventory {
 	private int money;
 	private Plant[] plants;
 	private Grain[] seeds;
-	
+
 	public Inventory () {
 		plants = new Plant[10];
 		seeds = new Grain[10];
-		money = 0;
+		money = 1000;
 	}
 	
 	public Inventory (Plant[] plantArray, Grain[] grainArray, int money) {

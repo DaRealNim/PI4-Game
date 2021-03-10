@@ -42,8 +42,8 @@ public class MainGameScreen implements Screen	{
 	protected Stage stage;
 	private ServerInteraction server;
 
-	public MainGameScreen (ManagementGame game, AssetManager manager, Map map, ServerInteraction server) {
-		this.map = map;
+	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
+		this.map = server.getMap();
 		this.game = game;
 		this.manager = manager;
 		this.batch = game.batch;
@@ -112,7 +112,7 @@ public class MainGameScreen implements Screen	{
 		}
 		camera.translate(translateX, translateY);
 	}
-	
+
 	@Override
 	public void pause() {}
 

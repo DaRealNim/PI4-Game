@@ -11,11 +11,12 @@ import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.blocks.Field;
+import com.pi4.mgmtgame.ServerInteraction;
 
 
 public class Plain extends Environment {
 
-    public Plain(int x, int y, final AssetManager manager) {
+    public Plain(int x, int y, final AssetManager manager, final ServerInteraction server) {
     	super(x, y, manager);
         Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "plain");
         button.setX(x*16);
@@ -31,8 +32,13 @@ public class Plain extends Environment {
                     public void clicked(InputEvent event, float x, float y) {
                         Map map = (Map)getParent();
                         Field f = new Field(getGridX(), getGridY(), manager);
-                        map.setStructAt(getGridX(), getGridY(), f);
-                        map.addActor(f);
+                        boolean res = server.requestBuildStructure(getGridX(), getGridY(), f);
+                        System.out.println("Could build structure at "+getGridX()+", "+getGridY()+": "+res);
+                        Map serverMap = server.getMap();
+                        serverMap.updateActors();
+                        Stage stage = getStage();
+                        map.remove();
+                        stage.addActor(serverMap);
                         p.remove();
                     }
                 });
@@ -56,7 +62,7 @@ public class Plain extends Environment {
     public boolean canBuild(Structure struct) {
         return true;
     }
-    
+
     @Override
     public void passTurn() {
     	System.out.println("Nothing to do at (" + super.getGridX() + "," + super.getGridY() + ")");

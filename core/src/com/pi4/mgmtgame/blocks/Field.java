@@ -75,21 +75,24 @@ public class Field extends Structure {
     }
 
     public void growSeed() {
-        this.growingState++;
+        if (plantedSeed != null && !hasSeedGrown()) {
+            System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
+            this.growingState++;
+        }
     }
 
     public Plant harvest() {
         if (hasSeedGrown()) {
+            this.growingState = 0;
             return plantedSeed.getGrownPlant();
         } else {
             return null;
         }
     }
-    
+
     @Override
     public void passTurn() {
 		this.growSeed();
-		System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
 	}
 
 

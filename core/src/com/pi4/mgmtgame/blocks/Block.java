@@ -24,6 +24,11 @@ public class Block extends Group {
         this.displayedButton = b;
     }
 
+    public void updateActors() {
+        clear();
+        addActor(this.displayedButton);
+    }
+
     //Commented for now because just adding blocks as group children work, but may need
     //later in case something goes horribly wrong
     //
@@ -54,7 +59,7 @@ public class Block extends Group {
 	public void setGridY(int y) {
 		this.y = y;
 	}
-	
+
 	public void passTurn() {
 	}
 }

@@ -75,12 +75,11 @@ public class MainMenuScreen implements Screen {
             	mainTable.clear();
             	stage.clear();
             	stage.dispose();
-            	
+
             	Inventory inv = new Inventory();
-            	Map gameMap = new Map(10, 10, manager);
-            	ServerInteraction server = new ServerInteraction(gameMap, inv);
-            	
-            	game.setScreen(new MainGameScreen(game, manager, gameMap, server));
+            	ServerInteraction server = new ServerInteraction(inv, manager);
+
+            	game.setScreen(new MainGameScreen(game, manager, server));
             }
         });
 
