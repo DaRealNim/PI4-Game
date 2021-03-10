@@ -1,19 +1,20 @@
 package com.pi4.mgmtgame.resources;
 
 public class Potatoes extends Plant{
+	final int id = 5;
 	static final int basePrice = 1;
-	static int price = basePrice;
+	static int potatoPrice = basePrice;
+	
 	public int getPrice() {
-		return price;
+		return potatoPrice;
 	}
-
-
+	
 	public void addPrice(int p) {
-		price += p;
+		potatoPrice += p;
 	}
 
 	public void subPrice(int p) {
-		price -= p;
+		potatoPrice -= p;
 	}
 
 	

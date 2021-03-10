@@ -1,25 +1,25 @@
 package com.pi4.mgmtgame.resources;
 
 public class CarrotSeeds extends Grain {
+	final int id = 6;
 	int growingTime = 1;
-	static int price = basePrice;
-	@Override
+	static int carrotSeedPrice = basePrice;
+	
 	public Plant getGrownPlant() {
 		return new Carrots();
 	}
 	
-	@Override
 	public int getGrowingTime() {
 		return growingTime;
 	}
 	public void addPrice(int p) {
-		price += p;
+		carrotSeedPrice += p;
 	}
 
 	public void subPrice(int p) {
-		price -= p;
+		carrotSeedPrice -= p;
 	}
 	public int getPrice() {
-		return price;
+		return carrotSeedPrice;
 	}
 }

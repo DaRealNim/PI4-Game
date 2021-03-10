@@ -14,6 +14,7 @@ public abstract class Resources {
 	public int getVolume() {
 		return volume;
 	}
+	
 	public abstract int getPrice();
 	public abstract void addPrice(int p);
 	public abstract void subPrice(int p);

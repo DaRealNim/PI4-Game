@@ -1,19 +1,19 @@
 package com.pi4.mgmtgame.resources;
 
 public class Wood extends Plant {
+	final int id = 1;
 	static final int basePrice = 1;
-	static int price = basePrice;
+	static int woodPrice = basePrice;
 
 	public int getPrice() {
-		return price;
+		return woodPrice;
 	}
 
 	public void addPrice(int p) {
-		price += p;
+		woodPrice += p;
 	}
 
 	public void subPrice(int p) {
-		price -= p;
+		woodPrice -= p;
 	}
-
 }
