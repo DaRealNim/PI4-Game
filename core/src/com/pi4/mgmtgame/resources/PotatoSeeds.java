@@ -6,7 +6,7 @@ public class PotatoSeeds extends Grain {
 	static int potatoSeedPrice = basePrice;
 	
 	public Plant getGrownPlant() {
-		return new Potatoes();
+		return new Potato();
 	}
 	
 	public int getGrowingTime() {

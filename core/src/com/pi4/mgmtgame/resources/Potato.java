@@ -1,6 +1,6 @@
 package com.pi4.mgmtgame.resources;
 
-public class Potatoes extends Plant{
+public class Potato extends Plant{
 	final int id = 5;
 	static final int basePrice = 1;
 	static int potatoPrice = basePrice;

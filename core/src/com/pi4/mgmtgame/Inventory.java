@@ -9,25 +9,25 @@ public class Inventory {
 	private Grain[] seeds;
 	
 	public Inventory (Plant[] plantArray, Grain[] grainArray) {
-		plants = new Plant[100];
-		seeds = new Grain[100];
+		plants = new Plant[10];
+		seeds = new Grain[10];
 		money = 0;
 	}
 	
-	public void removePlant(int index, int value) {
-		this.plants[index].subVolume(value);
+	public void removePlant(int id, int value) {
+		this.plants[id].subVolume(value);
 	}
 	
-	public void addPlant(int index, int value) {
-		this.plants[index].addVolume(value);
+	public void addPlant(int id, int value) {
+		this.plants[id].addVolume(value);
 	}
 	
-	public void removeGrain(int index, int value) {
-		this.seeds[index].subVolume(value);
+	public void removeGrain(int id, int value) {
+		this.seeds[id].subVolume(value);
 	}
 	
-	public void addGrain(int index, int value) {
-		this.seeds[index].addVolume(value);
+	public void addGrain(int id, int value) {
+		this.seeds[id].addVolume(value);
 	}
 	
 	public void giveMoney(int value) {
@@ -40,5 +40,13 @@ public class Inventory {
 	
 	public int getMoney() {
 		return money;
+	}
+
+	public boolean hasGrain(Grain seed) {
+		return (this.seeds[seed.getId()].getVolume() > 0);
+	}
+	
+	public boolean hasPlant(Plant plant) {
+		return (this.plants[plant.getId()].getVolume() > 0);
 	}
 }
