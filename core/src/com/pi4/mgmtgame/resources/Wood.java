@@ -1,7 +1,7 @@
 package com.pi4.mgmtgame.resources;
 
 public class Wood extends Plant {
-	final int id = 1;
+	final int id = 3;
 	static final int basePrice = 1;
 	static int woodPrice = basePrice;
 

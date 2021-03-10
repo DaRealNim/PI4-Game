@@ -31,7 +31,7 @@ public class Plain extends Environment {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         Map map = (Map)getParent();
-                        Field f = new Field(getGridX(), getGridY(), manager);
+                        Field f = new Field(getGridX(), getGridY(), manager, server);
                         boolean res = server.requestBuildStructure(getGridX(), getGridY(), f);
                         System.out.println("Could build structure at "+getGridX()+", "+getGridY()+": "+res);
                         Map serverMap = server.getMap();

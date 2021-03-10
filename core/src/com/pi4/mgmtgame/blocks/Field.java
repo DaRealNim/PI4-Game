@@ -1,99 +1,161 @@
 package com.pi4.mgmtgame.blocks;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Popup;
-
+import com.pi4.mgmtgame.ServerInteraction;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pi4.mgmtgame.Map;
 
 public class Field extends Structure {
-    private Grain plantedSeed;
-    private int growingState;
+	private Grain plantedSeed;
+	private int growingState;
 
-    public Field(int x, int y, final AssetManager manager) {
-    	super(x, y, manager);
-        Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_wheat");
-        button.setX(x*16);
-        button.setY(y*16);
-        button.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
-                Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
-                Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-                final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant, buttonHarvest, buttonDestroy);
-                buttonPlant.addListener(new ClickListener(){
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        p.remove();
-                    }
-                });
-                buttonHarvest.addListener(new ClickListener(){
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        p.remove();
-                    }
-                });
-                buttonDestroy.addListener(new ClickListener(){
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        p.remove();
-                    }
-                });
+	public Field(int x, int y, final AssetManager manager, final ServerInteraction server) {
+		super(x, y, manager);
+		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_wheat");
+		button.setX(x * 16);
+		button.setY(y * 16);
+		button.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
+				Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
+				Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
+				final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant,
+						buttonHarvest, buttonDestroy);
+				buttonPlant.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						Button[] buttons = new Button[5];
+						Button plantWheat = new Button(manager.get("popupIcons/popup.json", Skin.class),
+								"wheatseeds_icon");
+						Button plantPotato = new Button(manager.get("popupIcons/popup.json", Skin.class),
+								"potatoseeds_icon");
+						Button plantCarrot = new Button(manager.get("popupIcons/popup.json", Skin.class),
+								"carrotseeds_icon");
+						if (server.getInventory().hasGrain(0))
+							buttons[0] = plantWheat;
 
-                getStage().addActor(p);
-            }
-        });
-        setButton(button);
-        this.growingState = 0;
-    }
+						if (server.getInventory().hasGrain(1))
+							buttons[1] = plantPotato;
 
-    @Override
-    public int getConstructionCost() {
-        return 300;
-    }
+						if (server.getInventory().hasGrain(2))
+							buttons[2] = plantCarrot;
 
-    @Override
-    public int getDestructionGain() {
-        return 100;
-    }
+						final Popup d = new Popup((getGridX() - 2) * 16 - 12, (getGridY() + 1) * 16 + 12, manager,buttons);
+						getStage().addActor(d);
 
-    public void plantSeed(Grain seed) {
-        this.plantedSeed = seed;
-    }
+						plantWheat.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								attemptToPlant(0, server);
+								d.remove();
+							}
+						});
 
-    public boolean hasSeedGrown() {
-        if (this.plantedSeed == null)
-            return false;
-        return (this.growingState >= this.plantedSeed.getGrowingTime());
-    }
+						plantPotato.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								attemptToPlant(1, server);
+								d.remove();
+							}
+						});
 
-    public void growSeed() {
-        if (plantedSeed != null && !hasSeedGrown()) {
-            System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
-            this.growingState++;
-        }
-    }
+						plantCarrot.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								attemptToPlant(2, server);
+								d.remove();
+							}
+						});
 
-    public Plant harvest() {
-        if (hasSeedGrown()) {
-            this.growingState = 0;
-            return plantedSeed.getGrownPlant();
-        } else {
-            return null;
-        }
-    }
+					}
+				});
 
-    @Override
-    public void passTurn() {
-		this.growSeed();
+				buttonHarvest.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						p.remove();
+					}
+				});
+				buttonDestroy.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						p.remove();
+					}
+				});
+
+				getStage().addActor(p);
+
+			}
+		});
+
+		setButton(button);
+		this.growingState = 0;
 	}
 
+	@Override
+	public int getConstructionCost() {
+		return 300;
+	}
+
+	@Override
+	public int getDestructionGain() {
+		return 100;
+	}
+
+	public void plantSeed(Grain seed) {
+		this.plantedSeed = seed;
+	}
+
+	public boolean hasSeedGrown() {
+		if (this.plantedSeed == null)
+			return false;
+		return (this.growingState >= this.plantedSeed.getGrowingTime());
+	}
+
+	public void growSeed() {
+		if (plantedSeed != null && !hasSeedGrown()) {
+			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
+			this.growingState++;
+		}
+	}
+
+	private void attemptToPlant(int i, ServerInteraction server) {
+		Map map = (Map) getParent();
+		// ERREUR (renvoie tjrs 0)
+		boolean res = server.requestPlantSeed(getGridX(), getGridY(), server.getInventory().getSeeds()[i]);
+		// System.out.println(server.getInventory().getSeeds()[i].getId());
+		// Todo Fix cette merde
+		System.out.println("Could plant seed of id " + i + " at " + getGridX() + ", " + getGridY() + ": " + res);
+		Map serverMap = server.getMap();
+		serverMap.updateActors();
+		Stage stage = getStage();
+		map.remove();
+		stage.addActor(serverMap);
+	}
+
+	public Plant harvest() {
+		if (hasSeedGrown()) {
+			this.growingState = 0;
+			return plantedSeed.getGrownPlant();
+		}
+		return null;
+	}
+
+	@Override
+	public void passTurn() {
+		this.growSeed();
+	}
 
 }

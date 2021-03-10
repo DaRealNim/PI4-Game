@@ -45,7 +45,7 @@ public class ServerInteraction {
 
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
 		Structure structBlock = map.getStructAt(x, y);
-
+		System.out.println(seed.getId());
 		if (structBlock instanceof Field && inv.hasGrain(seed)
 			&& structBlock != null)
 		{

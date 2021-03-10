@@ -1,7 +1,7 @@
 package com.pi4.mgmtgame.resources;
 
 public class PotatoSeeds extends Grain {
-	final int id = 4;
+	final int id = 1;
 	int growingTime = 1;
 	static int potatoSeedPrice = basePrice;
 	
