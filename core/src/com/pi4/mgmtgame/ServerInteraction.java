@@ -98,6 +98,7 @@ public class ServerInteraction {
 					currBlock.passTurn();
 			}
 		}
+		System.out.println(this.inv);
 	}
 
 

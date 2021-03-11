@@ -27,42 +27,42 @@ public class Inventory {
 		seeds[1]=new PotatoSeeds();
 		seeds[2]=new CarrotSeeds();
 		seeds[3]=new TreeSeeds();
-		money = 1000;
+		money = 2000;
 		for(int i=0;i<4;i++)
-			seeds[i].addVolume(1);
+			seeds[i].addVolume(2);
 	}
-	
+
 	public Inventory (Plant[] plantArray, Grain[] grainArray, int money) {
 		plants = new Plant[10];
 		seeds = new Grain[10];
 		this.money = money;
 	}
-	
-	
+
+
 	public void removePlant(int id, int value) {
 		this.plants[id].subVolume(value);
 	}
-	
+
 	public void addPlant(int id, int value) {
 		this.plants[id].addVolume(value);
 	}
-	
+
 	public void removeGrain(int id, int value) {
 		this.seeds[id].subVolume(value);
 	}
-	
+
 	public void addGrain(int id, int value) {
 		this.seeds[id].addVolume(value);
 	}
-	
+
 	public void giveMoney(int value) {
 		this.money -= value;
 	}
-	
+
 	public void receiveMoney(int value) {
 		this.money += value;
 	}
-	
+
 	public int getMoney() {
 		return money;
 	}
@@ -73,7 +73,7 @@ public class Inventory {
 	public boolean hasGrain(int i) {
 		return (this.seeds[i].getVolume() > 0);
 	}
-	
+
 	public boolean hasPlant(Plant plant) {
 		return (this.plants[plant.getId()].getVolume() > 0);
 	}
@@ -86,5 +86,10 @@ public class Inventory {
 	}
 	public Plant[] getPlants() {
 		return plants;
+	}
+
+	@Override
+	public String toString() {
+		return this.money+"$\nWheat seeds: "+this.seeds[0].getVolume()+"\nPotato seeds: "+this.seeds[1].getVolume()+"\nCarrot seeds: "+this.seeds[2].getVolume();
 	}
 }
