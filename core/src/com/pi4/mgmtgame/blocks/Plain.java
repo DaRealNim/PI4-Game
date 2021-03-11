@@ -65,6 +65,6 @@ public class Plain extends Environment {
 
     @Override
     public void passTurn() {
-    	System.out.println("Nothing to do at (" + super.getGridX() + "," + super.getGridY() + ")");
+    	// System.out.println("Nothing to do at (" + super.getGridX() + "," + super.getGridY() + ")");
 	}
 }

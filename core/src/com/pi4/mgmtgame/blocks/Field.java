@@ -137,6 +137,9 @@ public class Field extends Structure {
 		if (plantedSeed != null && !hasSeedGrown()) {
 			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
 			this.growingState++;
+			if (hasSeedGrown()) {
+				changeStyle(plantedSeed.getFieldSpriteName() + "_grew");
+			}
 		}
 	}
 
