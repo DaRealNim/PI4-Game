@@ -1,16 +1,14 @@
 package com.pi4.mgmtgame.resources;
 
 public class PotatoSeeds extends Grain {
-	final int id = 1;
-	int growingTime = 1;
 	static int potatoSeedPrice = basePrice;
-	
+
 	public Plant getGrownPlant() {
 		return new Potato();
 	}
-	
+
 	public int getGrowingTime() {
-		return growingTime;
+		return 3;
 	}
 	public void addPrice(int p) {
 		potatoSeedPrice += p;
@@ -21,5 +19,13 @@ public class PotatoSeeds extends Grain {
 	}
 	public int getPrice() {
 		return potatoSeedPrice;
+	}
+
+	public int getId() {
+		return 1;
+	}
+
+	public String getFieldSpriteName() {
+		return "field_potatoes";
 	}
 }

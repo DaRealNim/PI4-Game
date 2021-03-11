@@ -1,14 +1,13 @@
 package com.pi4.mgmtgame.resources;
 
 public class TreeSeeds extends Grain {
-	final int id = 3;
 	int growingTime = 1;
 	static int treeSeedPrice = basePrice;
-	
+
 	public Plant getGrownPlant() {
 		return new Wood();
 	}
-	
+
 	public int getGrowingTime() {
 		return growingTime;
 	}
@@ -21,5 +20,13 @@ public class TreeSeeds extends Grain {
 	}
 	public int getPrice() {
 		return treeSeedPrice;
+	}
+
+	public int getId() {
+		return 3;
+	}
+
+	public String getFieldSpriteName() {
+		return "none";
 	}
 }
