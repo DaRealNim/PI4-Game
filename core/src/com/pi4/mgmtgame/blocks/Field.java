@@ -22,12 +22,13 @@ public class Field extends Structure {
 
 	public Field(int x, int y, final AssetManager manager, final ServerInteraction server) {
 		super(x, y, manager);
-		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_wheat");
+		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
 		button.setX(x * 16);
 		button.setY(y * 16);
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Clicked Field!");
 				Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
 				Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
 				Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
@@ -60,6 +61,7 @@ public class Field extends Structure {
 							public void clicked(InputEvent event, float x, float y) {
 								attemptToPlant(0, server);
 								d.remove();
+                                p.remove();
 							}
 						});
 
@@ -68,6 +70,7 @@ public class Field extends Structure {
 							public void clicked(InputEvent event, float x, float y) {
 								attemptToPlant(1, server);
 								d.remove();
+                                p.remove();
 							}
 						});
 
@@ -76,6 +79,7 @@ public class Field extends Structure {
 							public void clicked(InputEvent event, float x, float y) {
 								attemptToPlant(2, server);
 								d.remove();
+                                p.remove();
 							}
 						});
 
@@ -116,6 +120,7 @@ public class Field extends Structure {
 
 	public void plantSeed(Grain seed) {
 		this.plantedSeed = seed;
+        changeStyle(seed.getFieldSpriteName());
 	}
 
 	public boolean hasSeedGrown() {
@@ -123,6 +128,10 @@ public class Field extends Structure {
 			return false;
 		return (this.growingState >= this.plantedSeed.getGrowingTime());
 	}
+
+    public boolean hasSeed() {
+        return (this.plantedSeed != null);
+    }
 
 	public void growSeed() {
 		if (plantedSeed != null && !hasSeedGrown()) {
@@ -135,7 +144,7 @@ public class Field extends Structure {
 		Map map = (Map) getParent();
 		// ERREUR (renvoie tjrs 0)
 		boolean res = server.requestPlantSeed(getGridX(), getGridY(), server.getInventory().getSeeds()[i]);
-		// System.out.println(server.getInventory().getSeeds()[i].getId());
+		System.out.println(server.getInventory().getSeeds()[i].getId());
 		// Todo Fix cette merde
 		System.out.println("Could plant seed of id " + i + " at " + getGridX() + ", " + getGridY() + ": " + res);
 		Map serverMap = server.getMap();

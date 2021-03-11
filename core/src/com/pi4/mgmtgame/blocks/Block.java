@@ -19,14 +19,24 @@ public class Block extends Group {
     }
 
     public void setButton(Button b) {
-        clearChildren();
+        clear();
         addActor(b);
         this.displayedButton = b;
+    }
+
+    public Button getButton() {
+        return this.displayedButton;
     }
 
     public void updateActors() {
         clear();
         addActor(this.displayedButton);
+    }
+
+    public void changeStyle(String styleName) {
+        if (this.displayedButton != null) {
+            getButton().setStyle(getButton().getSkin().get(styleName, Button.ButtonStyle.class));
+        }
     }
 
     //Commented for now because just adding blocks as group children work, but may need

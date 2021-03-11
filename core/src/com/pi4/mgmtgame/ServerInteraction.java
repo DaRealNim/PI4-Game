@@ -29,11 +29,11 @@ public class ServerInteraction {
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
-		Environment envBlock = map.getEnvironmentAt(x, y);		
-		
-		if (envBlock.canBuild(struct) 
+		Environment envBlock = map.getEnvironmentAt(x, y);
+
+		if (envBlock.canBuild(struct)
 			&& inv.getMoney() >= struct.getConstructionCost()
-			&& envBlock != null) 
+			&& envBlock != null)
 		{
 			map.setStructAt(x, y, struct);
 			inv.giveMoney(struct.getConstructionCost());
@@ -45,13 +45,16 @@ public class ServerInteraction {
 
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
 		Structure structBlock = map.getStructAt(x, y);
-		System.out.println(seed.getId());
+		System.out.println("Seed id: "+seed.getId());
 		if (structBlock instanceof Field && inv.hasGrain(seed)
 			&& structBlock != null)
 		{
-			((Field) structBlock).plantSeed(seed);
-			inv.removeGrain(seed.getId(), 1);
-			return (true);
+			if (!((Field) structBlock).hasSeed())
+			{
+				((Field) structBlock).plantSeed(seed);
+				inv.removeGrain(seed.getId(), 1);
+				return (true);
+			}
 		}
 
 		return (false);
