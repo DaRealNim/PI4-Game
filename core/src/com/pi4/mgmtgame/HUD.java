@@ -4,10 +4,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pi4.mgmtgame.resources.Grain;
+import com.pi4.mgmtgame.resources.Plant;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.assets.AssetManager;
@@ -24,14 +28,21 @@ public class HUD {
     private Button passTurnButton;
     private AssetManager manager;
     private ServerInteraction server;
+    private Label moneyLabel, grainLabel, seedLabel;
+    private Inventory inv;
+    String seedLabelText;
+    String grainLabelText; 
 
 
     public HUD (AssetManager man, ServerInteraction server) {
       this.manager = man;
+      this.server = server;
+      this.inv = server.getInventory();
+      
       viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, new OrthographicCamera());
       stage = new Stage(viewport);
+      
       this.show();
-      this.server = server;
     }
 
     public void show() {
@@ -40,6 +51,26 @@ public class HUD {
       passTurnButton = new Button(buttonSkins, "passTurn");
       passTurnButton.setZIndex(1);
 
+      moneyLabel = new Label("DOLLA BILLZ: " + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      
+      seedLabelText = "";
+      grainLabelText = "";
+  	
+      for (Grain seed : inv.getSeeds())
+      {
+    	  if (seed != null)
+    	  seedLabelText += seed.toString() + ": " + seed.getVolume() + "  \n";
+      }
+       
+      for (Plant plant : inv.getPlants())
+      {
+    	  if (plant != null)
+    	  grainLabelText += plant.toString() + ": " + plant.getVolume() + "  \n";
+      }
+      
+      grainLabel = new Label(grainLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      seedLabel = new Label(seedLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      
       passTurnButton.addListener(new ClickListener(){
               @Override
               public void clicked(InputEvent event, float x, float y) {
@@ -53,13 +84,15 @@ public class HUD {
       table.top();
       table.setFillParent(true);
 
-      table.add(passTurnButton).padTop(10).expandX();
-
+      table.add(passTurnButton).center().expandX();
+      table.add(moneyLabel).center().expandX();
+      table.add(grainLabel).left().expandX();
+      table.add(seedLabel).right().expandX().padRight(40);
+      
       stage.addActor(table);
     }
 
     public void update() {
-      //update the values when we have values to update, probably get Inventory in the constructor somewhere
     }
 
     public void dispose() {

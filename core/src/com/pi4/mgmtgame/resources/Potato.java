@@ -1,6 +1,6 @@
 package com.pi4.mgmtgame.resources;
 
-public class Potato extends Plant{
+public class Potato extends Plant {
 	static final int basePrice = 1;
 	static int potatoPrice = basePrice;
 
@@ -19,6 +19,8 @@ public class Potato extends Plant{
 	public int getId() {
 		return 1;
 	}
-
-
+	
+	public String toString() {
+		return ("Potato");
+	}
 }

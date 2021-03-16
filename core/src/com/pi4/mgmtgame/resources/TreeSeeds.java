@@ -29,4 +29,8 @@ public class TreeSeeds extends Grain {
 	public String getFieldSpriteName() {
 		return "none";
 	}
+	
+	public String toString() {
+		return ("Tree Seeds");
+	}
 }

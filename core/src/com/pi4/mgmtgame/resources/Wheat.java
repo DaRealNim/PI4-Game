@@ -19,4 +19,8 @@ public class Wheat extends Plant {
 	public int getId() {
 		return 0;
 	}
+	
+	public String toString() {
+		return ("Wheat");
+	}
 }

@@ -19,4 +19,8 @@ public class Wood extends Plant {
 	public int getId() {
 		return 3;
 	}
+	
+	public String toString() {
+		return ("Wood");
+	}
 }

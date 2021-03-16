@@ -28,4 +28,8 @@ public class PotatoSeeds extends Grain {
 	public String getFieldSpriteName() {
 		return "field_potatoes";
 	}
+	
+	public String toString() {
+		return ("Potato Seeds");
+	}
 }

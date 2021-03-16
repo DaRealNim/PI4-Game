@@ -17,18 +17,22 @@ public class Inventory {
 	private Grain[] seeds;
 
 	public Inventory () {
+		
 		plants = new Plant[10];
-		plants[0]=new Wheat();
-		plants[1]=new Potato();
-		plants[2]=new Carrot();
-		plants[3]=new Wood();
+		plants[0] = new Wheat();
+		plants[1] = new Potato();
+		plants[2] = new Carrot();
+		plants[3] = new Wood();
+		
 		seeds = new Grain[10];
-		seeds[0]=new WheatSeeds();
-		seeds[1]=new PotatoSeeds();
-		seeds[2]=new CarrotSeeds();
-		seeds[3]=new TreeSeeds();
+		seeds[0] = new WheatSeeds();
+		seeds[1] = new PotatoSeeds();
+		seeds[2] = new CarrotSeeds();
+		seeds[3] = new TreeSeeds();
+		
 		money = 2000;
-		for(int i=0;i<4;i++)
+		
+		for(int i = 0; i < 4; i++)
 			seeds[i].addVolume(2);
 	}
 

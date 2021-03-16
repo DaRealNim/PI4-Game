@@ -19,4 +19,8 @@ public class Carrot extends Plant{
 	public int getId() {
 		return 2;
 	}
+	
+	public String toString() {
+		return ("Carrot");
+	}
 }
