@@ -86,12 +86,17 @@ public class Field extends Structure {
 					}
 				});
 
-				buttonHarvest.addListener(new ClickListener() {
-					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						p.remove();
-					}
-				});
+				if(server.canHarvest(getGridX(), getGridY())) {
+					buttonHarvest.addListener(new ClickListener() {
+						@Override
+						public void clicked(InputEvent event, float x, float y) {
+							p.remove();
+						}
+					});
+				} else {
+					buttonHarvest.getColor().a = (float)0.3;
+				}
+
 				buttonDestroy.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {

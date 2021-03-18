@@ -28,12 +28,15 @@ public class ServerInteraction {
 		return turn;
 	}
 
-	public boolean requestBuildStructure(int x, int y, Structure struct) {
+	public boolean canBuildStructure(int x, int y, Structure struct) {
 		Environment envBlock = map.getEnvironmentAt(x, y);
+		return (envBlock.canBuild(struct)
+				&& inv.getMoney() >= struct.getConstructionCost()
+				&& envBlock != null);
+	}
 
-		if (envBlock.canBuild(struct)
-			&& inv.getMoney() >= struct.getConstructionCost()
-			&& envBlock != null)
+	public boolean requestBuildStructure(int x, int y, Structure struct) {
+		if (canBuildStructure(x, y, struct))
 		{
 			map.setStructAt(x, y, struct);
 			inv.giveMoney(struct.getConstructionCost());
@@ -60,20 +63,25 @@ public class ServerInteraction {
 		return (false);
 	}
 
+	public boolean canHarvest(int x, int y) {
+		Structure structBlock = map.getStructAt(x, y);
+		if (structBlock instanceof Field && structBlock != null) {
+			Field fieldBlock = (Field) structBlock;
+			return (fieldBlock.hasSeedGrown());
+		} else return false;
+	}
+
 	public boolean requestHarvest(int x, int y) {
 		Structure structBlock = map.getStructAt(x, y);
 		Plant harvested;
 		Field fieldBlock;
 
-		if (structBlock instanceof Field && structBlock != null) {
-			fieldBlock = (Field) structBlock;
-
-			if (fieldBlock.hasSeedGrown()) {
+		if(canHarvest(x, y)) {
+				fieldBlock = (Field) structBlock;
 				harvested = fieldBlock.harvest();
 				harvested.addVolume(4);
 				inv.addPlant(harvested.getId(), harvested.getVolume());
-			}
-			return (true);
+				return (true);
 		}
 		return (false);
 	}
