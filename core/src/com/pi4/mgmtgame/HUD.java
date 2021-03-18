@@ -1,6 +1,7 @@
 package com.pi4.mgmtgame;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,6 +13,7 @@ import com.pi4.mgmtgame.resources.Plant;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.assets.AssetManager;
@@ -68,6 +70,8 @@ public class HUD {
 
     public void show() {
       Skin buttonSkins = manager.get("hudButtons/hudButton.json", Skin.class);
+      Texture backgroundTexture = manager.get("hudButtons/hudBackground.png", Texture.class);
+      Image background = new Image(backgroundTexture);
 
       passTurnButton = new Button(buttonSkins, "passTurn");
       passTurnButton.setZIndex(1);
@@ -100,16 +104,22 @@ public class HUD {
               }
           });
 
-      Table table = new Table();
-
+      Table table = new Table().padTop(8);
       table.top();
       table.setFillParent(true);
+
+      background.setHeight(background.getHeight()*4);
+      background.setWidth(background.getWidth()*4);
+      background.setY(ManagementGame.HEIGHT - background.getHeight());
+
+
 
       table.add(passTurnButton).center().expandX();
       table.add(moneyLabel).center().expandX();
       table.add(grainLabel).left().expandX();
       table.add(seedLabel).right().expandX().padRight(40);
 
+      stage.addActor(background);
       stage.addActor(table);
     }
 
