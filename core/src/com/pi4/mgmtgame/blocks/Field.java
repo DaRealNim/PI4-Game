@@ -21,6 +21,7 @@ public class Field extends Structure {
 	private int growingState;
 
 	public Field(int x, int y, final AssetManager manager, final ServerInteraction server) {
+		
 		super(x, y, manager);
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
 		button.setX(x * 16);

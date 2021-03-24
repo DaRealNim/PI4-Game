@@ -15,9 +15,9 @@ public class Inventory {
 	private int money;
 	private Plant[] plants;
 	private Grain[] seeds;
-
-	public Inventory () {
-		
+	private int invID;
+	public Inventory (int x) {
+		invID=x;
 		plants = new Plant[10];
 		plants[0] = new Wheat();
 		plants[1] = new Potato();
@@ -91,6 +91,11 @@ public class Inventory {
 	public Plant[] getPlants() {
 		return plants;
 	}
+	
+	public int getinvID() {
+		return invID;
+	}
+	
 
 	@Override
 	public String toString() {
