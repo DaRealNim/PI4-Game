@@ -21,7 +21,7 @@ public class Field extends Structure {
 	private int growingState;
 
 	public Field(int x, int y, final AssetManager manager, final ServerInteraction server) {
-		
+
 		super(x, y, manager);
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
 		button.setX(x * 16);
@@ -30,83 +30,84 @@ public class Field extends Structure {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Clicked Field!");
-				Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
-				Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
-				Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-				final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant,
-						buttonHarvest, buttonDestroy);
-				buttonPlant.addListener(new ClickListener() {
-					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						Button[] buttons = new Button[5];
-						Button plantWheat = new Button(manager.get("popupIcons/popup.json", Skin.class),
-								"wheatseeds_icon");
-						Button plantPotato = new Button(manager.get("popupIcons/popup.json", Skin.class),
-								"potatoseeds_icon");
-						Button plantCarrot = new Button(manager.get("popupIcons/popup.json", Skin.class),
-								"carrotseeds_icon");
-						if (server.getInventory().hasGrain(0))
-							buttons[0] = plantWheat;
+				if (testOwner(server.getInternalTurn())) {
+					Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
+					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
+					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
+					final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant,
+							buttonHarvest, buttonDestroy);
+					buttonPlant.addListener(new ClickListener() {
+						@Override
+						public void clicked(InputEvent event, float x, float y) {
+							Button[] buttons = new Button[5];
+							Button plantWheat = new Button(manager.get("popupIcons/popup.json", Skin.class),
+									"wheatseeds_icon");
+							Button plantPotato = new Button(manager.get("popupIcons/popup.json", Skin.class),
+									"potatoseeds_icon");
+							Button plantCarrot = new Button(manager.get("popupIcons/popup.json", Skin.class),
+									"carrotseeds_icon");
+							if (server.getInventory().hasGrain(0))
+								buttons[0] = plantWheat;
 
-						if (server.getInventory().hasGrain(1))
-							buttons[1] = plantPotato;
+							if (server.getInventory().hasGrain(1))
+								buttons[1] = plantPotato;
 
-						if (server.getInventory().hasGrain(2))
-							buttons[2] = plantCarrot;
+							if (server.getInventory().hasGrain(2))
+								buttons[2] = plantCarrot;
 
-						final Popup d = new Popup((getGridX() - 2) * 16 - 12, (getGridY() + 1) * 16 + 12, manager,buttons);
-						getStage().addActor(d);
+							final Popup d = new Popup((getGridX() - 2) * 16 - 12, (getGridY() + 1) * 16 + 12, manager,buttons);
+							getStage().addActor(d);
 
-						plantWheat.addListener(new ClickListener() {
+							plantWheat.addListener(new ClickListener() {
+								@Override
+								public void clicked(InputEvent event, float x, float y) {
+									attemptToPlant(0, server);
+									d.remove();
+	                                p.remove();
+								}
+							});
+
+							plantPotato.addListener(new ClickListener() {
+								@Override
+								public void clicked(InputEvent event, float x, float y) {
+									attemptToPlant(1, server);
+									d.remove();
+	                                p.remove();
+								}
+							});
+
+							plantCarrot.addListener(new ClickListener() {
+								@Override
+								public void clicked(InputEvent event, float x, float y) {
+									attemptToPlant(2, server);
+									d.remove();
+	                                p.remove();
+								}
+							});
+
+						}
+					});
+
+					if(server.canHarvest(getGridX(), getGridY())) {
+						buttonHarvest.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
-								attemptToPlant(0, server);
-								d.remove();
-                                p.remove();
+								p.remove();
 							}
 						});
-
-						plantPotato.addListener(new ClickListener() {
-							@Override
-							public void clicked(InputEvent event, float x, float y) {
-								attemptToPlant(1, server);
-								d.remove();
-                                p.remove();
-							}
-						});
-
-						plantCarrot.addListener(new ClickListener() {
-							@Override
-							public void clicked(InputEvent event, float x, float y) {
-								attemptToPlant(2, server);
-								d.remove();
-                                p.remove();
-							}
-						});
-
+					} else {
+						buttonHarvest.getColor().a = (float)0.3;
 					}
-				});
 
-				if(server.canHarvest(getGridX(), getGridY())) {
-					buttonHarvest.addListener(new ClickListener() {
+					buttonDestroy.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
 							p.remove();
 						}
 					});
-				} else {
-					buttonHarvest.getColor().a = (float)0.3;
+
+					getStage().addActor(p);
 				}
-
-				buttonDestroy.addListener(new ClickListener() {
-					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						p.remove();
-					}
-				});
-
-				getStage().addActor(p);
-
 			}
 		});
 

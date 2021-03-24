@@ -10,12 +10,14 @@ public class ServerInteraction {
 	private Inventory[] invArray = new Inventory[5];
 	private Inventory inv;
 	private int turn;
+	private int internalTurn;
 	public int currentPlayer;
 
 	public ServerInteraction(Inventory[] inv, AssetManager manager) {
 		this.map = new Map(10, 10, manager, this);
 		this.invArray = inv;
 		this.turn = 0;
+		this.internalTurn = 0;
 		this.inv = invArray[0];
 	}
 
@@ -29,6 +31,10 @@ public class ServerInteraction {
 
 	public int getTurn() {
 		return turn;
+	}
+
+	public int getInternalTurn() {
+		return internalTurn;
 	}
 
 	public boolean canBuildStructure(int x, int y, Structure struct) {
@@ -90,19 +96,23 @@ public class ServerInteraction {
 		int widthIndex;
 		int heightIndex;
 		Block currBlock;
-		turn++;
+		internalTurn++;
 		// à modifier
-		inv = invArray[turn % 5];
-		currentPlayer = turn % 5;
-		for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {
-			for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) {
-				currBlock = map.getEnvironmentAt(heightIndex, widthIndex);
-				if (currBlock != null)
-					currBlock.passTurn();
+		inv = invArray[internalTurn % 5];
+		currentPlayer = internalTurn % 5;
+		if (internalTurn == 5) {
+			turn++;
+			internalTurn = 0;
+			for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {
+				for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) {
+					currBlock = map.getEnvironmentAt(heightIndex, widthIndex);
+					if (currBlock != null)
+						currBlock.passTurn();
 
-				currBlock = map.getStructAt(heightIndex, widthIndex);
-				if (currBlock != null)
-					currBlock.passTurn();
+					currBlock = map.getStructAt(heightIndex, widthIndex);
+					if (currBlock != null)
+						currBlock.passTurn();
+				}
 			}
 		}
 		System.out.println(this.inv);

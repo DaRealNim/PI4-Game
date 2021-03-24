@@ -35,7 +35,7 @@ public class MainGameScreen implements Screen	{
 	AssetManager manager;
 	Map map;
 	private Viewport viewport;
-	private OrthographicCamera camera;
+	private final OrthographicCamera camera;
 	private SpriteBatch batch;
 	private HUD hud;
 	private InputMultiplexer multiplexer;
@@ -47,10 +47,22 @@ public class MainGameScreen implements Screen	{
 		this.game = game;
 		this.manager = manager;
 		this.batch = game.batch;
-		this.multiplexer = new InputMultiplexer();
 		this.server = server;
 
 		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
+
+		this.multiplexer = new InputMultiplexer() {
+			@Override
+			public boolean scrolled(float amountX, float amountY) {
+				if (amountY > 0) {
+					camera.zoom = Math.min(2, camera.zoom+.2f);
+				}
+				if (amountY < 0) {
+					camera.zoom = Math.max(0.1f, camera.zoom-.2f);
+				}
+				return true;
+			}
+		};
 
 		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
 		viewport.apply();

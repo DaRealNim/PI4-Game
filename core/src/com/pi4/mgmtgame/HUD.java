@@ -30,7 +30,7 @@ public class HUD {
     private Button passTurnButton;
     private AssetManager manager;
     private ServerInteraction server;
-    private Label moneyLabel, grainLabel, seedLabel;
+    private Label moneyLabel, grainLabel, seedLabel, turnLabel, internalTurnLabel;
     private Inventory inv;
     String seedLabelText;
     String grainLabelText;
@@ -48,6 +48,7 @@ public class HUD {
     }
 
     public void updateLabels() {
+        this.inv = server.getInventory();
         seedLabelText = "";
         grainLabelText = "";
 
@@ -64,6 +65,8 @@ public class HUD {
         }
 
         moneyLabel.setText("DOLLA BILLZ: " + inv.getMoney());
+        turnLabel.setText("Month : " + server.getTurn());
+        internalTurnLabel.setText("Tour du joueur : " + server.getInternalTurn());
         seedLabel.setText(seedLabelText);
         grainLabel.setText(grainLabelText);
     }
@@ -77,6 +80,8 @@ public class HUD {
       passTurnButton.setZIndex(1);
 
       moneyLabel = new Label("DOLLA BILLZ: " + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      turnLabel = new Label("Month : " + server.getTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      internalTurnLabel = new Label("Tour du joueur : " + server.getInternalTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
       seedLabelText = "";
       grainLabelText = "";
@@ -116,6 +121,8 @@ public class HUD {
 
       table.add(passTurnButton).center().expandX();
       table.add(moneyLabel).center().expandX();
+      table.add(turnLabel).center().expandX();
+      table.add(internalTurnLabel).center().expandX();
       table.add(grainLabel).left().expandX();
       table.add(seedLabel).right().expandX().padRight(40);
 
