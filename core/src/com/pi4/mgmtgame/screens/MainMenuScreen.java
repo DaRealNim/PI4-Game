@@ -31,7 +31,7 @@ public class MainMenuScreen implements Screen {
   	private OrthographicCamera camera;
 	private AssetManager manager;
 	ManagementGame game;
-	private int nbOfPlayers=5;
+	private int nbOfPlayers=3;
 
 	public MainMenuScreen(ManagementGame game, AssetManager manager) {
 		this.game = game;

@@ -36,57 +36,62 @@ public class Field extends Structure {
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant,
 							buttonHarvest, buttonDestroy);
-					buttonPlant.addListener(new ClickListener() {
-						@Override
-						public void clicked(InputEvent event, float x, float y) {
-							Button[] buttons = new Button[5];
-							Button plantWheat = new Button(manager.get("popupIcons/popup.json", Skin.class),
-									"wheatseeds_icon");
-							Button plantPotato = new Button(manager.get("popupIcons/popup.json", Skin.class),
-									"potatoseeds_icon");
-							Button plantCarrot = new Button(manager.get("popupIcons/popup.json", Skin.class),
-									"carrotseeds_icon");
-							if (server.getInventory().hasGrain(0))
-								buttons[0] = plantWheat;
+					if (!hasSeed()) {
+						buttonPlant.getColor().a = (float)1;
+						buttonPlant.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								Button[] buttons = new Button[5];
+								Button plantWheat = new Button(manager.get("popupIcons/popup.json", Skin.class),
+										"wheatseeds_icon");
+								Button plantPotato = new Button(manager.get("popupIcons/popup.json", Skin.class),
+										"potatoseeds_icon");
+								Button plantCarrot = new Button(manager.get("popupIcons/popup.json", Skin.class),
+										"carrotseeds_icon");
+								if (server.getInventory().hasGrain(0))
+									buttons[0] = plantWheat;
 
-							if (server.getInventory().hasGrain(1))
-								buttons[1] = plantPotato;
+								if (server.getInventory().hasGrain(1))
+									buttons[1] = plantPotato;
 
-							if (server.getInventory().hasGrain(2))
-								buttons[2] = plantCarrot;
+								if (server.getInventory().hasGrain(2))
+									buttons[2] = plantCarrot;
 
-							final Popup d = new Popup((getGridX() - 2) * 16 - 12, (getGridY() + 1) * 16 + 12, manager,buttons);
-							getStage().addActor(d);
+								final Popup d = new Popup((getGridX() - 2) * 16 - 12, (getGridY() + 1) * 16 + 12, manager,buttons);
+								getStage().addActor(d);
 
-							plantWheat.addListener(new ClickListener() {
-								@Override
-								public void clicked(InputEvent event, float x, float y) {
-									attemptToPlant(0, server);
-									d.remove();
-	                                p.remove();
-								}
-							});
+								plantWheat.addListener(new ClickListener() {
+									@Override
+									public void clicked(InputEvent event, float x, float y) {
+										attemptToPlant(0, server);
+										d.remove();
+		                                p.remove();
+									}
+								});
 
-							plantPotato.addListener(new ClickListener() {
-								@Override
-								public void clicked(InputEvent event, float x, float y) {
-									attemptToPlant(1, server);
-									d.remove();
-	                                p.remove();
-								}
-							});
+								plantPotato.addListener(new ClickListener() {
+									@Override
+									public void clicked(InputEvent event, float x, float y) {
+										attemptToPlant(1, server);
+										d.remove();
+		                                p.remove();
+									}
+								});
 
-							plantCarrot.addListener(new ClickListener() {
-								@Override
-								public void clicked(InputEvent event, float x, float y) {
-									attemptToPlant(2, server);
-									d.remove();
-	                                p.remove();
-								}
-							});
+								plantCarrot.addListener(new ClickListener() {
+									@Override
+									public void clicked(InputEvent event, float x, float y) {
+										attemptToPlant(2, server);
+										d.remove();
+		                                p.remove();
+									}
+								});
 
-						}
-					});
+							}
+						});
+					} else {
+						buttonPlant.getColor().a = (float)0.3;
+					}
 
 					if(server.canHarvest(getGridX(), getGridY())) {
 						buttonHarvest.addListener(new ClickListener() {
@@ -171,7 +176,9 @@ public class Field extends Structure {
 	public Plant harvest() {
 		if (hasSeedGrown()) {
 			this.growingState = 0;
-			return plantedSeed.getGrownPlant();
+			Plant grown = plantedSeed.getGrownPlant();
+			plantedSeed = null;
+			return grown;
 		}
 		return null;
 	}
