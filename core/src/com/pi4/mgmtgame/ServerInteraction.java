@@ -118,5 +118,4 @@ public class ServerInteraction {
 		System.out.println(this.inv);
 		System.out.println(turn);
 	}
-
 }
