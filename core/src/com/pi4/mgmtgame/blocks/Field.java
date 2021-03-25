@@ -92,6 +92,8 @@ public class Field extends Structure {
 						buttonHarvest.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
+								server.requestHarvest(getGridX(), getGridY());
+								changeStyle("field_empty");
 								p.remove();
 							}
 						});
@@ -102,6 +104,8 @@ public class Field extends Structure {
 					buttonDestroy.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
+							server.requestDestroyStructure(getGridX(), getGridY());
+							remove();
 							p.remove();
 						}
 					});

@@ -55,6 +55,11 @@ public class ServerInteraction {
 
 		return (false);
 	}
+	
+	public boolean canDestroyStructure(int x, int y) {
+	    Structure structBlock = map.getStructAt(x, y);
+	    return (structBlock != null && structBlock.testOwner(currentPlayer));
+	}
 
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
 		Structure structBlock = map.getStructAt(x, y);
@@ -68,6 +73,15 @@ public class ServerInteraction {
 			}
 		}
 
+		return (false);
+	}
+	
+	public boolean requestDestroyStructure(int x, int y) {
+		if (canDestroyStructure(x, y)) {
+			map.setStructAt(x, y, null);
+			return (true);
+		}
+		
 		return (false);
 	}
 
