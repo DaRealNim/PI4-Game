@@ -78,7 +78,9 @@ public class ServerInteraction {
 	
 	public boolean requestDestroyStructure(int x, int y) {
 		if (canDestroyStructure(x, y)) {
+			inv.receiveMoney((map.getStructAt(x, y).getConstructionCost()*30)/100);
 			map.setStructAt(x, y, null);
+			
 			return (true);
 		}
 		
