@@ -7,18 +7,22 @@ import com.pi4.mgmtgame.resources.Plant;
 
 public class ServerInteraction {
 	private Map map;
-	private Inventory[] invArray = new Inventory[5];
+	private Inventory[] invArray;
 	private Inventory inv;
 	private int turn;
 	private int internalTurn;
 	public int currentPlayer;
+	private int nbOfPlayers;
 
-	public ServerInteraction(Inventory[] inv, AssetManager manager) {
+	public ServerInteraction(Inventory[] inv, AssetManager manager, int nbOfPlayers) {
 		this.map = new Map(10, 10, manager, this);
+		this.nbOfPlayers = nbOfPlayers;
+		this.invArray = new Inventory[nbOfPlayers];
 		this.invArray = inv;
 		this.turn = 0;
 		this.internalTurn = 0;
 		this.inv = invArray[0];
+
 	}
 
 	public Map getMap() {
@@ -55,7 +59,8 @@ public class ServerInteraction {
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
 		Structure structBlock = map.getStructAt(x, y);
 		System.out.println("Seed id: " + seed.getId());
-		if (structBlock instanceof Field && inv.hasGrain(seed) && structBlock != null && structBlock.testOwner(currentPlayer)) {
+		if (structBlock instanceof Field && inv.hasGrain(seed) && structBlock != null
+				&& structBlock.testOwner(currentPlayer)) {
 			if (!((Field) structBlock).hasSeed()) {
 				((Field) structBlock).plantSeed(seed);
 				inv.removeGrain(seed.getId(), 1);
@@ -98,9 +103,9 @@ public class ServerInteraction {
 		Block currBlock;
 		internalTurn++;
 		// à modifier
-		inv = invArray[internalTurn % 5];
-		currentPlayer = internalTurn % 5;
-		if (internalTurn == 5) {
+		inv = invArray[internalTurn % nbOfPlayers];
+		currentPlayer = internalTurn % nbOfPlayers;
+		if (internalTurn == nbOfPlayers) {
 			turn++;
 			internalTurn = 0;
 			for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {

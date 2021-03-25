@@ -31,6 +31,7 @@ public class MainMenuScreen implements Screen {
   	private OrthographicCamera camera;
 	private AssetManager manager;
 	ManagementGame game;
+	private int nbOfPlayers=5;
 
 	public MainMenuScreen(ManagementGame game, AssetManager manager) {
 		this.game = game;
@@ -76,10 +77,10 @@ public class MainMenuScreen implements Screen {
             	stage.clear();
             	stage.dispose();
 
-            	Inventory[] inv = new Inventory[5];
-            	for(int i = 0;i<5;i++)
+            	Inventory[] inv = new Inventory[nbOfPlayers];
+            	for(int i = 0;i<nbOfPlayers;i++)
         			inv[i]= new Inventory(i);
-            	ServerInteraction server = new ServerInteraction(inv, manager);
+            	ServerInteraction server = new ServerInteraction(inv, manager,nbOfPlayers);
 
             	game.setScreen(new MainGameScreen(game, manager, server));
             }
