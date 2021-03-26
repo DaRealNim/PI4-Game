@@ -74,14 +74,20 @@ public class HUD {
 
     public void show() {
       Skin buttonSkins = manager.get("hudButtons/hudButton.json", Skin.class);
-      
+
       Texture backgroundTexture = manager.get("hudButtons/hudBackground.png", Texture.class);
       Image background = new Image(backgroundTexture);
 
       passTurnButton = new Button(buttonSkins, "passTurn");
       passTurnButton.setZIndex(1);
       marketButton = new Button(buttonSkins, "shopButton");
-      
+
+      passTurnButton.setTransform(true);
+      passTurnButton.setScale(2);
+
+      marketButton.setTransform(true);
+      marketButton.setScale(2);
+
 
       moneyLabel = new Label("DOLLA BILLZ: " + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
       turnLabel = new Label("Month : " + server.getTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -112,7 +118,7 @@ public class HUD {
                   System.out.println("Passed a turn!");
               }
           });
-      
+
       marketButton.addListener(new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
@@ -129,9 +135,8 @@ public class HUD {
       background.setWidth(background.getWidth()*4);
       background.setY(ManagementGame.HEIGHT - background.getHeight());
 
-
-      table.add(marketButton).center().expandX();
-      table.add(passTurnButton).center().expandX();
+      table.add(marketButton).center().expandX().padTop(40);
+      table.add(passTurnButton).center().expandX().padTop(40);
       table.add(moneyLabel).center().expandX();
       table.add(turnLabel).center().expandX();
       table.add(internalTurnLabel).center().expandX();
