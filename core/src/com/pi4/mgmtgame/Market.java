@@ -59,6 +59,22 @@ public class Market extends Group {
 	    table.setX(bg.getWidth() / 4);
 	    table.setY(bg.getHeight() / 2);
 
+		Button close = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+
+		close.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				remove();
+			}
+		});
+
+		close.setTransform(true);
+		close.setScale(3);
+		close.setX(bg.getWidth() - 64);
+		close.setY(bg.getHeight() - 64);
+		// table.add(close).padLeft(600);
+		// table.row();
+
 	    for (Plant p : server.getInventory().getPlants())
 	    {
 	    	final Plant plant = p;
@@ -98,6 +114,8 @@ public class Market extends Group {
 	    	Button i = new Button(new TextureRegionDrawable(manager.get(g.getTexture(), Texture.class)));
 			i.setTransform(true);
 			i.setScale(2);
+
+
 			// Image i = new Image(manager.get(g.getTexture(), Texture.class));
 	    	Button buyButton = new Button(marketSkins, "buyButton");
 	    	Button sellButton = new Button(marketSkins, "sellButton");
@@ -124,6 +142,7 @@ public class Market extends Group {
 		}
 
 	    addActor(bg);
+		addActor(close);
 	    addActor(table);
 	}
 
