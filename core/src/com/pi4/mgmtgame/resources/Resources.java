@@ -18,4 +18,5 @@ public abstract class Resources {
 	public abstract int getPrice();
 	public abstract void addPrice(int p);
 	public abstract void subPrice(int p);
+	public abstract String getTexture();
 }

@@ -25,6 +25,10 @@ public class CarrotSeeds extends Grain {
 		return carrotSeedPrice;
 	}
 
+	public String getTexture() {
+		return("marketRes/carrot.png");
+	}
+	
 	public String getFieldSpriteName() {
 		return "field_carrots";
 	}

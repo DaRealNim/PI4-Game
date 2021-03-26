@@ -20,6 +20,10 @@ public class Carrot extends Plant{
 		return 2;
 	}
 	
+	public String getTexture() {
+		return("marketRes/carrot.png");
+	}
+	
 	public String toString() {
 		return ("Carrot");
 	}

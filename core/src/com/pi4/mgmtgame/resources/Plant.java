@@ -7,4 +7,5 @@ public abstract class Plant extends Resources {
 	public abstract void addPrice(int p);
 	public abstract void subPrice(int p);
 	public abstract int getId();
+	public abstract String getTexture();
 }

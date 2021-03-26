@@ -2,6 +2,7 @@ package com.pi4.mgmtgame.screens;
 
 import com.pi4.mgmtgame.ManagementGame;
 import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.Market;
 import com.pi4.mgmtgame.ServerInteraction;
 import com.pi4.mgmtgame.HUD;
 
@@ -74,6 +75,7 @@ public class MainGameScreen implements Screen	{
 
 		hud = new HUD(manager, server);
 	}
+	
 	@Override
 	public void show() {
 		multiplexer.addProcessor(hud.stage);

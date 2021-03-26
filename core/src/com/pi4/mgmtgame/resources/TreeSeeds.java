@@ -30,6 +30,10 @@ public class TreeSeeds extends Grain {
 		return "none";
 	}
 	
+	public String getTexture() {
+		return("marketRes/wood.png");
+	}
+	
 	public String toString() {
 		return ("Tree Seeds");
 	}

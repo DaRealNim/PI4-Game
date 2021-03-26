@@ -8,4 +8,5 @@ public abstract class Grain extends Resources {
 	public abstract Plant getGrownPlant();
 	public abstract int getId();
 	public abstract String getFieldSpriteName();
+	public abstract String getTexture();
 }

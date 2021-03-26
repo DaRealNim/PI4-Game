@@ -73,6 +73,7 @@ public class HUD {
 
     public void show() {
       Skin buttonSkins = manager.get("hudButtons/hudButton.json", Skin.class);
+      
       Texture backgroundTexture = manager.get("hudButtons/hudBackground.png", Texture.class);
       Image background = new Image(backgroundTexture);
 

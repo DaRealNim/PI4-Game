@@ -25,6 +25,10 @@ public class PotatoSeeds extends Grain {
 		return 1;
 	}
 
+	public String getTexture() {
+		return("marketRes/potato.png");
+	}
+	
 	public String getFieldSpriteName() {
 		return "field_potatoes";
 	}

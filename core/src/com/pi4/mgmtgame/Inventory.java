@@ -6,6 +6,7 @@ import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Potato;
 import com.pi4.mgmtgame.resources.PotatoSeeds;
+import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.TreeSeeds;
 import com.pi4.mgmtgame.resources.Wheat;
 import com.pi4.mgmtgame.resources.WheatSeeds;
@@ -17,14 +18,14 @@ public class Inventory {
 	private Grain[] seeds;
 	private int invID;
 	public Inventory (int x) {
-		invID=x;
-		plants = new Plant[10];
+		invID = x;
+		plants = new Plant[4];
 		plants[0] = new Wheat();
 		plants[1] = new Potato();
 		plants[2] = new Carrot();
 		plants[3] = new Wood();
 		
-		seeds = new Grain[10];
+		seeds = new Grain[4];
 		seeds[0] = new WheatSeeds();
 		seeds[1] = new PotatoSeeds();
 		seeds[2] = new CarrotSeeds();

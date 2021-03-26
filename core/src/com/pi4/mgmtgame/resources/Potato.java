@@ -20,6 +20,10 @@ public class Potato extends Plant {
 		return 1;
 	}
 	
+	public String getTexture() {
+		return("marketRes/potato.png");
+	}
+	
 	public String toString() {
 		return ("Potato");
 	}

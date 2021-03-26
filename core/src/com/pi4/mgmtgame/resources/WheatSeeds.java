@@ -26,6 +26,9 @@ public class WheatSeeds extends Grain {
 		wheatSeedPrice += p;
 	}
 
+	public String getTexture() {
+		return("marketRes/wheat.png");
+	}
 
 	public void subPrice(int p) {
 		wheatSeedPrice -= p;

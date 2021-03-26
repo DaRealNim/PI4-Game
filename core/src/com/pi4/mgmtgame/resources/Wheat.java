@@ -20,6 +20,10 @@ public class Wheat extends Plant {
 		return 0;
 	}
 	
+	public String getTexture() {
+		return("marketRes/wheat.png");
+	}
+	
 	public String toString() {
 		return ("Wheat");
 	}
