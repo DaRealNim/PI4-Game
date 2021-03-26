@@ -1,8 +1,12 @@
 {
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	shopButton: {
+		up: shopButton
+		down: shopButtonDown
+	}
 	passTurn: {
-		up: Webp.net-resizeimage
-		down: emonji
+		up: passTurn
+		down: passTurnDown
 	}
 }
 }

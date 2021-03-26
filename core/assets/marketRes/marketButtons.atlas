@@ -1,20 +1,34 @@
 
 marketButtons.png
-size: 64,64
+size: 256,256
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
-buyButton
+button1
   rotate: false
-  xy: 1, 1
-  size: 16, 16
-  orig: 16, 16
+  xy: 1, 133
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-sellButton
+button2
   rotate: false
-  xy: 1, 19
-  size: 16, 16
-  orig: 16, 16
+  xy: 1, 67
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+button3
+  rotate: false
+  xy: 67, 133
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+button4
+  rotate: false
+  xy: 1, 1
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1

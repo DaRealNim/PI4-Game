@@ -28,6 +28,7 @@ public class HUD {
     public Stage stage;
     private Viewport viewport;
     private Button passTurnButton;
+    private Button marketButton;
     private AssetManager manager;
     private ServerInteraction server;
     private Label moneyLabel, grainLabel, seedLabel, turnLabel, internalTurnLabel;
@@ -79,6 +80,8 @@ public class HUD {
 
       passTurnButton = new Button(buttonSkins, "passTurn");
       passTurnButton.setZIndex(1);
+      marketButton = new Button(buttonSkins, "shopButton");
+      
 
       moneyLabel = new Label("DOLLA BILLZ: " + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
       turnLabel = new Label("Month : " + server.getTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -102,13 +105,21 @@ public class HUD {
       grainLabel = new Label(grainLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
       seedLabel = new Label(seedLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-      passTurnButton.addListener(new ClickListener(){
+      passTurnButton.addListener(new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
             	  server.passTurn();
                   System.out.println("Passed a turn!");
               }
           });
+      
+      marketButton.addListener(new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+        	  Market market = new Market(manager, server);
+        	  stage.addActor(market);
+          }
+      });
 
       Table table = new Table().padTop(8);
       table.top();
@@ -119,7 +130,7 @@ public class HUD {
       background.setY(ManagementGame.HEIGHT - background.getHeight());
 
 
-
+      table.add(marketButton).center().expandX();
       table.add(passTurnButton).center().expandX();
       table.add(moneyLabel).center().expandX();
       table.add(turnLabel).center().expandX();

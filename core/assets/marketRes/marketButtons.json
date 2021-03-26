@@ -1,10 +1,12 @@
 {
-com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+ButtonStyle: {
 	sellButton: {
-		up: sellButton
+		up: button1
+		down: button2
 	}
 	buyButton: {
-		up: buyButton
+		up: button3
+		down: button4
 	}
 }
 }

@@ -2,6 +2,8 @@ package com.pi4.mgmtgame;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pi4.mgmtgame.resources.Grain;
@@ -16,24 +19,16 @@ import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Wood;
 
-public class Market {
+public class Market extends Group {
 	
 	ServerInteraction server;
-	public Stage stage;
-    private Viewport viewport;
     private AssetManager manager;
-    
     
 	public Market(AssetManager man, ServerInteraction server) {
 		this.server = server;
 		this.manager = man;
 	    this.server = server;
-	    
-	    viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, new OrthographicCamera());
-	    viewport.apply();
-	    
-	    stage = new Stage(viewport);
-	    
+	   
 	    this.show();
 	}
 	
@@ -60,35 +55,79 @@ public class Market {
 		Image[] marketRes = {wood, carrot, potato, wheat, bill};
 		
 		Table table = new Table();
-	    table.setFillParent(true);
-		
-		bg.setHeight(bg.getHeight() / 4);
-	    bg.setWidth(bg.getWidth() / 4);
+	    table.setX(bg.getHeight() / 2);
+	    table.setY(bg.getWidth() / 2);
 	    
 	    for (Plant p : server.getInventory().getPlants())
 	    {
-	    	System.out.println(p.getTexture());
+	    	final Plant plant = p;
 	    	Image i = new Image(manager.get(p.getTexture(), Texture.class));
-	    	i.setHeight(64);
-	    	i.setWidth(64);
+	    	Button buyButton = new Button(marketSkins, "buyButton");
+	    	Button sellButton = new Button(marketSkins, "sellButton");
+	    	
+	    	sellButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	          	  sellPlant(plant, 1);
+	            }       
+	    	});
+	    	
+	    	buyButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	          	  buyPlant(plant, 1);
+	            }       
+	    	});
+	    	
 	    	table.add(i);
-		}
+	    	table.add(buyButton).padRight(25);
+	    	table.add(sellButton).padRight(50);
+	    	table.row();
+	    }
 	    
 	    for (Grain g : server.getInventory().getSeeds())
 	    {
+	    	final Grain grain = g;
 	    	Image i = new Image(manager.get(g.getTexture(), Texture.class));
-	    	i.setHeight(64);
-	    	i.setWidth(64);
+	    	Button buyButton = new Button(marketSkins, "buyButton");
+	    	Button sellButton = new Button(marketSkins, "sellButton");
+
+	    	sellButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	          	  sellGrain(grain, 1);
+	            }       
+	    	});
+	    	
+	    	buyButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	          	  buyGrain(grain, 1);
+	            }       
+	    	});
+	    	
+	   
 	    	table.add(i);
+	    	table.add(buyButton);
+	    	table.add(sellButton);
+	    	table.row();
 		}
 	    
-	    stage.addActor(bg);
-	    stage.addActor(table);
+	    addActor(bg);
+	    addActor(table);
 	}
 	
 	
-	boolean userHasMoneyToBuy(int q, Resources r){
+	boolean userHasMoneyToBuy(int q, Resources r) {
 		return (server.getInventory().getMoney() >= r.getPrice() * q);
+	}
+	
+	boolean userCanSellPlant(int q, Plant p) {
+		return (server.getInventory().getPlants()[p.getId()].getVolume() >= q);
+	}
+	
+	boolean userCanSellGrain(int q, Grain g) {
+		return (server.getInventory().getSeeds()[g.getId()].getVolume() >= q);
 	}
 	
 	void buyGrain(Grain boughtGrain, int q) {
@@ -98,7 +137,7 @@ public class Market {
 		if (userHasMoneyToBuy(q, boughtGrain)) {
 			userInv.giveMoney(grainPrice * q);
 			userInv.addGrain(boughtGrain.getId(), q);
-			boughtGrain.addPrice((int) (grainPrice * 1.05) * q);
+			boughtGrain.addPrice(1);
 		}
 	}
 	
@@ -106,37 +145,32 @@ public class Market {
 		Inventory userInv = server.getInventory();
 		int grainPrice = soldGrain.getPrice();
 		
-		if (userHasMoneyToBuy(q, soldGrain)) {
+		if (userCanSellGrain(q, soldGrain)) {
 			userInv.receiveMoney(grainPrice * q);
 			userInv.removeGrain(soldGrain.getId(), q);
-			soldGrain.addPrice((int) (grainPrice * 1.05) * q);
+			soldGrain.subPrice(1);
 		}
-		soldGrain.subPrice((int) (soldGrain.getPrice() * 1.05) * q);
 	}
 	
-	void buyPlant(Plant p, int q) {
+	void buyPlant(Plant boughtPlant, int q) {
 		Inventory userInv = server.getInventory();
-		int plantPrice = p.getPrice();
+		int plantPrice = boughtPlant.getPrice();
 		
-		if (userHasMoneyToBuy(q, p)) {
+		if (userHasMoneyToBuy(q, boughtPlant)) {
 			userInv.giveMoney(plantPrice * q);
-			userInv.addPlant(p.getId(), q);
-			p.addPrice((int) (plantPrice * 1.05) * q);
+			userInv.addPlant(boughtPlant.getId(), q);
+			boughtPlant.addPrice(1);
 		}
-		
-		p.addPrice((int) (plantPrice * 1.05) * q);
 	}
 	
-	void sellPlant(Plant p, int q) {
+	void sellPlant(Plant soldPlant, int q) {
 		Inventory userInv = server.getInventory();
-		int plantPrice = p.getPrice();
+		int plantPrice = soldPlant.getPrice();
 		
-		if (userHasMoneyToBuy(q, p)) {
+		if (userCanSellPlant(q, soldPlant)) {
 			userInv.receiveMoney(plantPrice * q);
-			userInv.removePlant(p.getId(), q);
-			p.addPrice((int) (plantPrice * 1.05) * q);
+			userInv.removePlant(soldPlant.getId(), q);
+			soldPlant.subPrice(1);
 		}
-		
-		p.addPrice((int) (plantPrice * 1.05) * q);
 	}
 }
