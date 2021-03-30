@@ -54,6 +54,18 @@ project(":desktop") {
     }
 }
 
+project(":server") {
+    apply plugin: "java-library"
+
+
+    dependencies {
+        implementation project(":core")
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+
+    }
+}
+
 project(":core") {
     apply plugin: "java-library"
 
