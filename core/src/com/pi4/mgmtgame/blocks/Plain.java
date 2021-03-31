@@ -16,17 +16,22 @@ import com.pi4.mgmtgame.ServerInteraction;
 
 public class Plain extends Environment {
 
-    public Plain(int x, int y, final AssetManager manager, final ServerInteraction server) {
-    	super(x, y, manager);
+    public Plain(int x, int y) {
+    	super(x, y);
+    }
+
+    @Override
+    public void addViewController(final AssetManager manager, final ServerInteraction server) {
+        this.manager = manager;
         Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "plain");
-        button.setX(x*16);
-        button.setY(y*16);
+        button.setX(getGridX() * 16);
+		button.setY(getGridY() * 16);
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
                 Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
-                final Field f = new Field(getGridX(), getGridY(), manager, server);
+                final Field f = new Field(getGridX(), getGridY());
                 f.setOwnerID(server.getCurrentPlayer());
                 final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonField);
                 if (server.canBuildStructure(getGridX(), getGridY(), f)) {
@@ -34,11 +39,10 @@ public class Plain extends Environment {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             Map map = (Map)getParent();
-                            //Field f = new Field(getGridX(), getGridY(), manager, server)
                             boolean res = server.requestBuildStructure(getGridX(), getGridY(), f);
                             System.out.println("Could build structure at "+getGridX()+", "+getGridY()+": "+res+"id :");
                             Map serverMap = server.getMap();
-                            serverMap.updateActors();
+                            serverMap.updateActors(manager, server);
                             Stage stage = getStage();
                             map.remove();
                             stage.addActor(serverMap);
@@ -72,5 +76,10 @@ public class Plain extends Environment {
     @Override
     public void passTurn() {
     	// System.out.println("Nothing to do at (" + super.getGridX() + "," + super.getGridY() + ")");
+	}
+
+    @Override
+	public String toString() {
+		return "Plain";
 	}
 }

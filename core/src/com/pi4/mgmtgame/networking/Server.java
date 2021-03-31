@@ -12,12 +12,16 @@ import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.graphics.Texture;
+
 public class Server {
 	private ServerSocket serverSocket;
 	private int numPlayers;
 	private ServerSide player1;
 	private ServerSide player2;
-	
+
 	private Map map;
 	private Inventory[] invArray;
 	private Inventory inv;
@@ -26,8 +30,8 @@ public class Server {
 	private int currentPlayer;
 	private int nbOfPlayers;
 	private int playerID;
-	
-	public Server(Inventory[] inv, AssetManager manager, int nbOfPlayers) {
+
+	public Server(int nbOfPlayers) {
 		System.out.println("----Server----");
         try {
 			serverSocket = new ServerSocket(51769);
@@ -35,35 +39,40 @@ public class Server {
 			e.printStackTrace();
 			System.out.println("Exception in Server constructor.");
 		}
-        
-		this.map = new Map(10, 10, manager, null);
+
+		this.map = new Map(10, 10, null, null);
 		this.nbOfPlayers = nbOfPlayers;
 		this.invArray = new Inventory[nbOfPlayers];
-		this.invArray = inv;
+		for(int i=0; i<nbOfPlayers; i++) {
+			this.invArray[i] = new Inventory(i);
+		}
 		this.turn = 0;
 		this.internalTurn = 0;
 		this.inv = invArray[0];
 	}
-	
+
 	public void acceptConnections() {
 		try {
 			System.out.println("Waiting on conns...");
-			
+
 			while (numPlayers < 2) {
 				Socket playerSocket = serverSocket.accept();
-				
-				++numPlayers;		
+
+				++numPlayers;
 				System.out.println("Player " + numPlayers + " connected");
-				
+
 				ServerSide serverSideConnection = new ServerSide(playerSocket, numPlayers);
-			
+				System.out.println("bruh???");
+
 				if (numPlayers == 1)
 					player1 = serverSideConnection;
 				else
 					player2 = serverSideConnection;
-				
+
 				Thread t = new Thread(serverSideConnection);
+				System.out.println("bruh??");
 				t.start();
+				System.out.println("bruh?");
 			}
 			System.out.println("Game will now start.");
 		}
@@ -72,43 +81,50 @@ public class Server {
 			System.out.println(e + "\nexception on acceptConns");
 		}
 	}
-	
+
 	private class ServerSide implements Runnable {
 		private Socket playerSocket;
 		private int playerID;
-		
+
 		protected DataInputStream dataIn;
 		protected DataOutputStream dataOut;
 		protected ObjectInputStream objIn;
 		protected ObjectOutputStream objOut;
-		
+
 		public ServerSide(Socket s, int id) 	{
 			playerSocket = s;
-			playerID = id;		
-			
+			playerID = id;
+			System.out.println("haha");
 			try {
-				dataIn = new DataInputStream(playerSocket.getInputStream());
 				dataOut = new DataOutputStream(playerSocket.getOutputStream());
-				objIn = new ObjectInputStream(playerSocket.getInputStream());
+				dataIn = new DataInputStream(playerSocket.getInputStream());
 				objOut = new ObjectOutputStream(playerSocket.getOutputStream());
+				objIn = new ObjectInputStream(playerSocket.getInputStream());
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println(e + "\nexception on ServerSide constructor");
 			}
 		}
-		
+
+		@Override
 		public void run() {
+			System.out.println("run executed!");
 			try {
+				System.out.println("sending "+playerID);
 				dataOut.writeInt(playerID);
 				dataOut.flush();
-				
+				System.out.println("done");
+
 				while (true) {
 					int x = 0;
 					int y = 0;
 					Structure struct = null;
 					Grain grain = null;
-					switch (dataIn.readInt()) {
+					int request = dataIn.readInt();
+					System.out.println("Got request "+request);
+					switch (request) {
 						case 0:
+							objOut.reset();
 							objOut.writeObject(getMap());
 							objOut.flush();
 							break;
@@ -117,6 +133,7 @@ public class Server {
 							dataOut.flush();
 							break;
 						case 2:
+							objOut.reset();
 							objOut.writeObject(getInventory());
 							objOut.flush();
 							break;
@@ -139,8 +156,10 @@ public class Server {
 							x = dataIn.readInt();
 							y = dataIn.readInt();
 							struct = (Structure) objIn.readObject();
+							map.explicitPrint();
 							dataOut.writeBoolean(requestBuildStructure(x, y, struct));
 							dataOut.flush();
+							map.explicitPrint();
 							break;
 						case 7:
 							x = dataIn.readInt();
@@ -187,12 +206,12 @@ public class Server {
 			}
 		}
 	}
-	
-	
+
+
 	public int getCurrentPlayer() {
 		return (currentPlayer);
 	}
-	
+
 	public Map getMap() {
 		return map;
 	}
@@ -208,27 +227,26 @@ public class Server {
 	public int getInternalTurn() {
 		return internalTurn;
 	}
-	
+
 	public boolean canBuildStructure(int x, int y, Structure struct) {
 		Environment envBlock = map.getEnvironmentAt(x, y);
 		return (envBlock.canBuild(struct) && inv.getMoney() >= struct.getConstructionCost() && envBlock != null);
 	}
-	
+
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
 		if (canBuildStructure(x, y, struct)) {
 			map.setStructAt(x, y, struct);
 			inv.giveMoney(struct.getConstructionCost());
 			return (true);
 		}
-
 		return (false);
 	}
-	
+
 	public boolean canDestroyStructure(int x, int y) {
 	    Structure structBlock = map.getStructAt(x, y);
 	    return (structBlock != null && structBlock.testOwner(currentPlayer));
 	}
-	
+
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
 		Structure structBlock = map.getStructAt(x, y);
 		System.out.println("Seed id: " + seed.getId());
@@ -248,13 +266,13 @@ public class Server {
 		if (canDestroyStructure(x, y)) {
 			inv.receiveMoney((map.getStructAt(x, y).getConstructionCost()*30)/100);
 			map.setStructAt(x, y, null);
-			
+
 			return (true);
 		}
-		
+
 		return (false);
 	}
-	
+
 	public boolean canHarvest(int x, int y) {
 		Structure structBlock = map.getStructAt(x, y);
 		if (structBlock instanceof Field && structBlock != null && structBlock.testOwner(currentPlayer)) {
@@ -263,7 +281,7 @@ public class Server {
 		} else
 			return false;
 	}
-	
+
 	public boolean requestHarvest(int x, int y) {
 		Structure structBlock = map.getStructAt(x, y);
 		Plant harvested;
@@ -307,9 +325,9 @@ public class Server {
 		System.out.println(this.inv);
 		System.out.println(turn);
 	}
-	
+
 	public static void main(String[] args) {
-		Server gameServer = new Server(null, null, 2);
+		Server gameServer = new Server(2);
 		gameServer.acceptConnections();
 	}
 }

@@ -45,6 +45,7 @@ public class MainGameScreen implements Screen	{
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
+		this.map.explicitPrint();
 		this.game = game;
 		this.manager = manager;
 		this.batch = game.batch;
@@ -73,16 +74,17 @@ public class MainGameScreen implements Screen	{
 
 		stage = new Stage(viewport, batch);
 
-		hud = new HUD(manager, server);
+		// hud = new HUD(manager, server);
 	}
-	
+
 	@Override
 	public void show() {
-		multiplexer.addProcessor(hud.stage);
+		// multiplexer.addProcessor(hud.stage);
 		multiplexer.addProcessor(stage);
 
 		Gdx.input.setInputProcessor(multiplexer);
 		stage.addActor(map);
+		map.updateActors(manager, server);
 	}
 
 	@Override
@@ -93,11 +95,11 @@ public class MainGameScreen implements Screen	{
 		stage.act(delta);
 		stage.draw();
 		processCameraMovement();
-		hud.update();
+		// hud.update();
 
-		game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-		hud.stage.act();
-		hud.stage.draw();
+		// game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+		// hud.stage.act();
+		// hud.stage.draw();
 	}
 
 	@Override

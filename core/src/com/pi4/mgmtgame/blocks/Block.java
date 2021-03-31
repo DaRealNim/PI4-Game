@@ -1,21 +1,28 @@
 package com.pi4.mgmtgame.blocks;
 
+import java.io.Serializable;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
+import com.pi4.mgmtgame.ServerInteraction;
 
-public class Block extends Group {
+
+public class Block extends Group implements Serializable {
     private Button displayedButton;
     protected AssetManager manager;
     private int x, y;
 
-    public Block(int x, int y, AssetManager manager) {
+    public Block(int x, int y) {
     	this.setGridX(x);
     	this.setGridY(y);
-      this.manager = manager;
+    }
+
+    public void addViewController(final AssetManager manager, final ServerInteraction server) {
+        System.out.println("nnooooOOOOOOO");
     }
 
     public void setButton(Button b) {

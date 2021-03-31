@@ -26,37 +26,62 @@ public class Map extends Group implements Serializable {
 
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				Plain p = new Plain(i, j, manager, server);
+				Plain p = new Plain(i, j);
 				envnmt_map[i][j] = p;
+				addActor(p);
+			}
+		}
+
+		for(int i = 0; i < w; i+=3) {
+			for (int j = 0; j < h; j+=3) {
+				Field p = new Field(i, j);
+				struct_map[i][j] = p;
 				addActor(p);
 			}
 		}
 	}
 
-	@Override
-    public void act(float delta) {
+	public void explicitPrint() {
+		System.out.println("Couche environement:");
+		for(Environment[] row : envnmt_map) {
+			for(Environment block : row) {
+				System.out.println(block);
+			}
+		}
+		System.out.println("Couche structure:");
 		for(Structure[] row : struct_map) {
 			for(Structure block : row) {
-				if (block != null) {
-					if (block.testOwner(server.getInternalTurn())) {
-						block.getColor().a = (float)1;
-					} else {
-						block.getColor().a = (float)0.7;
-					}
-				}
+				System.out.println(block);
 			}
-	    }
-    }
+		}
+	}
 
-	public void updateActors() {
+	// @Override
+    // public void act(float delta) {
+	// 	for(Structure[] row : struct_map) {
+	// 		for(Structure block : row) {
+	// 			if (block != null) {
+	// 				if (block.testOwner(server.getInternalTurn())) {
+	// 					block.getColor().a = (float)1;
+	// 				} else {
+	// 					block.getColor().a = (float)0.7;
+	// 				}
+	// 			}
+	// 		}
+	//     }
+    // }
+
+	public void updateActors(final AssetManager manager, final ServerInteraction server) {
 		clear();
 		for(int i = 0; i < this.width; i++) {
 			for (int j = 0; j < this.height; j++) {
 				if (envnmt_map[i][j] != null) {
+					envnmt_map[i][j].addViewController(manager, server);
 					addActor(envnmt_map[i][j]);
 					envnmt_map[i][j].updateActors();
 				}
 				if (struct_map[i][j] != null) {
+					struct_map[i][j].addViewController(manager, server);
 					addActor(struct_map[i][j]);
 					struct_map[i][j].updateActors();
 				}
