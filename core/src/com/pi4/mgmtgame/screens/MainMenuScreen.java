@@ -80,7 +80,7 @@ public class MainMenuScreen implements Screen {
             	Inventory[] inv = new Inventory[nbOfPlayers];
             	for(int i = 0;i<nbOfPlayers;i++)
         			inv[i]= new Inventory(i);
-            	ServerInteraction server = new ServerInteraction(inv, manager,nbOfPlayers);
+            	ServerInteraction server = new ServerInteraction();
 
             	game.setScreen(new MainGameScreen(game, manager, server));
             }

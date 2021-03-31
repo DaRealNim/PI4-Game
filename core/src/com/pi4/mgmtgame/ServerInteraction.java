@@ -1,142 +1,291 @@
 package com.pi4.mgmtgame;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.pi4.mgmtgame.blocks.*;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
 
 public class ServerInteraction {
-	private Map map;
-	private Inventory[] invArray;
-	private Inventory inv;
-	private int turn;
-	private int internalTurn;
-	public int currentPlayer;
-	private int nbOfPlayers;
+	private ClientSide clientSideConnection;
+	private int playerID;
 
-	public ServerInteraction(Inventory[] inv, AssetManager manager, int nbOfPlayers) {
-		this.map = new Map(10, 10, manager, this);
-		this.nbOfPlayers = nbOfPlayers;
-		this.invArray = new Inventory[nbOfPlayers];
-		this.invArray = inv;
-		this.turn = 0;
-		this.internalTurn = 0;
-		this.inv = invArray[0];
-
+	public ServerInteraction(int ID) {
+		playerID = ID;
+		connectToServer();
 	}
 
 	public Map getMap() {
-		return map;
+		Map map = null;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(0);
+			clientSideConnection.dataOut.flush();
+			map = (Map) clientSideConnection.objIn.readObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return (map);
+	}
+	
+	public int getCurrentPlayer() {
+		int player = -1;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(1);
+			clientSideConnection.dataOut.flush();
+			player = clientSideConnection.dataIn.readInt();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return (player);
 	}
 
 	public Inventory getInventory() {
-		return inv;
+		Inventory inv = null;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(2);
+			clientSideConnection.dataOut.flush();
+			inv = (Inventory) clientSideConnection.objIn.readObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return (inv);
 	}
 
 	public int getTurn() {
-		return turn;
+		int turn = 0;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(3);
+			clientSideConnection.dataOut.flush();
+			turn = clientSideConnection.dataIn.readInt();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return (turn);
 	}
 
 	public int getInternalTurn() {
-		return internalTurn;
+		int turn = -1;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(4);
+			clientSideConnection.dataOut.flush();
+			turn = clientSideConnection.dataIn.readInt();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return (turn);
 	}
 
 	public boolean canBuildStructure(int x, int y, Structure struct) {
-		Environment envBlock = map.getEnvironmentAt(x, y);
-		return (envBlock.canBuild(struct) && inv.getMoney() >= struct.getConstructionCost() && envBlock != null);
+		boolean canBuildOk = false;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(5);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.objOut.writeObject(struct);
+			clientSideConnection.objOut.flush();
+			
+			canBuildOk  = clientSideConnection.dataIn.readBoolean();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return (canBuildOk);
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
-		if (canBuildStructure(x, y, struct)) {
-			map.setStructAt(x, y, struct);
-			inv.giveMoney(struct.getConstructionCost());
-			return (true);
+		boolean requestBuildOk = false;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(6);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.objOut.writeObject(struct);
+			clientSideConnection.objOut.flush();
+			
+			requestBuildOk  = clientSideConnection.dataIn.readBoolean();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		return (false);
+			
+		return (requestBuildOk);
 	}
 	
 	public boolean canDestroyStructure(int x, int y) {
-	    Structure structBlock = map.getStructAt(x, y);
-	    return (structBlock != null && structBlock.testOwner(currentPlayer));
+		boolean canDestroyOk = false;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(7);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			
+			canDestroyOk  = clientSideConnection.dataIn.readBoolean();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return (canDestroyOk);
 	}
 
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
-		Structure structBlock = map.getStructAt(x, y);
-		System.out.println("Seed id: " + seed.getId());
-		if (structBlock instanceof Field && inv.hasGrain(seed) && structBlock != null
-				&& structBlock.testOwner(currentPlayer)) {
-			if (!((Field) structBlock).hasSeed()) {
-				((Field) structBlock).plantSeed(seed);
-				inv.removeGrain(seed.getId(), 1);
-				return (true);
-			}
+		boolean requestPlantOk = false;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(8);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.objOut.writeObject(seed);
+			clientSideConnection.objOut.flush();
+			
+			requestPlantOk  = clientSideConnection.dataIn.readBoolean();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		return (false);
+			
+		return (requestPlantOk);
 	}
 	
 	public boolean requestDestroyStructure(int x, int y) {
-		if (canDestroyStructure(x, y)) {
-			inv.receiveMoney((map.getStructAt(x, y).getConstructionCost()*30)/100);
-			map.setStructAt(x, y, null);
-			
-			return (true);
-		}
+		boolean requestDestroyOk = false;
 		
-		return (false);
+		try {
+			clientSideConnection.dataOut.writeInt(9);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			
+			requestDestroyOk = clientSideConnection.dataIn.readBoolean();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return (requestDestroyOk);
 	}
 
 	public boolean canHarvest(int x, int y) {
-		Structure structBlock = map.getStructAt(x, y);
-		if (structBlock instanceof Field && structBlock != null && structBlock.testOwner(currentPlayer)) {
-			Field fieldBlock = (Field) structBlock;
-			return (fieldBlock.hasSeedGrown());
-		} else
-			return false;
+		boolean canHarvestOk = false;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(10);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			
+			canHarvestOk = clientSideConnection.dataIn.readBoolean();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		return (canHarvestOk);	
 	}
 
 	public boolean requestHarvest(int x, int y) {
-		Structure structBlock = map.getStructAt(x, y);
-		Plant harvested;
-		Field fieldBlock;
-
-		if (canHarvest(x, y)) {
-			fieldBlock = (Field) structBlock;
-			harvested = fieldBlock.harvest();
-			harvested.addVolume(4);
-			inv.addPlant(harvested.getId(), harvested.getVolume());
-			return (true);
+		boolean requestHarvestOk = false;
+		
+		try {
+			clientSideConnection.dataOut.writeInt(11);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			
+			requestHarvestOk = clientSideConnection.dataIn.readBoolean();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return (false);
+			
+		return (requestHarvestOk);
 	}
 
 	public void passTurn() {
-		int mapWidth = map.getMapWidth();
-		int mapHeight = map.getMapHeight();
-		int widthIndex;
-		int heightIndex;
-		Block currBlock;
-		internalTurn++;
-		// à modifier
-		inv = invArray[internalTurn % nbOfPlayers];
-		currentPlayer = internalTurn % nbOfPlayers;
-		if (internalTurn == nbOfPlayers) {
-			turn++;
-			internalTurn = 0;
-			for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {
-				for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) {
-					currBlock = map.getEnvironmentAt(heightIndex, widthIndex);
-					if (currBlock != null)
-						currBlock.passTurn();
-
-					currBlock = map.getStructAt(heightIndex, widthIndex);
-					if (currBlock != null)
-						currBlock.passTurn();
-				}
+		try {
+			clientSideConnection.dataOut.writeInt(12);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private class ClientSide {
+		protected Socket clientSocket;
+		
+		protected DataInputStream dataIn;
+		protected DataOutputStream dataOut;
+		protected ObjectInputStream objIn;
+		protected ObjectOutputStream objOut;
+		
+		public ClientSide() {
+			System.out.println("----Client----");
+			try {
+				clientSocket = new Socket("localhost", 51769);
+				dataIn = new DataInputStream(clientSocket.getInputStream());
+				dataOut = new DataOutputStream(clientSocket.getOutputStream());
+				objIn = new ObjectInputStream(clientSocket.getInputStream());
+				objOut = new ObjectOutputStream(clientSocket.getOutputStream());
+				
+				playerID = dataIn.readInt();
+				
+				System.out.println("\nConnection to " + clientSocket.getInetAddress() + " on port: " + clientSocket.getPort() + " successful.");
+				System.out.println("Connected as player " + playerID);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e + "\nexception on ClientSide constructor");
 			}
 		}
-		System.out.println(this.inv);
-		System.out.println(turn);
+	}
+	
+	public void connectToServer() {
+		clientSideConnection = new ClientSide();
 	}
 }

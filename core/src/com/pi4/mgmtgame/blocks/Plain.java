@@ -27,7 +27,7 @@ public class Plain extends Environment {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
                 Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
                 final Field f = new Field(getGridX(), getGridY(), manager, server);
-                f.setOwnerID(server.currentPlayer);
+                f.setOwnerID(server.getCurrentPlayer());
                 final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonField);
                 if (server.canBuildStructure(getGridX(), getGridY(), f)) {
                     buttonField.addListener(new ClickListener(){

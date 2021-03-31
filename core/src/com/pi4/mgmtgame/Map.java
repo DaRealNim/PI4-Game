@@ -3,10 +3,13 @@ import com.pi4.mgmtgame.ServerInteraction;
 import com.pi4.mgmtgame.blocks.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.graphics.g2d.Batch;
+
+import java.io.Serializable;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
-public class Map extends Group {
+public class Map extends Group implements Serializable {
 	private Environment[][] envnmt_map;
 	private Structure[][] struct_map;
 	private ServerInteraction server;

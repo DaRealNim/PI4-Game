@@ -1,6 +1,8 @@
 package com.pi4.mgmtgame.resources;
 
-public abstract class Grain extends Resources {
+import java.io.Serializable;
+
+public abstract class Grain extends Resources implements Serializable {
 	static int basePrice = 1;
 	int growingTime = 1;
 
