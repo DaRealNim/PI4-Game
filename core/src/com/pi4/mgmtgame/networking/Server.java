@@ -23,7 +23,7 @@ public class Server {
 	private Inventory inv;
 	private int turn;
 	private int internalTurn;
-	public int currentPlayer;
+	private int currentPlayer;
 	private int nbOfPlayers;
 	private int playerID;
 	
@@ -101,13 +101,97 @@ public class Server {
 			try {
 				dataOut.writeInt(playerID);
 				dataOut.flush();
-			} catch (IOException e) {
+				
+				while (true) {
+					int x = 0;
+					int y = 0;
+					Structure struct = null;
+					Grain grain = null;
+					switch (dataIn.readInt()) {
+						case 0:
+							objOut.writeObject(getMap());
+							objOut.flush();
+							break;
+						case 1:
+							dataOut.writeInt(getCurrentPlayer());
+							dataOut.flush();
+							break;
+						case 2:
+							objOut.writeObject(getInventory());
+							objOut.flush();
+							break;
+						case 3:
+							dataOut.writeInt(getTurn());
+							dataOut.flush();
+							break;
+						case 4:
+							dataOut.writeInt(getInternalTurn());
+							dataOut.flush();
+							break;
+						case 5:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							struct = (Structure) objIn.readObject();
+							dataOut.writeBoolean(canBuildStructure(x, y, struct));
+							dataOut.flush();
+							break;
+						case 6:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							struct = (Structure) objIn.readObject();
+							dataOut.writeBoolean(requestBuildStructure(x, y, struct));
+							dataOut.flush();
+							break;
+						case 7:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							dataOut.writeBoolean(canDestroyStructure(x, y));
+							dataOut.flush();
+							break;
+						case 8:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							grain = (Grain) objIn.readObject();
+							dataOut.writeBoolean(requestPlantSeed(x, y, grain));
+							dataOut.flush();
+							break;
+						case 9:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							dataOut.writeBoolean(requestDestroyStructure(x, y));
+							dataOut.flush();
+							break;
+						case 10:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							dataOut.writeBoolean(canHarvest(x, y));
+							dataOut.flush();
+							break;
+						case 11:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							dataOut.writeBoolean(requestHarvest(x, y));
+							dataOut.flush();
+							break;
+						case 12:
+							passTurn();
+							break;
+						default:
+							System.out.println("wyd????");
+							break;
+					}
+				}
+			} catch (Exception e) {
 				System.out.println(e + "\nexception on ServerSide runnable");
 				e.printStackTrace();
 			}
 		}
 	}
 	
+	
+	public int getCurrentPlayer() {
+		return (currentPlayer);
+	}
 	
 	public Map getMap() {
 		return map;
