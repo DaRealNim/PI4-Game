@@ -32,20 +32,19 @@ public class Plain extends Environment {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
                 Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
                 final Field f = new Field(getGridX(), getGridY());
+                server.waitForIdle();
                 f.setOwnerID(server.getCurrentPlayer());
                 final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonField);
+                server.waitForIdle();
                 if (server.canBuildStructure(getGridX(), getGridY(), f)) {
                     buttonField.addListener(new ClickListener(){
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             Map map = (Map)getParent();
+                            server.waitForIdle();
                             boolean res = server.requestBuildStructure(getGridX(), getGridY(), f);
                             System.out.println("Could build structure at "+getGridX()+", "+getGridY()+": "+res+"id :");
-                            Map serverMap = server.getMap();
-                            serverMap.updateActors(manager, server);
-                            Stage stage = getStage();
-                            map.remove();
-                            stage.addActor(serverMap);
+                            updateMap(manager, server);
                             p.remove();
                         }
                     });

@@ -57,8 +57,6 @@ public class Server {
 
 			while (numPlayers < 2) {
 				Socket playerSocket = serverSocket.accept();
-
-				++numPlayers;
 				System.out.println("Player " + numPlayers + " connected");
 
 				ServerSide serverSideConnection = new ServerSide(playerSocket, numPlayers);
@@ -73,6 +71,7 @@ public class Server {
 				System.out.println("bruh??");
 				t.start();
 				System.out.println("bruh?");
+				++numPlayers;
 			}
 			System.out.println("Game will now start.");
 		}
@@ -156,10 +155,12 @@ public class Server {
 							x = dataIn.readInt();
 							y = dataIn.readInt();
 							struct = (Structure) objIn.readObject();
-							map.explicitPrint();
+							if (internalTurn != playerID) {
+								dataOut.writeBoolean(false);
+								break;
+							}
 							dataOut.writeBoolean(requestBuildStructure(x, y, struct));
 							dataOut.flush();
-							map.explicitPrint();
 							break;
 						case 7:
 							x = dataIn.readInt();
@@ -171,12 +172,20 @@ public class Server {
 							x = dataIn.readInt();
 							y = dataIn.readInt();
 							grain = (Grain) objIn.readObject();
+							if (internalTurn != playerID) {
+								dataOut.writeBoolean(false);
+								break;
+							}
 							dataOut.writeBoolean(requestPlantSeed(x, y, grain));
 							dataOut.flush();
 							break;
 						case 9:
 							x = dataIn.readInt();
 							y = dataIn.readInt();
+							if (internalTurn != playerID) {
+								dataOut.writeBoolean(false);
+								break;
+							}
 							dataOut.writeBoolean(requestDestroyStructure(x, y));
 							dataOut.flush();
 							break;
@@ -189,10 +198,16 @@ public class Server {
 						case 11:
 							x = dataIn.readInt();
 							y = dataIn.readInt();
+							if (internalTurn != playerID) {
+								dataOut.writeBoolean(false);
+								break;
+							}
 							dataOut.writeBoolean(requestHarvest(x, y));
 							dataOut.flush();
 							break;
 						case 12:
+							if (internalTurn != playerID)
+								break;
 							passTurn();
 							break;
 						default:

@@ -9,6 +9,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
 import com.pi4.mgmtgame.ServerInteraction;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pi4.mgmtgame.Map;
 
 
 public class Block extends Group implements Serializable {
@@ -44,6 +46,16 @@ public class Block extends Group implements Serializable {
         if (this.displayedButton != null) {
             getButton().setStyle(getButton().getSkin().get(styleName, Button.ButtonStyle.class));
         }
+    }
+
+    protected void updateMap(AssetManager manager, ServerInteraction server) {
+        Map map = (Map) getParent();
+        server.waitForIdle();
+        Map serverMap = server.getMap();
+        serverMap.updateActors(manager, server);
+        Stage stage = getStage();
+        map.remove();
+        stage.addActor(serverMap);
     }
 
     //Commented for now because just adding blocks as group children work, but may need

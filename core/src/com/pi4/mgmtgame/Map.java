@@ -31,14 +31,6 @@ public class Map extends Group implements Serializable {
 				addActor(p);
 			}
 		}
-
-		for(int i = 0; i < w; i+=3) {
-			for (int j = 0; j < h; j+=3) {
-				Field p = new Field(i, j);
-				struct_map[i][j] = p;
-				addActor(p);
-			}
-		}
 	}
 
 	public void explicitPrint() {
@@ -56,23 +48,24 @@ public class Map extends Group implements Serializable {
 		}
 	}
 
-	// @Override
-    // public void act(float delta) {
-	// 	for(Structure[] row : struct_map) {
-	// 		for(Structure block : row) {
-	// 			if (block != null) {
-	// 				if (block.testOwner(server.getInternalTurn())) {
-	// 					block.getColor().a = (float)1;
-	// 				} else {
-	// 					block.getColor().a = (float)0.7;
-	// 				}
-	// 			}
-	// 		}
-	//     }
-    // }
+	@Override
+    public void act(float delta) {
+		for(Structure[] row : struct_map) {
+			for(Structure block : row) {
+				if (block != null) {
+					if (block.testOwner(server.getID())) {
+						block.getColor().a = (float)1;
+					} else {
+						block.getColor().a = (float)0.7;
+					}
+				}
+			}
+	    }
+    }
 
 	public void updateActors(final AssetManager manager, final ServerInteraction server) {
 		clear();
+		this.server = server;
 		for(int i = 0; i < this.width; i++) {
 			for (int j = 0; j < this.height; j++) {
 				if (envnmt_map[i][j] != null) {

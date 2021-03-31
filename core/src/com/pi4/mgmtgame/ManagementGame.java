@@ -33,6 +33,7 @@ public class ManagementGame extends Game {
 		manager.load("marketRes/wheat.png", Texture.class);
 		manager.load("marketRes/wood.png", Texture.class);
 		manager.load("marketRes/marketButtons.json", Skin.class, new SkinLoader.SkinParameter("marketRes/marketButtons.atlas"));
+		manager.load("b l a c k.png", Texture.class);
 		manager.finishLoading();
 
 		this.setScreen(new MainMenuScreen(this, manager));
