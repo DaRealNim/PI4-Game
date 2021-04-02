@@ -157,6 +157,7 @@ public class Server {
 							struct = (Structure) objIn.readObject();
 							if (internalTurn != playerID) {
 								dataOut.writeBoolean(false);
+								dataOut.flush();
 								break;
 							}
 							dataOut.writeBoolean(requestBuildStructure(x, y, struct));
@@ -174,6 +175,7 @@ public class Server {
 							grain = (Grain) objIn.readObject();
 							if (internalTurn != playerID) {
 								dataOut.writeBoolean(false);
+								dataOut.flush();
 								break;
 							}
 							dataOut.writeBoolean(requestPlantSeed(x, y, grain));
@@ -184,6 +186,7 @@ public class Server {
 							y = dataIn.readInt();
 							if (internalTurn != playerID) {
 								dataOut.writeBoolean(false);
+								dataOut.flush();
 								break;
 							}
 							dataOut.writeBoolean(requestDestroyStructure(x, y));
@@ -200,6 +203,7 @@ public class Server {
 							y = dataIn.readInt();
 							if (internalTurn != playerID) {
 								dataOut.writeBoolean(false);
+								dataOut.flush();
 								break;
 							}
 							dataOut.writeBoolean(requestHarvest(x, y));

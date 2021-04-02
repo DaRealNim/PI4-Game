@@ -18,13 +18,8 @@ public class ServerInteraction {
 	private HUD hud;
 	private int playerID;
 	private int storedInternalTurn;
-	private boolean busy;
-	// private ArrayList<Request> requestPool;
 
 	public ServerInteraction() {
-		// playerID = ID;
-		// requestPool = new ArrayList<Request>();
-		busy = false;
 		connectToServer();
 	}
 
@@ -40,9 +35,9 @@ public class ServerInteraction {
 		return storedInternalTurn;
 	}
 
-	public Map getMap() {
+	public synchronized Map getMap() {
+		// System.out.println("getMap()");
 		Map map = null;
-		busy = true;
 
 		try {
 			clientSideConnection.dataOut.writeInt(0);
@@ -52,13 +47,13 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 
-		busy = false;
+		// System.out.println("end getMap()");
 		return (map);
 	}
 
-	public int getCurrentPlayer() {
+	public synchronized int getCurrentPlayer() {
+		// System.out.println("getCurrentPlayer()");
 		int player = -1;
-		busy = true;
 
 		try {
 			clientSideConnection.dataOut.writeInt(1);
@@ -68,13 +63,13 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 
-		busy = false;
+		// System.out.println("end getCurrentPlayer()");
 		return (player);
 	}
 
-	public Inventory getInventory() {
+	public synchronized Inventory getInventory() {
+		// System.out.println("getInventory()");
 		Inventory inv = null;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(2);
 			clientSideConnection.dataOut.flush();
@@ -83,13 +78,13 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 
-		busy = false;
+		// System.out.println("end getInventory()");
 		return (inv);
 	}
 
-	public int getTurn() {
+	public synchronized int getTurn() {
+		// System.out.println("getTurn()");
 		int turn = 0;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(3);
 			clientSideConnection.dataOut.flush();
@@ -98,13 +93,13 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 
-		busy = false;
+		// System.out.println("end getTurn()");
 		return (turn);
 	}
 
-	public int getInternalTurn() {
+	public synchronized int getInternalTurn() {
+		// System.out.println("getInternalTurn()");
 		int turn = -1;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(4);
 			clientSideConnection.dataOut.flush();
@@ -114,13 +109,13 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 
-		busy = false;
+		// System.out.println("end getInternalTurn()");
 		return (turn);
 	}
 
-	public boolean canBuildStructure(int x, int y, Structure struct) {
+	public synchronized boolean canBuildStructure(int x, int y, Structure struct) {
+		// System.out.println("canBuildStructure()");
 		boolean canBuildOk = false;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(5);
 			clientSideConnection.dataOut.flush();
@@ -139,13 +134,13 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 
-		busy = false;
+		// System.out.println("end canBuildStructure()");
 		return (canBuildOk);
 	}
 
-	public boolean requestBuildStructure(int x, int y, Structure struct) {
+	public synchronized boolean requestBuildStructure(int x, int y, Structure struct) {
+		// System.out.println("requestBuildStructure()");
 		boolean requestBuildOk = false;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(6);
 			clientSideConnection.dataOut.flush();
@@ -163,13 +158,12 @@ public class ServerInteraction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//hud.update()();
-		busy = false;
+		// System.out.println("end requestBuildStructure()");
 		return (requestBuildOk);
 	}
 
-	public boolean canDestroyStructure(int x, int y) {
-		busy = true;
+	public synchronized boolean canDestroyStructure(int x, int y) {
+		// System.out.println("canDestroyStructure()");
 		boolean canDestroyOk = false;
 		try {
 			clientSideConnection.dataOut.writeInt(7);
@@ -185,13 +179,13 @@ public class ServerInteraction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		busy = false;
+		// System.out.println("end canDestroyStructure()");
 		return (canDestroyOk);
 	}
 
-	public boolean requestPlantSeed(int x, int y, Grain seed) {
+	public synchronized boolean requestPlantSeed(int x, int y, Grain seed) {
+		// System.out.println("requestPlantSeed()");
 		boolean requestPlantOk = false;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(8);
 			clientSideConnection.dataOut.flush();
@@ -209,14 +203,13 @@ public class ServerInteraction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//hud.update()();
-		busy = false;
+		// System.out.println("end requestPlantSeed()");
 		return (requestPlantOk);
 	}
 
-	public boolean requestDestroyStructure(int x, int y) {
+	public synchronized boolean requestDestroyStructure(int x, int y) {
+		// System.out.println("requestDestroyStructure()");
 		boolean requestDestroyOk = false;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(9);
 			clientSideConnection.dataOut.flush();
@@ -232,13 +225,13 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 		//hud.update()();
-		busy = false;
+		// System.out.println("end requestDestroyStructure()");
 		return (requestDestroyOk);
 	}
 
-	public boolean canHarvest(int x, int y) {
+	public synchronized boolean canHarvest(int x, int y) {
+		// System.out.println("canHarvest()");
 		boolean canHarvestOk = false;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(10);
 			clientSideConnection.dataOut.flush();
@@ -253,13 +246,13 @@ public class ServerInteraction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		busy = false;
+		// System.out.println("end canHarvest()");
 		return (canHarvestOk);
 	}
 
-	public boolean requestHarvest(int x, int y) {
+	public synchronized boolean requestHarvest(int x, int y) {
+		// System.out.println("requestHarvest()");
 		boolean requestHarvestOk = false;
-		busy = true;
 		try {
 			clientSideConnection.dataOut.writeInt(11);
 			clientSideConnection.dataOut.flush();
@@ -274,13 +267,12 @@ public class ServerInteraction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//hud.update()();
-		busy = false;
+		// System.out.println("end requestHarvest()");
 		return (requestHarvestOk);
 	}
 
-	public void passTurn() {
-		busy = true;
+	public synchronized void passTurn() {
+		// System.out.println("passTurn()");
 		try {
 			clientSideConnection.dataOut.writeInt(12);
 			clientSideConnection.dataOut.flush();
@@ -288,8 +280,7 @@ public class ServerInteraction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//hud.update()();
-		busy = false;
+		// System.out.println("end passTurn()");
 	}
 
 	private class ClientSide {
@@ -325,35 +316,4 @@ public class ServerInteraction {
 	public void connectToServer() {
 		clientSideConnection = new ClientSide();
 	}
-
-	public void waitForIdle() {
-		boolean wasBusy = false;
-		while(busy) {
-			wasBusy = true;
-		}
-		if (wasBusy) {
-			System.out.print("wasBusy");
-			try {
-				Thread.sleep(300);
-			} catch(InterruptedException e) {
-			}
-		}
-	}
-
-
-	// private class Request implements Runnable {
-	// }
-
-	// private class RequestPool implements Runnable {
-	// 	@Override
-	// 	public void run() {
-	// 		while(true) {
-	// 			if (!requestPool.isEmpty()) {
-	// 				Request r = requestPool.get(0);
-	// 				r.run();
-	// 				requestPool.remove(0);
-	// 			}
-	// 		}
-	// 	}
-	// }
 }

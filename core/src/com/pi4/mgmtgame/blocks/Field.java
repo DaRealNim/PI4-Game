@@ -36,7 +36,6 @@ public class Field extends Structure {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Clicked Field!");
-				server.waitForIdle();
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
@@ -55,7 +54,6 @@ public class Field extends Structure {
 										"potatoseeds_icon");
 								Button plantCarrot = new Button(manager.get("popupIcons/popup.json", Skin.class),
 										"carrotseeds_icon");
-								server.waitForIdle();
 								Inventory inv = server.getInventory();
 								if (inv.hasGrain(0))
 									buttons[0] = plantWheat;
@@ -102,14 +100,13 @@ public class Field extends Structure {
 						buttonPlant.getColor().a = (float)0.3;
 					}
 
-					server.waitForIdle();
 					if(server.canHarvest(getGridX(), getGridY())) {
 						buttonHarvest.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
-								server.waitForIdle();
 								server.requestHarvest(getGridX(), getGridY());
 								updateMap(manager, server);
+								p.remove();
 							}
 						});
 					} else {
@@ -119,7 +116,6 @@ public class Field extends Structure {
 					buttonDestroy.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
-							server.waitForIdle();
 							server.requestDestroyStructure(getGridX(), getGridY());
 							updateMap(manager, server);
 							p.remove();
@@ -182,7 +178,6 @@ public class Field extends Structure {
 
 	private void attemptToPlant(int i, ServerInteraction server) {
 		// ERREUR (renvoie tjrs 0)
-		server.waitForIdle();
 		Inventory inv = server.getInventory();
 		boolean res = server.requestPlantSeed(getGridX(), getGridY(), inv.getSeeds()[i]);
 		System.out.println(inv.getSeeds()[i].getId());

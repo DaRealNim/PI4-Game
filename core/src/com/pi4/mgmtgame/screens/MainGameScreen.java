@@ -161,11 +161,10 @@ public class MainGameScreen implements Screen	{
 				} catch(InterruptedException e) {
 				}
 				int t = server.getStoredInternalTurn();
-				System.out.println(server.getID() + ", " + t);
+				// System.out.println(server.getID() + ", " + t);
 				if (server.getID() == t) {
 					waitingOverlay.setVisible(false);
-					// server.waitForIdle();
-					// hud.update();
+					hud.update();
 				} else {
 					waitingOverlay.setVisible(true);
 					Map serverMap = server.getMap();
@@ -176,17 +175,6 @@ public class MainGameScreen implements Screen	{
 					hud.update();
 					server.getInternalTurn();
 				}
-
-
-				// for (Actor a : stage.getActors()) {
-				// 	System.out.println(a + ":" + a.hashCode());
-				// }
-				// System.out.println(map + ":" + map.hashCode());
-				// System.out.println(stage.getActors().toString(", "));
-
-				// server.waitForIdle();
-
-				// System.out.println(server.getID() + ", " +t);
 
 			}
 		}

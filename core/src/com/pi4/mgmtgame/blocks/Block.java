@@ -50,7 +50,6 @@ public class Block extends Group implements Serializable {
 
     protected void updateMap(AssetManager manager, ServerInteraction server) {
         Map map = (Map) getParent();
-        server.waitForIdle();
         Map serverMap = server.getMap();
         serverMap.updateActors(manager, server);
         Stage stage = getStage();
