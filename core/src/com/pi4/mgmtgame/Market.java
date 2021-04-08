@@ -89,14 +89,14 @@ public class Market extends Group {
 	    	sellButton.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	          	  sellPlant(plant, 1);
+	          	  server.sellPlant(plant, 1);
 	            }
 	    	});
 
 	    	buyButton.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	          	  buyPlant(plant, 1);
+	          	  server.buyPlant(plant, 1);
 	            }
 	    	});
 
@@ -123,14 +123,14 @@ public class Market extends Group {
 	    	sellButton.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	          	  sellGrain(grain, 1);
+	          	  server.sellGrain(grain, 1);
 	            }
 	    	});
 
 	    	buyButton.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	          	  buyGrain(grain, 1);
+	          	  server.buyGrain(grain, 1);
 	            }
 	    	});
 

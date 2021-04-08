@@ -9,6 +9,7 @@ import com.pi4.mgmtgame.blocks.Block;
 import com.pi4.mgmtgame.blocks.Environment;
 import com.pi4.mgmtgame.blocks.Field;
 import com.pi4.mgmtgame.blocks.Structure;
+import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
 
@@ -112,8 +113,10 @@ public class Server {
 				while (true) {
 					int x = 0;
 					int y = 0;
+					int quantity = 0;
 					Structure struct = null;
 					Grain grain = null;
+					Plant plant = null;
 					int request = dataIn.readInt();
 					System.out.println("Got request "+request);
 					switch (request) {
@@ -209,6 +212,35 @@ public class Server {
 								break;
 							passTurn();
 							break;
+						case 13:
+							grain = (Grain) objIn.readObject();
+							quantity = dataIn.readInt();
+							if (internalTurn != playerID)
+								break;
+							buyGrain(grain, quantity);
+							break;
+						case 14:
+							grain = (Grain) objIn.readObject();
+							quantity = dataIn.readInt();
+							if (internalTurn != playerID)
+								break;
+							sellGrain(grain, quantity);
+							break;
+						case 15:
+							plant = (Plant) objIn.readObject();
+							quantity = dataIn.readInt();
+							if (internalTurn != playerID)
+								break;
+							buyPlant(plant, quantity);
+							break;
+						case 16:
+							plant = (Plant) objIn.readObject();
+							quantity = dataIn.readInt();
+							if (internalTurn != playerID)
+								break;
+							sellPlant(plant, quantity);
+							break;
+
 						default:
 							System.out.println("wyd????");
 							break;
@@ -338,6 +370,62 @@ public class Server {
 		}
 		System.out.println(this.inv);
 		System.out.println(turn);
+	}
+
+	public boolean userHasMoneyToBuy(int q, Resources r) {
+		return (getInventory().getMoney() >= r.getPrice() * q);
+	}
+
+	public boolean userCanSellPlant(int q, Plant p) {
+		return (getInventory().getPlants()[p.getId()].getVolume() >= q);
+	}
+
+	public boolean userCanSellGrain(int q, Grain g) {
+		return (getInventory().getSeeds()[g.getId()].getVolume() >= q);
+	}
+
+	public void buyGrain(Grain boughtGrain, int q) {
+		Inventory userInv = getInventory();
+		int grainPrice = boughtGrain.getPrice();
+
+		if (userHasMoneyToBuy(q, boughtGrain)) {
+			userInv.giveMoney(grainPrice * q);
+			userInv.addGrain(boughtGrain.getId(), q);
+			// boughtGrain.addPrice(1);
+		}
+	}
+
+	public void sellGrain(Grain soldGrain, int q) {
+		Inventory userInv = getInventory();
+		int grainPrice = soldGrain.getPrice();
+
+		if (userCanSellGrain(q, soldGrain)) {
+			userInv.receiveMoney(grainPrice * q);
+			userInv.removeGrain(soldGrain.getId(), q);
+			// soldGrain.subPrice(1);
+		}
+	}
+
+	public void buyPlant(Plant boughtPlant, int q) {
+		Inventory userInv = getInventory();
+		int plantPrice = boughtPlant.getPrice();
+
+		if (userHasMoneyToBuy(q, boughtPlant)) {
+			userInv.giveMoney(plantPrice * q);
+			userInv.addPlant(boughtPlant.getId(), q);
+			// boughtPlant.addPrice(1);
+		}
+	}
+
+	public void sellPlant(Plant soldPlant, int q) {
+		Inventory userInv = getInventory();
+		int plantPrice = soldPlant.getPrice();
+
+		if (userCanSellPlant(q, soldPlant)) {
+			userInv.receiveMoney(plantPrice * q);
+			userInv.removePlant(soldPlant.getId(), q);
+			// soldPlant.subPrice(1);
+		}
 	}
 
 	public static void main(String[] args) {

@@ -283,6 +283,64 @@ public class ServerInteraction {
 		// System.out.println("end passTurn()");
 	}
 
+	public synchronized void buyGrain(Grain boughtGrain, int q) {
+		try {
+			clientSideConnection.dataOut.writeInt(13);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(boughtGrain);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void sellGrain(Grain soldGrain, int q) {
+		try {
+			clientSideConnection.dataOut.writeInt(14);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(soldGrain);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void buyPlant(Plant boughtPlant, int q) {
+		try {
+			clientSideConnection.dataOut.writeInt(15);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(boughtPlant);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void sellPlant(Plant soldPlant, int q) {
+		try {
+			clientSideConnection.dataOut.writeInt(16);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(soldPlant);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+
+
+
+
 	private class ClientSide {
 		protected Socket clientSocket;
 
