@@ -19,8 +19,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class Server {
 	private ServerSocket serverSocket;
 	private int numPlayers;
-	private ServerSide player1;
-	private ServerSide player2;
+	private ServerSide[] players;
 
 	private Map map;
 	private Inventory[] invArray;
@@ -46,6 +45,8 @@ public class Server {
 		for(int i=0; i<nbOfPlayers; i++) {
 			this.invArray[i] = new Inventory(i);
 		}
+		this.players = new ServerSide[nbOfPlayers];
+		this.numPlayers = 0;
 		this.turn = 0;
 		this.internalTurn = 0;
 		this.inv = invArray[0];
@@ -55,25 +56,19 @@ public class Server {
 		try {
 			System.out.println("Waiting on conns...");
 
-			while (numPlayers < 2) {
+			while (numPlayers < nbOfPlayers) {
 				Socket playerSocket = serverSocket.accept();
 				System.out.println("Player " + numPlayers + " connected");
 
 				ServerSide serverSideConnection = new ServerSide(playerSocket, numPlayers);
-				System.out.println("bruh???");
-
-				if (numPlayers == 1)
-					player1 = serverSideConnection;
-				else
-					player2 = serverSideConnection;
+				this.players[numPlayers] = serverSideConnection;
 
 				Thread t = new Thread(serverSideConnection);
-				System.out.println("bruh??");
 				t.start();
-				System.out.println("bruh?");
 				++numPlayers;
 			}
 			System.out.println("Game will now start.");
+			serverSocket.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -346,7 +341,7 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		Server gameServer = new Server(2);
+		Server gameServer = new Server(3);
 		gameServer.acceptConnections();
 	}
 }
