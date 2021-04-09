@@ -20,7 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.assets.AssetManager;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 
 
@@ -42,6 +43,7 @@ public class MainGameScreen implements Screen	{
 	private InputMultiplexer multiplexer;
 	protected Stage stage;
 	private ServerInteraction server;
+	private Button waitingOverlay;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -74,8 +76,9 @@ public class MainGameScreen implements Screen	{
 		stage = new Stage(viewport, batch);
 
 		hud = new HUD(manager, server);
+		server.passHUD(hud);
 	}
-	
+
 	@Override
 	public void show() {
 		multiplexer.addProcessor(hud.stage);
@@ -83,6 +86,16 @@ public class MainGameScreen implements Screen	{
 
 		Gdx.input.setInputProcessor(multiplexer);
 		stage.addActor(map);
+		map.updateActors(manager, server);
+
+		waitingOverlay = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
+		waitingOverlay.setVisible(false);
+		hud.stage.addActor(waitingOverlay);
+
+
+
+		Thread t = new Thread(new MapHudUpdate());
+		t.start();
 	}
 
 	@Override
@@ -93,7 +106,6 @@ public class MainGameScreen implements Screen	{
 		stage.act(delta);
 		stage.draw();
 		processCameraMovement();
-		hud.update();
 
 		game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.act();
@@ -138,5 +150,34 @@ public class MainGameScreen implements Screen	{
 
 	@Override
 	public void dispose() {}
+
+	private class MapHudUpdate implements Runnable {
+
+		@Override
+		public void run() {
+			while(true) {
+				try {
+					Thread.sleep(500);
+				} catch(InterruptedException e) {
+				}
+				int t = server.getStoredInternalTurn();
+				// System.out.println(server.getID() + ", " + t);
+				if (server.getID() == t) {
+					waitingOverlay.setVisible(false);
+					hud.update();
+				} else {
+					waitingOverlay.setVisible(true);
+					Map serverMap = server.getMap();
+					serverMap.updateActors(manager, server);
+					map.remove();
+					map = serverMap;
+					stage.addActor(serverMap);
+					hud.update();
+					server.getInternalTurn();
+				}
+
+			}
+		}
+	}
 
 }

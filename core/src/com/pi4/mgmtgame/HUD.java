@@ -33,6 +33,7 @@ public class HUD {
     private ServerInteraction server;
     private Label moneyLabel, grainLabel, seedLabel, turnLabel, internalTurnLabel;
     private Inventory inv;
+    private int internalTurn;
     String seedLabelText;
     String grainLabelText;
 
@@ -46,6 +47,10 @@ public class HUD {
       stage = new Stage(viewport);
 
       this.show();
+    }
+
+    public int getInternalTurn() {
+        return internalTurn;
     }
 
     public void updateLabels() {

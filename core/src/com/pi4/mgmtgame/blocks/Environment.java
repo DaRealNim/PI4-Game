@@ -7,8 +7,8 @@ import com.pi4.mgmtgame.resources.Grain;
 
 public abstract class Environment extends Block {
 
-    public Environment(int x, int y, AssetManager manager) {
-        super(x, y, manager);
+    public Environment(int x, int y) {
+        super(x, y);
     }
 
     //Returns a growing penalty for fields in months
@@ -19,7 +19,7 @@ public abstract class Environment extends Block {
 
     //Checks if a specific building can be placed on that terrain
     abstract public boolean canBuild(Structure struct);
-    
+
     @Override
     public void passTurn() {
 	}

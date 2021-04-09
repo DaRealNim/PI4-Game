@@ -3,10 +3,13 @@ import com.pi4.mgmtgame.ServerInteraction;
 import com.pi4.mgmtgame.blocks.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.graphics.g2d.Batch;
+
+import java.io.Serializable;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
-public class Map extends Group {
+public class Map extends Group implements Serializable {
 	private Environment[][] envnmt_map;
 	private Structure[][] struct_map;
 	private ServerInteraction server;
@@ -23,9 +26,24 @@ public class Map extends Group {
 
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				Plain p = new Plain(i, j, manager, server);
+				Plain p = new Plain(i, j);
 				envnmt_map[i][j] = p;
 				addActor(p);
+			}
+		}
+	}
+
+	public void explicitPrint() {
+		System.out.println("Couche environement:");
+		for(Environment[] row : envnmt_map) {
+			for(Environment block : row) {
+				System.out.println(block);
+			}
+		}
+		System.out.println("Couche structure:");
+		for(Structure[] row : struct_map) {
+			for(Structure block : row) {
+				System.out.println(block);
 			}
 		}
 	}
@@ -35,7 +53,7 @@ public class Map extends Group {
 		for(Structure[] row : struct_map) {
 			for(Structure block : row) {
 				if (block != null) {
-					if (block.testOwner(server.getInternalTurn())) {
+					if (block.testOwner(server.getID())) {
 						block.getColor().a = (float)1;
 					} else {
 						block.getColor().a = (float)0.7;
@@ -45,15 +63,18 @@ public class Map extends Group {
 	    }
     }
 
-	public void updateActors() {
+	public void updateActors(final AssetManager manager, final ServerInteraction server) {
 		clear();
+		this.server = server;
 		for(int i = 0; i < this.width; i++) {
 			for (int j = 0; j < this.height; j++) {
 				if (envnmt_map[i][j] != null) {
+					envnmt_map[i][j].addViewController(manager, server);
 					addActor(envnmt_map[i][j]);
 					envnmt_map[i][j].updateActors();
 				}
 				if (struct_map[i][j] != null) {
+					struct_map[i][j].addViewController(manager, server);
 					addActor(struct_map[i][j]);
 					struct_map[i][j].updateActors();
 				}

@@ -1,5 +1,7 @@
 package com.pi4.mgmtgame;
 
+import java.io.Serializable;
+
 import com.pi4.mgmtgame.resources.Carrot;
 import com.pi4.mgmtgame.resources.CarrotSeeds;
 import com.pi4.mgmtgame.resources.Grain;
@@ -12,7 +14,7 @@ import com.pi4.mgmtgame.resources.Wheat;
 import com.pi4.mgmtgame.resources.WheatSeeds;
 import com.pi4.mgmtgame.resources.Wood;
 
-public class Inventory {
+public class Inventory implements Serializable {
 	private int money;
 	private Plant[] plants;
 	private Grain[] seeds;

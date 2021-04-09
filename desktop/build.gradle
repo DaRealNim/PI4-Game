@@ -3,10 +3,28 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../core/assets"]
 
 project.ext.mainClassName = "com.pi4.mgmtgame.desktop.DesktopLauncher"
+project.ext.serverName = "com.pi4.mgmtgame.networking.Server"
+project.ext.clientName = "com.pi4.mgmtgame.networking.Player"
 project.ext.assetsDir = new File("../core/assets")
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
+}
+
+task server(dependsOn: classes, type: JavaExec) {
+    main = project.serverName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
+}
+
+task client(dependsOn: classes, type: JavaExec) {
+    main = project.clientName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir

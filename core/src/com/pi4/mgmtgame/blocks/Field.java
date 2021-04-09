@@ -15,17 +15,23 @@ import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.ServerInteraction;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.Inventory;
 
 public class Field extends Structure {
 	private Grain plantedSeed;
 	private int growingState;
 
-	public Field(int x, int y, final AssetManager manager, final ServerInteraction server) {
+	public Field(int x, int y) {
+		super(x, y);
+		this.growingState = 0;
+	}
 
-		super(x, y, manager);
+	@Override
+	public void addViewController(final AssetManager manager, final ServerInteraction server) {
+		this.manager = manager;
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
-		button.setX(x * 16);
-		button.setY(y * 16);
+		button.setX(getGridX() * 16);
+		button.setY(getGridY() * 16);
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -48,13 +54,14 @@ public class Field extends Structure {
 										"potatoseeds_icon");
 								Button plantCarrot = new Button(manager.get("popupIcons/popup.json", Skin.class),
 										"carrotseeds_icon");
-								if (server.getInventory().hasGrain(0))
+								Inventory inv = server.getInventory();
+								if (inv.hasGrain(0))
 									buttons[0] = plantWheat;
 
-								if (server.getInventory().hasGrain(1))
+								if (inv.hasGrain(1))
 									buttons[1] = plantPotato;
 
-								if (server.getInventory().hasGrain(2))
+								if (inv.hasGrain(2))
 									buttons[2] = plantCarrot;
 
 								final Popup d = new Popup((getGridX() - 2) * 16 - 12, (getGridY() + 1) * 16 + 12, manager,buttons);
@@ -98,7 +105,7 @@ public class Field extends Structure {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
 								server.requestHarvest(getGridX(), getGridY());
-								changeStyle("field_empty");
+								updateMap(manager, server);
 								p.remove();
 							}
 						});
@@ -110,7 +117,7 @@ public class Field extends Structure {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
 							server.requestDestroyStructure(getGridX(), getGridY());
-							remove();
+							updateMap(manager, server);
 							p.remove();
 						}
 					});
@@ -121,7 +128,18 @@ public class Field extends Structure {
 		});
 
 		setButton(button);
-		this.growingState = 0;
+	}
+
+	@Override
+	public void updateActors() {
+		super.updateActors();
+		if (plantedSeed == null) {
+			changeStyle("field_empty");
+		} else if (!hasSeedGrown()) {
+			changeStyle(plantedSeed.getFieldSpriteName());
+		} else {
+			changeStyle(plantedSeed.getFieldSpriteName() + "_grew");
+		}
 	}
 
 	@Override
@@ -136,7 +154,6 @@ public class Field extends Structure {
 
 	public void plantSeed(Grain seed) {
 		this.plantedSeed = seed;
-        changeStyle(seed.getFieldSpriteName());
 	}
 
 	public boolean hasSeedGrown() {
@@ -160,17 +177,13 @@ public class Field extends Structure {
 	}
 
 	private void attemptToPlant(int i, ServerInteraction server) {
-		Map map = (Map) getParent();
 		// ERREUR (renvoie tjrs 0)
-		boolean res = server.requestPlantSeed(getGridX(), getGridY(), server.getInventory().getSeeds()[i]);
-		System.out.println(server.getInventory().getSeeds()[i].getId());
+		Inventory inv = server.getInventory();
+		boolean res = server.requestPlantSeed(getGridX(), getGridY(), inv.getSeeds()[i]);
+		System.out.println(inv.getSeeds()[i].getId());
 		// Todo Fix cette merde
 		System.out.println("Could plant seed of id " + i + " at " + getGridX() + ", " + getGridY() + ": " + res);
-		Map serverMap = server.getMap();
-		serverMap.updateActors();
-		Stage stage = getStage();
-		map.remove();
-		stage.addActor(serverMap);
+		updateMap(manager, server);
 	}
 
 	public Plant harvest() {
@@ -186,6 +199,11 @@ public class Field extends Structure {
 	@Override
 	public void passTurn() {
 		this.growSeed();
+	}
+
+	@Override
+	public String toString() {
+		return "Field";
 	}
 
 }

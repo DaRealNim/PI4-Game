@@ -1,12 +1,14 @@
 package com.pi4.mgmtgame.blocks;
 
+import java.io.Serializable;
+
 import com.badlogic.gdx.assets.AssetManager;
 
-public abstract class Structure extends Block {
+public abstract class Structure extends Block implements Serializable {
 	private int ownerID;
 
-	public Structure(int x, int y, AssetManager manager) {
-		super(x, y, manager);
+	public Structure(int x, int y) {
+		super(x, y);
 	}
 
 	public boolean testOwner(int x) {

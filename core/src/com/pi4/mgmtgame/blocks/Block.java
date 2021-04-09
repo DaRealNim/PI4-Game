@@ -1,21 +1,30 @@
 package com.pi4.mgmtgame.blocks;
 
+import java.io.Serializable;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
+import com.pi4.mgmtgame.ServerInteraction;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pi4.mgmtgame.Map;
 
-public class Block extends Group {
+
+public class Block extends Group implements Serializable {
     private Button displayedButton;
     protected AssetManager manager;
     private int x, y;
 
-    public Block(int x, int y, AssetManager manager) {
+    public Block(int x, int y) {
     	this.setGridX(x);
     	this.setGridY(y);
-      this.manager = manager;
+    }
+
+    public void addViewController(final AssetManager manager, final ServerInteraction server) {
+        System.out.println("nnooooOOOOOOO");
     }
 
     public void setButton(Button b) {
@@ -37,6 +46,15 @@ public class Block extends Group {
         if (this.displayedButton != null) {
             getButton().setStyle(getButton().getSkin().get(styleName, Button.ButtonStyle.class));
         }
+    }
+
+    protected void updateMap(AssetManager manager, ServerInteraction server) {
+        Map map = (Map) getParent();
+        Map serverMap = server.getMap();
+        serverMap.updateActors(manager, server);
+        Stage stage = getStage();
+        map.remove();
+        stage.addActor(serverMap);
     }
 
     //Commented for now because just adding blocks as group children work, but may need
