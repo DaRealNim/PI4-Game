@@ -21,9 +21,9 @@ public class TreeField extends Structure{
 	final private Grain plantedSeed = new TreeSeeds();
 	public TreeField(int x, int y) {
 		super(x, y);
-		this.growingState = 0; 
+		this.growingState = 0;
 	}
-	
+
 	public void addViewController(final AssetManager manager, final ServerInteraction server) {
 		this.manager = manager;
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
@@ -81,7 +81,7 @@ public class TreeField extends Structure{
 	public int getDestructionGain() {
 		return 0;
 	}
-	
+
 	public void growSeed() {
 		if (plantedSeed != null && !hasSeedGrown()) {
 			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
@@ -91,18 +91,24 @@ public class TreeField extends Structure{
 			}
 		}
 	}
-	
+
 	public boolean hasSeedGrown() {
 		return (this.growingState >= this.plantedSeed.getGrowingTime());
 	}
 
 	@Override
 	public boolean canBuild(Inventory inv) {
-		if(inv.hasGrain(plantedSeed))
+		if(inv.hasGrain(plantedSeed)) {
 			return true;
+		}
 		return false;
 	}
-	
+
+	@Override
+	public void doBuild(Inventory inv) {
+		inv.removeGrain(plantedSeed.getId(), 1);
+	}
+
 	public Plant harvest() {
 		if (hasSeedGrown()) {
 			Plant grown = plantedSeed.getGrownPlant();

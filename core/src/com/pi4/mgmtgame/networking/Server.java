@@ -283,6 +283,7 @@ public class Server {
 		if (canBuildStructure(x, y, struct)) {
 			map.setStructAt(x, y, struct);
 			inv.giveMoney(struct.getConstructionCost());
+			struct.doBuild(getInventory());
 			return (true);
 		}
 		return (false);
@@ -429,7 +430,7 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		Server gameServer = new Server(3);
+		Server gameServer = new Server(2);
 		gameServer.acceptConnections();
 	}
 }

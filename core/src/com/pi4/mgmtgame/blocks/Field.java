@@ -207,6 +207,9 @@ public class Field extends Structure {
 	}
 
 	@Override
+	public void doBuild(Inventory inv) {}
+
+	@Override
 	public String toString() {
 		return "Field";
 	}
