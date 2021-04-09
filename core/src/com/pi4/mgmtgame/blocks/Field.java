@@ -202,6 +202,11 @@ public class Field extends Structure {
 	}
 
 	@Override
+	public boolean canBuild(Inventory inv) {
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		return "Field";
 	}

@@ -276,7 +276,7 @@ public class Server {
 
 	public boolean canBuildStructure(int x, int y, Structure struct) {
 		Environment envBlock = map.getEnvironmentAt(x, y);
-		return (envBlock.canBuild(struct) && inv.getMoney() >= struct.getConstructionCost() && envBlock != null);
+		return (envBlock.canBuild(struct) && struct.canBuild(getInventory()) &&inv.getMoney() >= struct.getConstructionCost() && envBlock != null);
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {

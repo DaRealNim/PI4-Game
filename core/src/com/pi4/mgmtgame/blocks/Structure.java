@@ -1,4 +1,5 @@
 package com.pi4.mgmtgame.blocks;
+import com.pi4.mgmtgame.Inventory;
 
 import java.io.Serializable;
 
@@ -28,6 +29,8 @@ public abstract class Structure extends Block implements Serializable {
 	abstract public int getConstructionCost();
 
 	abstract public int getDestructionGain();
+
+	abstract public boolean canBuild(Inventory inv);
 
 	@Override
 	public void passTurn() {
