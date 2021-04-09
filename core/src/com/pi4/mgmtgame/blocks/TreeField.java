@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
+import com.pi4.mgmtgame.resources.TreeSeeds;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.ServerInteraction;
@@ -17,7 +18,7 @@ import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Inventory;
 public class TreeField extends Structure{
 	private int growingState;
-
+	final private Grain plantedSeed = new TreeSeeds();
 	public TreeField(int x, int y) {
 		super(x, y);
 		this.growingState = 0; 
@@ -40,7 +41,8 @@ public class TreeField extends Structure{
 						buttonHarvest.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
-								server.requestHarvest(getGridX(), getGridY());
+								if(server.requestHarvest(getGridX(), getGridY())==true)
+									server.requestDestroyStructure(getGridX(), getGridY());
 								updateMap(manager, server);
 								p.remove();
 							}
@@ -67,20 +69,48 @@ public class TreeField extends Structure{
 	}
 
 	protected boolean hasTreeSeed() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public int getConstructionCost() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 200;
 	}
 
 	@Override
 	public int getDestructionGain() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public void growSeed() {
+		if (plantedSeed != null && !hasSeedGrown()) {
+			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
+			this.growingState++;
+			if (hasSeedGrown()) {
+				changeStyle(plantedSeed.getFieldSpriteName() + "_grew");
+			}
+		}
+	}
+	
+	public boolean hasSeedGrown() {
+		return (this.growingState >= this.plantedSeed.getGrowingTime());
+	}
+
+	@Override
+	public boolean canBuild(Inventory inv) {
+		if(inv.hasGrain(plantedSeed))
+			return true;
+		return false;
+	}
+	
+	public Plant harvest() {
+		if (hasSeedGrown()) {
+			Plant grown = plantedSeed.getGrownPlant();
+			return grown;
+		}
+		return null;
+	}
+
+
 
 }
