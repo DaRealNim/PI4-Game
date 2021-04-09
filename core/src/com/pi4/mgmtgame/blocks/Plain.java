@@ -31,9 +31,26 @@ public class Plain extends Environment {
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
                 Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
+                Button buttonTree = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
                 final Field f = new Field(getGridX(), getGridY());
+                final TreeField g = new TreeField(getGridX(), getGridY());
                 f.setOwnerID(server.getCurrentPlayer());
-                final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonField);
+                g.setOwnerID(server.getCurrentPlayer());
+                final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager,buttonField, buttonTree);
+                if (server.canBuildStructure(getGridX(), getGridY(), g)) {
+                    buttonTree.addListener(new ClickListener(){
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            Map map = (Map)getParent();
+                            boolean res = server.requestBuildStructure(getGridX(), getGridY(), g);
+                            System.out.println("Could build TreeF at "+getGridX()+", "+getGridY()+": "+res+"id :");
+                            updateMap(manager, server);
+                            p.remove();
+                        }
+                    });
+                } else {
+                    buttonTree.getColor().a = (float)0.3;
+                }
                 if (server.canBuildStructure(getGridX(), getGridY(), f)) {
                     buttonField.addListener(new ClickListener(){
                         @Override
