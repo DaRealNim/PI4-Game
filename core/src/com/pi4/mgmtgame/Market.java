@@ -10,12 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pi4.mgmtgame.resources.Grain;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Wood;
@@ -55,9 +58,13 @@ public class Market extends Group {
 
 		Image[] marketRes = {wood, carrot, potato, wheat, bill};
 
-		Table table = new Table();
-	    table.setX(bg.getWidth() / 4);
-	    table.setY(bg.getHeight() / 2);
+		Table grainTable = new Table();
+	  grainTable.setX(bg.getWidth() / 4);
+	  grainTable.setY(bg.getHeight() / 2);
+
+		Table plantTable = new Table();
+	  plantTable.setX(bg.getWidth() / 4);
+		plantTable.setY(bg.getHeight() / 2);
 
 		Button close = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
 
@@ -72,19 +79,18 @@ public class Market extends Group {
 		close.setScale(3);
 		close.setX(bg.getWidth() - 64);
 		close.setY(bg.getHeight() - 64);
-		// table.add(close).padLeft(600);
-		// table.row();
 
-	    for (Plant p : server.getInventory().getPlants())
-	    {
-	    	final Plant plant = p;
-			System.out.println(p.getTexture());
-	    	// Image i = new Image(manager.get(p.getTexture(), Texture.class));
-			Button i = new Button(new TextureRegionDrawable(manager.get(p.getTexture(), Texture.class)));
-			i.setTransform(true);
-			i.setScale(2);
-	    	Button buyButton = new Button(marketSkins, "buyButton");
-	    	Button sellButton = new Button(marketSkins, "sellButton");
+	  for (Plant p : server.getInventory().getPlants())  {
+	  		final Plant plant = p;
+				Button i = new Button(new TextureRegionDrawable(manager.get(p.getTexture(), Texture.class)));
+				i.setTransform(true);
+				i.setScale(2);
+
+				Button buyButton = new Button(marketSkins, "buyButton");
+	  		Button sellButton = new Button(marketSkins, "sellButton");
+
+				String itemText = p.toString();
+				Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 	    	sellButton.addListener(new ClickListener() {
 	            @Override
@@ -100,23 +106,27 @@ public class Market extends Group {
 	            }
 	    	});
 
-	    	table.add(i).padRight(25);
-			// addActor(i);
-	    	table.add(buyButton).padRight(25);
-	    	table.add(sellButton).padRight(50);
-	    	table.row();
+				plantTable.add(itemLabel).padLeft(80);
+				plantTable.row();
+	    	plantTable.add(i).padRight(25).padTop(25).padLeft(80);
+				plantTable.row();
+	    	plantTable.add(buyButton);
+	    	plantTable.add(sellButton).padRight(10);
+	    	plantTable.row();
 	    }
 
-	    for (Grain g : server.getInventory().getSeeds())
-	    {
+
+	    for (Grain g : server.getInventory().getSeeds()) {
 	    	final Grain grain = g;
-			System.out.println(g.getTexture());
-	    	Button i = new Button(new TextureRegionDrawable(manager.get(g.getTexture(), Texture.class)));
-			i.setTransform(true);
-			i.setScale(2);
+				System.out.println(g.getTexture());
 
+				Button i = new Button(new TextureRegionDrawable(manager.get(g.getTexture(), Texture.class)));
+				i.setTransform(true);
+				i.setScale(2);
 
-			// Image i = new Image(manager.get(g.getTexture(), Texture.class));
+				String itemText = g.toString(); //haha g string
+				Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
 	    	Button buyButton = new Button(marketSkins, "buyButton");
 	    	Button sellButton = new Button(marketSkins, "sellButton");
 
@@ -134,16 +144,23 @@ public class Market extends Group {
 	            }
 	    	});
 
-
-	    	table.add(i).padRight(25);
-	    	table.add(buyButton).padRight(25);
-	    	table.add(sellButton).padRight(50);
-	    	table.row();
+				grainTable.add(itemLabel).padLeft(80);
+				grainTable.row();
+	    	grainTable.add(i).padRight(25).padTop(25).padLeft(80);
+				grainTable.row();
+	    	grainTable.add(buyButton);
+	    	grainTable.add(sellButton).padRight(10);
+	    	grainTable.row();
 		}
 
-	    addActor(bg);
+		grainTable.padLeft(300);
+		plantTable.right();
+		grainTable.left();
+
+	  addActor(bg);
 		addActor(close);
-	    addActor(table);
+	  addActor(plantTable);
+		addActor(grainTable);
 	}
 
 
