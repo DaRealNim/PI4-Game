@@ -106,9 +106,9 @@ public class Market extends Group {
 	            }
 	    	});
 
-				plantTable.add(itemLabel).padLeft(80);
+				plantTable.add(itemLabel).padLeft(120);
 				plantTable.row();
-	    	plantTable.add(i).padRight(25).padTop(25).padLeft(80);
+	    	plantTable.add(i).padRight(25).padTop(25).padLeft(120);
 				plantTable.row();
 	    	plantTable.add(buyButton);
 	    	plantTable.add(sellButton).padRight(10);
@@ -144,16 +144,17 @@ public class Market extends Group {
 	            }
 	    	});
 
-				grainTable.add(itemLabel).padLeft(80);
+				grainTable.add(itemLabel).padLeft(120);
 				grainTable.row();
-	    	grainTable.add(i).padRight(25).padTop(25).padLeft(80);
+	    	grainTable.add(i).padRight(15).padTop(25).padLeft(150);
 				grainTable.row();
-	    	grainTable.add(buyButton);
-	    	grainTable.add(sellButton).padRight(10);
+	    	grainTable.add(buyButton).padLeft(30);
+	    	grainTable.add(sellButton);
 	    	grainTable.row();
 		}
 
-		grainTable.padLeft(300);
+		grainTable.padLeft(260);
+		plantTable.padRight(-30);
 		plantTable.right();
 		grainTable.left();
 
@@ -176,47 +177,5 @@ public class Market extends Group {
 		return (server.getInventory().getSeeds()[g.getId()].getVolume() >= q);
 	}
 
-	void buyGrain(Grain boughtGrain, int q) {
-		Inventory userInv = server.getInventory();
-		int grainPrice = boughtGrain.getPrice();
 
-		if (userHasMoneyToBuy(q, boughtGrain)) {
-			userInv.giveMoney(grainPrice * q);
-			userInv.addGrain(boughtGrain.getId(), q);
-			boughtGrain.addPrice(1);
-		}
-	}
-
-	void sellGrain(Grain soldGrain, int q) {
-		Inventory userInv = server.getInventory();
-		int grainPrice = soldGrain.getPrice();
-
-		if (userCanSellGrain(q, soldGrain)) {
-			userInv.receiveMoney(grainPrice * q);
-			userInv.removeGrain(soldGrain.getId(), q);
-			soldGrain.subPrice(1);
-		}
-	}
-
-	void buyPlant(Plant boughtPlant, int q) {
-		Inventory userInv = server.getInventory();
-		int plantPrice = boughtPlant.getPrice();
-
-		if (userHasMoneyToBuy(q, boughtPlant)) {
-			userInv.giveMoney(plantPrice * q);
-			userInv.addPlant(boughtPlant.getId(), q);
-			boughtPlant.addPrice(1);
-		}
-	}
-
-	void sellPlant(Plant soldPlant, int q) {
-		Inventory userInv = server.getInventory();
-		int plantPrice = soldPlant.getPrice();
-
-		if (userCanSellPlant(q, soldPlant)) {
-			userInv.receiveMoney(plantPrice * q);
-			userInv.removePlant(soldPlant.getId(), q);
-			soldPlant.subPrice(1);
-		}
-	}
 }
