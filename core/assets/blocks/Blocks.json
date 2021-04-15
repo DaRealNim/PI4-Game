@@ -24,5 +24,11 @@ ButtonStyle: {
 	field_potatoes_grew: {
 		up: field_potatoes_grew
 	}
+	treefarm: {
+		up: treefarm
+	}
+	treefarm_grew: {
+		up: treefarm_grew
+	}
 }
 }

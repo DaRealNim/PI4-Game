@@ -4,6 +4,13 @@ size: 128,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+axe_icon
+  rotate: false
+  xy: 27, 44
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
 bomb_icon
   rotate: false
   xy: 1, 44
@@ -56,6 +63,13 @@ potatoseeds_icon
 shovel_icon
   rotate: false
   xy: 80, 78
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+tree_icon
+  rotate: false
+  xy: 80, 65
   size: 11, 11
   orig: 11, 11
   offset: 0, 0

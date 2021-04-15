@@ -16,7 +16,8 @@ import com.pi4.mgmtgame.ServerInteraction;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Inventory;
-public class TreeField extends Structure{
+
+public class TreeField extends Field{
 	private int growingState;
 	final private Grain plantedSeed = new TreeSeeds();
 	public TreeField(int x, int y) {
@@ -24,9 +25,10 @@ public class TreeField extends Structure{
 		this.growingState = 0;
 	}
 
+	@Override
 	public void addViewController(final AssetManager manager, final ServerInteraction server) {
 		this.manager = manager;
-		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
+		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "treefarm");
 		button.setX(getGridX() * 16);
 		button.setY(getGridY() * 16);
 		button.addListener(new ClickListener() {
@@ -35,8 +37,8 @@ public class TreeField extends Structure{
                 System.out.println("Clicked Field!");
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon"); //mettre une hache svp
-					final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager,buttonDestroy, buttonHarvest);
+					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "axe_icon"); //mettre une hache svp
+					final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonHarvest, buttonDestroy);
 					if(server.canHarvest(getGridX(), getGridY())) {
 						buttonHarvest.addListener(new ClickListener() {
 							@Override
@@ -74,7 +76,7 @@ public class TreeField extends Structure{
 
 	@Override
 	public int getConstructionCost() {
-		return 200;
+		return 0;
 	}
 
 	@Override
@@ -82,6 +84,7 @@ public class TreeField extends Structure{
 		return 0;
 	}
 
+	@Override
 	public void growSeed() {
 		if (plantedSeed != null && !hasSeedGrown()) {
 			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
@@ -92,6 +95,24 @@ public class TreeField extends Structure{
 		}
 	}
 
+	@Override
+	public void passTurn() {
+		this.growSeed();
+	}
+
+	@Override
+	public void updateActors() {
+		super.updateActors();
+		if (plantedSeed == null) {
+			changeStyle("none");
+		} else if (!hasSeedGrown()) {
+			changeStyle(plantedSeed.getFieldSpriteName());
+		} else {
+			changeStyle(plantedSeed.getFieldSpriteName() + "_grew");
+		}
+	}
+
+	@Override
 	public boolean hasSeedGrown() {
 		return (this.growingState >= this.plantedSeed.getGrowingTime());
 	}
@@ -109,6 +130,7 @@ public class TreeField extends Structure{
 		inv.removeGrain(plantedSeed.getId(), 1);
 	}
 
+	@Override
 	public Plant harvest() {
 		if (hasSeedGrown()) {
 			Plant grown = plantedSeed.getGrownPlant();

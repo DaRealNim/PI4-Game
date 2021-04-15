@@ -38,7 +38,7 @@ public abstract class Environment extends Block {
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
                 Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
-                Button buttonTree = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
+                Button buttonTree = new Button(manager.get("popupIcons/popup.json", Skin.class), "tree_icon");
                 final Field f = new Field(getGridX(), getGridY());
                 final TreeField g = new TreeField(getGridX(), getGridY());
                 f.setOwnerID(server.getCurrentPlayer());

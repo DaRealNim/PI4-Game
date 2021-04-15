@@ -27,13 +27,13 @@ public class TreeSeeds extends Grain {
 	}
 
 	public String getFieldSpriteName() {
-		return "none";
+		return "treefarm";
 	}
-	
+
 	public String getTexture() {
 		return("marketRes/wood.png");
 	}
-	
+
 	public String toString() {
 		return ("Tree Seeds");
 	}

@@ -27,5 +27,11 @@ ButtonStyle: {
 	closeButton: {
 		up: closeButton
 	}
+	axe_icon: {
+		up: axe_icon
+	}
+	tree_icon: {
+		up: tree_icon
+	}
 }
 }
