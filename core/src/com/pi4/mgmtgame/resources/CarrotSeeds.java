@@ -1,7 +1,7 @@
 package com.pi4.mgmtgame.resources;
 
 public class CarrotSeeds extends Grain {
-	static int carrotSeedPrice = basePrice;
+	static int carrotSeedPrice = 10;
 
 	public Plant getGrownPlant() {
 		return new Carrot();
@@ -28,11 +28,11 @@ public class CarrotSeeds extends Grain {
 	public String getTexture() {
 		return("marketRes/carrot.png");
 	}
-	
+
 	public String getFieldSpriteName() {
 		return "field_carrots";
 	}
-	
+
 	public String toString() {
 		return ("Carrot Seeds");
 	}

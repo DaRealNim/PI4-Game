@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Wood extends Plant {
 	static final int basePrice = 1;
-	static int woodPrice = basePrice;
+	static int woodPrice = 10;
 
 	public int getPrice() {
 		return woodPrice;
@@ -21,11 +21,11 @@ public class Wood extends Plant {
 	public int getId() {
 		return 3;
 	}
-	
+
 	public String getTexture() {
 		return("marketRes/wood.png");
 	}
-	
+
 	public String toString() {
 		return ("Wood");
 	}

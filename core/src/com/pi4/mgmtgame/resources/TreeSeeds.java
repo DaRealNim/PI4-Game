@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.resources;
 
 public class TreeSeeds extends Grain {
 	int growingTime = 1;
-	static int treeSeedPrice = basePrice;
+	static int treeSeedPrice = 10;
 
 	public Plant getGrownPlant() {
 		return new Wood();

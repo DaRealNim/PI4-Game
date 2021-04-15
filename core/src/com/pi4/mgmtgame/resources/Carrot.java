@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.resources;
 
 public class Carrot extends Plant{
 	static final int basePrice = 1;
-	static int carrotPrice = basePrice;
+	static int carrotPrice = 10;
 
 	public int getPrice() {
 		return carrotPrice;
@@ -19,11 +19,11 @@ public class Carrot extends Plant{
 	public int getId() {
 		return 2;
 	}
-	
+
 	public String getTexture() {
 		return("marketRes/carrot.png");
 	}
-	
+
 	public String toString() {
 		return ("Carrot");
 	}

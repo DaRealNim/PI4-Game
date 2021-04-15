@@ -1,7 +1,7 @@
 package com.pi4.mgmtgame.resources;
 
 public class WheatSeeds extends Grain {
-	static int wheatSeedPrice = basePrice;
+	static int wheatSeedPrice = 10;
 
 
 	public Plant getGrownPlant() {
@@ -37,7 +37,7 @@ public class WheatSeeds extends Grain {
 	public String getFieldSpriteName() {
 		return "field_wheat";
 	}
-	
+
 	public String toString() {
 		return ("Wheat Seeds");
 	}

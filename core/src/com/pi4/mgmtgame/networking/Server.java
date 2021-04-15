@@ -392,7 +392,8 @@ public class Server {
 		if (userHasMoneyToBuy(q, boughtGrain)) {
 			userInv.giveMoney(grainPrice * q);
 			userInv.addGrain(boughtGrain.getId(), q);
-			// boughtGrain.addPrice(1);
+			boughtGrain.addPrice(1);
+			System.out.println(boughtGrain.toString() + " price: " + boughtGrain.getPrice());
 		}
 	}
 
@@ -401,9 +402,11 @@ public class Server {
 		int grainPrice = soldGrain.getPrice();
 
 		if (userCanSellGrain(q, soldGrain)) {
+			soldGrain.subPrice(1);
+			grainPrice = soldGrain.getPrice();
 			userInv.receiveMoney(grainPrice * q);
 			userInv.removeGrain(soldGrain.getId(), q);
-			// soldGrain.subPrice(1);
+			System.out.println(soldGrain.toString() + " price: " + soldGrain.getPrice());
 		}
 	}
 
@@ -414,7 +417,8 @@ public class Server {
 		if (userHasMoneyToBuy(q, boughtPlant)) {
 			userInv.giveMoney(plantPrice * q);
 			userInv.addPlant(boughtPlant.getId(), q);
-			// boughtPlant.addPrice(1);
+			boughtPlant.addPrice(1);
+			System.out.println(boughtPlant.toString() + " price: " + boughtPlant.getPrice());
 		}
 	}
 
@@ -423,9 +427,11 @@ public class Server {
 		int plantPrice = soldPlant.getPrice();
 
 		if (userCanSellPlant(q, soldPlant)) {
+			soldPlant.subPrice(1);
+			plantPrice = soldPlant.getPrice();
 			userInv.receiveMoney(plantPrice * q);
 			userInv.removePlant(soldPlant.getId(), q);
-			// soldPlant.subPrice(1);
+			System.out.println(soldPlant.toString() + " price: " + soldPlant.getPrice());
 		}
 	}
 

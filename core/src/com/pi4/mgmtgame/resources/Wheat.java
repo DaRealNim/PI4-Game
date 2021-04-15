@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.resources;
 
 public class Wheat extends Plant {
 	static final int basePrice = 1;
-	static int wheatPrice = basePrice;
+	static int wheatPrice = 10;
 
 	public int getPrice() {
 		return wheatPrice;
@@ -19,11 +19,11 @@ public class Wheat extends Plant {
 	public int getId() {
 		return 0;
 	}
-	
+
 	public String getTexture() {
 		return("marketRes/wheat.png");
 	}
-	
+
 	public String toString() {
 		return ("Wheat");
 	}
