@@ -30,5 +30,8 @@ ButtonStyle: {
 	treefarm_grew: {
 		up: treefarm_grew
 	}
+	lake: {
+		up: lake
+	}
 }
 }

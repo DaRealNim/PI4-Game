@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.warmwaffles.noise.prime.PerlinNoise;
+import java.util.Random;
 
 public class Map extends Group implements Serializable {
 	private Environment[][] envnmt_map;
@@ -24,11 +26,22 @@ public class Map extends Group implements Serializable {
 		this.envnmt_map = new Environment[width][height];
 		this.struct_map = new Structure[width][height];
 
+		Random generator = new Random();
+		int seed = generator.nextInt();
+		System.out.println(seed);
+		PerlinNoise noise = new PerlinNoise(seed, 0.01, 1, 5, 10);
+
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				Plain p = new Plain(i, j);
-				envnmt_map[i][j] = p;
-				addActor(p);
+				if (noise.getHeight(i+0.5, j+0.5) < -1.3) {
+					Lake l = new Lake(i, j);
+					envnmt_map[i][j] = l;
+					addActor(l);
+				} else {
+					Plain p = new Plain(i, j);
+					envnmt_map[i][j] = p;
+					addActor(p);
+				}
 			}
 		}
 	}

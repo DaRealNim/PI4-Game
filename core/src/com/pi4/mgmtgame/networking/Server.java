@@ -40,7 +40,7 @@ public class Server {
 			System.out.println("Exception in Server constructor.");
 		}
 
-		this.map = new Map(10, 10, null, null);
+		this.map = new Map(50, 50, null, null);
 		this.nbOfPlayers = nbOfPlayers;
 		this.invArray = new Inventory[nbOfPlayers];
 		for(int i=0; i<nbOfPlayers; i++) {

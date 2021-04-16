@@ -51,6 +51,7 @@ public class MainGameScreen implements Screen	{
 	private boolean selected;
 	private int selectedSquareX;
 	private int selectedSquareY;
+	private double cameraSpeed;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -64,16 +65,18 @@ public class MainGameScreen implements Screen	{
 		this.selectedSquareY = -1;
 
 		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
+		this.cameraSpeed = 2;
 
 		this.multiplexer = new InputMultiplexer() {
 			@Override
 			public boolean scrolled(float amountX, float amountY) {
 				if (amountY > 0) {
-					camera.zoom = Math.min(2, camera.zoom+.2f);
+					camera.zoom = Math.min(5, camera.zoom+.2f);
 				}
 				if (amountY < 0) {
 					camera.zoom = Math.max(0.1f, camera.zoom-.2f);
 				}
+				cameraSpeed = 2*camera.zoom;
 				return true;
 			}
 		};
@@ -183,16 +186,16 @@ public class MainGameScreen implements Screen	{
 		int translateX = 0;
 		int translateY = 0;
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			translateX -= 2;
+			translateX -= cameraSpeed;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			translateX += 2;
+			translateX += cameraSpeed;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			translateY -= 2;
+			translateY -= cameraSpeed;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			translateY += 2;
+			translateY += cameraSpeed;
 		}
 		camera.translate(translateX, translateY);
 	}
