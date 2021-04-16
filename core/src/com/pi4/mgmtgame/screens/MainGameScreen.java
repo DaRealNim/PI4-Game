@@ -22,7 +22,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.math.Vector3;
+import com.pi4.mgmtgame.Popup;
 
 
 public class MainGameScreen implements Screen	{
@@ -41,9 +43,14 @@ public class MainGameScreen implements Screen	{
 	private SpriteBatch batch;
 	private HUD hud;
 	private InputMultiplexer multiplexer;
-	protected Stage stage;
+	protected Stage stage, stage2;
 	private ServerInteraction server;
 	private Button waitingOverlay;
+	private Image selectSquare;
+	private Image selectedSquare;
+	private boolean selected;
+	private int selectedSquareX;
+	private int selectedSquareY;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -51,6 +58,10 @@ public class MainGameScreen implements Screen	{
 		this.manager = manager;
 		this.batch = game.batch;
 		this.server = server;
+
+		this.selected = false;
+		this.selectedSquareX = -1;
+		this.selectedSquareY = -1;
 
 		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
 
@@ -74,6 +85,7 @@ public class MainGameScreen implements Screen	{
 		camera.update();
 
 		stage = new Stage(viewport, batch);
+		stage2 = new Stage(viewport, batch);
 
 		hud = new HUD(manager, server);
 		server.passHUD(hud);
@@ -87,6 +99,13 @@ public class MainGameScreen implements Screen	{
 		Gdx.input.setInputProcessor(multiplexer);
 		stage.addActor(map);
 		map.updateActors(manager, server);
+
+		this.selectSquare = new Image(manager.get("select.png", Texture.class));
+		this.selectedSquare = new Image(manager.get("select.png", Texture.class));
+		this.selectedSquare.setColor(0f, 1f, 1f, 1f);
+		this.selectedSquare.setVisible(false);
+		stage2.addActor(selectSquare);
+		stage2.addActor(selectedSquare);
 
 		waitingOverlay = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		waitingOverlay.setVisible(false);
@@ -105,6 +124,45 @@ public class MainGameScreen implements Screen	{
 
 		stage.act(delta);
 		stage.draw();
+
+		Vector3 vec = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		stage.getCamera().unproject(vec);
+		if(vec.x / 16 < map.getMapWidth() && vec.x > 0 && vec.y / 16 < map.getMapHeight() && vec.y > 0) {
+			this.selectSquare.setVisible(true);
+			this.selectSquare.setX((int)(vec.x / 16)*16);
+			this.selectSquare.setY((int)(vec.y / 16)*16);
+		} else {
+			this.selectSquare.setVisible(false);
+		}
+
+		if (selected) {
+			this.selectSquare.setVisible(false);
+			boolean foundPopup = false;
+			for(Actor a : stage.getActors()) {
+				if (a instanceof Popup) {
+					foundPopup = true;
+					break;
+				}
+			}
+			if (!foundPopup) {
+				selected = false;
+				selectedSquare.setVisible(false);
+				selectSquare.setVisible(true);
+			}
+		}
+
+		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            this.selected = true;
+			this.selectedSquareX = (int)(vec.x / 16)*16;
+			this.selectedSquareY = (int)(vec.y / 16)*16;
+			this.selectedSquare.setVisible(true);
+			this.selectedSquare.setX(this.selectedSquareX);
+			this.selectedSquare.setY(this.selectedSquareY);
+		}
+
+		stage2.act(delta);
+		stage2.draw();
+
 		processCameraMovement();
 
 		game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
