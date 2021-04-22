@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pi4.mgmtgame.resources.Crickets;
 import com.pi4.mgmtgame.resources.Grain;
+import com.pi4.mgmtgame.resources.Item;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Popup;
@@ -20,6 +22,8 @@ import com.pi4.mgmtgame.Inventory;
 public class Field extends Structure {
 	private Grain plantedSeed;
 	private int growingState;
+	private Item usedItem;
+	private int turnsSinceCrickets;
 
 	public Field(int x, int y) {
 		super(x, y);
@@ -39,7 +43,7 @@ public class Field extends Structure {
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
-					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
+					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");	
 					final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant,
 							buttonHarvest, buttonDestroy);
 					if (!hasSeed()) {
@@ -123,6 +127,18 @@ public class Field extends Structure {
 					});
 
 					getStage().addActor(p);
+				} else {
+					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
+					final Popup c = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonCricket);
+					buttonCricket.addListener(new ClickListener() {
+						@Override
+						public void clicked(InputEvent event, float x, float y) {
+							server.requestUseItem(getGridX(), getGridY(),server.getInventory().getItems()[1]);
+							updateMap(manager, server);
+							c.remove();
+						}
+					});
+
 				}
 			}
 		});
@@ -131,12 +147,13 @@ public class Field extends Structure {
 	}
 
 	@Override
-	public void updateActors() {
+	public void updateActors() { //besoin d'un sprite a superposer si item appliqué
 		super.updateActors();
 		if (plantedSeed == null) {
 			changeStyle("field_empty");
 		} else if (!hasSeedGrown()) {
 			changeStyle(plantedSeed.getFieldSpriteName());
+			//if(usedItem) idk
 		} else {
 			changeStyle(plantedSeed.getFieldSpriteName() + "_grew");
 		}
@@ -164,6 +181,14 @@ public class Field extends Structure {
 
     public boolean hasSeed() {
         return (this.plantedSeed != null);
+    }
+    
+    public boolean hasItem() {
+    	return (this.usedItem!=null);
+    }
+    
+    public Item usedItem() {
+    	return (this.usedItem);
     }
 
 	public void growSeed() {
@@ -199,6 +224,11 @@ public class Field extends Structure {
 	@Override
 	public void passTurn() {
 		this.growSeed();
+		if(usedItem.getId()==1)
+			this.turnsSinceCrickets++;
+		this.growingState-=this.turnsSinceCrickets;
+		if(this.growingState<0)
+			this.growingState=0;
 	}
 
 	@Override
@@ -212,6 +242,22 @@ public class Field extends Structure {
 	@Override
 	public String toString() {
 		return "Field";
+	}
+
+	public void UseItem(Item item) {
+		switch(item.getId()) {
+		case 1 :
+			addCrickets(item);
+			break;
+		}
+		
+	}
+
+	private void addCrickets(Item crickets) {
+		this.usedItem=crickets;
+		if (this.growingState>0)
+			this.growingState--;
+		
 	}
 
 }

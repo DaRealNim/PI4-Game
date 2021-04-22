@@ -11,6 +11,7 @@ import com.pi4.mgmtgame.blocks.Field;
 import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Grain;
+import com.pi4.mgmtgame.resources.Item;
 import com.pi4.mgmtgame.resources.Plant;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -302,6 +303,20 @@ public class Server {
 			if (!((Field) structBlock).hasSeed()) {
 				((Field) structBlock).plantSeed(seed);
 				inv.removeGrain(seed.getId(), 1);
+				return (true);
+			}
+		}
+
+		return (false);
+	}
+	
+	public boolean requestUseItem(int x, int y, Item item) {
+		Structure structBlock = map.getStructAt(x, y);
+		System.out.println("Item id: " + item.getId());
+		if (structBlock instanceof Field && inv.hasItem(item) && structBlock != null) {
+			if (!((Field) structBlock).hasItem()) {
+				((Field) structBlock).UseItem(item);
+				inv.removeItem(item.getId(), 1);
 				return (true);
 			}
 		}
