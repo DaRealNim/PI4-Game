@@ -31,11 +31,10 @@ public class HUD {
     private Button marketButton;
     private AssetManager manager;
     private ServerInteraction server;
-    private Label moneyLabel, grainLabel, seedLabel, turnLabel, internalTurnLabel;
+    private Label moneyLabel, grainLabel, seedLabel, itemsLabel turnLabel, internalTurnLabel;
     private Inventory inv;
     private int internalTurn;
-    String seedLabelText;
-    String grainLabelText;
+    private String seedLabelText, grainLabelText, itemsLabelText;
 
 
     public HUD (AssetManager man, ServerInteraction server) {
@@ -57,17 +56,23 @@ public class HUD {
         this.inv = server.getInventory();
         seedLabelText = "";
         grainLabelText = "";
+        itemsLabelText = "";
 
         for (Grain seed : inv.getSeeds())
         {
       	  if (seed != null)
-      	  seedLabelText += seed.toString() + ": " + seed.getVolume() + "  \n";
+      	   seedLabelText += seed + ": " + seed.getVolume() + "  \n";
         }
 
         for (Plant plant : inv.getPlants())
         {
       	  if (plant != null)
-      	  grainLabelText += plant.toString() + ": " + plant.getVolume() + "  \n";
+      	   grainLabelText += plant + ": " + plant.getVolume() + "  \n";
+        }
+
+        for (Item item : inv.getItems()) {
+            if (item != null)
+              itemsLabel += item + ": " + item.getVolume() + " \n";
         }
 
         moneyLabel.setText("DOLLA BILLZ: " + inv.getMoney());
@@ -100,21 +105,29 @@ public class HUD {
 
       seedLabelText = "";
       grainLabelText = "";
+      itemsLabelText = "";
 
       for (Grain seed : inv.getSeeds())
       {
     	  if (seed != null)
-    	  seedLabelText += seed.toString() + ": " + seed.getVolume() + "  \n";
+    	     seedLabelText += seed + ": " + seed.getVolume() + "  \n";
       }
 
       for (Plant plant : inv.getPlants())
       {
     	  if (plant != null)
-    	  grainLabelText += plant.toString() + ": " + plant.getVolume() + "  \n";
+    	     grainLabelText += plant + ": " + plant.getVolume() + "  \n";
+      }
+
+      for (Item item : inv.getItems()) {
+          if (item != null)
+            itemsLabel += item + ": " + item.getVolume() + " \n";
       }
 
       grainLabel = new Label(grainLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
       seedLabel = new Label(seedLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      itemsLabel = new Label(itemsLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
 
       passTurnButton.addListener(new ClickListener() {
               @Override
@@ -146,7 +159,8 @@ public class HUD {
       table.add(turnLabel).center().expandX();
       table.add(internalTurnLabel).center().expandX();
       table.add(grainLabel).left().expandX();
-      table.add(seedLabel).right().expandX().padRight(40);
+      table.add(seedLabel).left().expandX();
+      table.add(itemsLabel).right().expandX().padRight(40);
 
       stage.addActor(background);
       stage.addActor(table);
