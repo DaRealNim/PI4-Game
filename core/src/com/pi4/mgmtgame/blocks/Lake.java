@@ -17,12 +17,13 @@ import com.pi4.mgmtgame.ServerInteraction;
 public class Lake extends Environment {
 
     public Lake(int x, int y) {
-    	super(x, y);
+        super(x, y);
+        setSpriteName("lake");
     }
 
     @Override
     public void addViewController(final AssetManager manager, final ServerInteraction server) {
-        super.addViewController(manager, server, "lake");
+        super.addViewController(manager, server);
     }
 
     @Override

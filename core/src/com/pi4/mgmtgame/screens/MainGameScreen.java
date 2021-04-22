@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.math.Vector3;
 import com.pi4.mgmtgame.Popup;
-
+import com.pi4.mgmtgame.ManagementGame;
 
 public class MainGameScreen implements Screen	{
 
@@ -65,18 +65,19 @@ public class MainGameScreen implements Screen	{
 		this.selectedSquareY = -1;
 
 		camera = new OrthographicCamera(ManagementGame.WIDTH, ManagementGame.HEIGHT);
-		this.cameraSpeed = 2;
+		camera.zoom = 2;
+		this.cameraSpeed = 4;
 
 		this.multiplexer = new InputMultiplexer() {
 			@Override
 			public boolean scrolled(float amountX, float amountY) {
 				if (amountY > 0) {
-					camera.zoom = Math.min(5, camera.zoom+.2f);
+					camera.zoom = Math.min(10, camera.zoom+.2f);
 				}
 				if (amountY < 0) {
-					camera.zoom = Math.max(0.1f, camera.zoom-.2f);
+					camera.zoom = Math.max(0.2f, camera.zoom-.2f);
 				}
-				cameraSpeed = 2*camera.zoom;
+				cameraSpeed = 4*camera.zoom;
 				return true;
 			}
 		};
@@ -84,7 +85,7 @@ public class MainGameScreen implements Screen	{
 		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
 		viewport.apply();
 
-		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.position.set((map.getMapWidth()/2)*ManagementGame.TILE_SIZE, (map.getMapHeight()/2)*ManagementGame.TILE_SIZE, 0);
 		camera.update();
 
 		stage = new Stage(viewport, batch);
@@ -130,10 +131,10 @@ public class MainGameScreen implements Screen	{
 
 		Vector3 vec = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
 		stage.getCamera().unproject(vec);
-		if(vec.x / 16 < map.getMapWidth() && vec.x > 0 && vec.y / 16 < map.getMapHeight() && vec.y > 0) {
+		if(vec.x / ManagementGame.TILE_SIZE < map.getMapWidth() && vec.x > 0 && vec.y / ManagementGame.TILE_SIZE < map.getMapHeight() && vec.y > 0) {
 			this.selectSquare.setVisible(true);
-			this.selectSquare.setX((int)(vec.x / 16)*16);
-			this.selectSquare.setY((int)(vec.y / 16)*16);
+			this.selectSquare.setX((int)(vec.x / ManagementGame.TILE_SIZE)*ManagementGame.TILE_SIZE);
+			this.selectSquare.setY((int)(vec.y / ManagementGame.TILE_SIZE)*ManagementGame.TILE_SIZE);
 		} else {
 			this.selectSquare.setVisible(false);
 		}
@@ -156,8 +157,8 @@ public class MainGameScreen implements Screen	{
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             this.selected = true;
-			this.selectedSquareX = (int)(vec.x / 16)*16;
-			this.selectedSquareY = (int)(vec.y / 16)*16;
+			this.selectedSquareX = (int)(vec.x / ManagementGame.TILE_SIZE)*ManagementGame.TILE_SIZE;
+			this.selectedSquareY = (int)(vec.y / ManagementGame.TILE_SIZE)*ManagementGame.TILE_SIZE;
 			this.selectedSquare.setVisible(true);
 			this.selectedSquare.setX(this.selectedSquareX);
 			this.selectedSquare.setY(this.selectedSquareY);
@@ -180,8 +181,6 @@ public class MainGameScreen implements Screen	{
 		camera.update();
 	}
 
-
-	//Will have to add more conditions to this, plz no touchy!
 	private void processCameraMovement() {
 		int translateX = 0;
 		int translateY = 0;
@@ -215,7 +214,7 @@ public class MainGameScreen implements Screen	{
 	private class MapHudUpdate implements Runnable {
 
 		@Override
-		public void run() {
+		public synchronized void run() {
 			while(true) {
 				try {
 					Thread.sleep(500);
@@ -230,9 +229,9 @@ public class MainGameScreen implements Screen	{
 					waitingOverlay.setVisible(true);
 					Map serverMap = server.getMap();
 					serverMap.updateActors(manager, server);
+					stage.addActor(serverMap);
 					map.remove();
 					map = serverMap;
-					stage.addActor(serverMap);
 					hud.update();
 					server.getInternalTurn();
 				}

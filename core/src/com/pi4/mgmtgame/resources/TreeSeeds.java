@@ -27,7 +27,7 @@ public class TreeSeeds extends Grain {
 	}
 
 	public String getFieldSpriteName() {
-		return "treefarm";
+		return "treefarm_grew";
 	}
 
 	public String getTexture() {

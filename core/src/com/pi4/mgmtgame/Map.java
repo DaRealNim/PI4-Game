@@ -29,20 +29,78 @@ public class Map extends Group implements Serializable {
 		Random generator = new Random();
 		int seed = generator.nextInt();
 		System.out.println(seed);
-		PerlinNoise noise = new PerlinNoise(seed, 0.01, 1, 5, 10);
+		PerlinNoise noise = new PerlinNoise(seed, 1, 1, 1, 1);
 
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				if (noise.getHeight(i+0.5, j+0.5) < -1.3) {
+				if (noise.getHeight(i/2+0.5, j/2+0.5) < -0.3) {
 					Lake l = new Lake(i, j);
+					l.setSpriteName("lake");
 					envnmt_map[i][j] = l;
 					addActor(l);
 				} else {
 					Plain p = new Plain(i, j);
+					int type;
+					if (rand_range(1, 100) < 60)
+						type = 1;
+					else
+						type = rand_range(1, 5);
+					String skinType = "plaine" + type;
+					p.setSpriteName(skinType);
 					envnmt_map[i][j] = p;
 					addActor(p);
 				}
 			}
+		}
+
+		//Correct sprites for lakes
+		for(int x = 0; x < w; x++) {
+			for (int y = 0; y < h; y++) {
+				Environment env = getEnvironmentAt(x, y);
+				if(env instanceof Lake) {
+					if (isNotLake(x - 1, y)) {
+						if (isNotLake(x, y - 1)) {
+							env.setSpriteName("lake_bottom_left");
+						} else if (isNotLake(x, y + 1)) {
+							env.setSpriteName("lake_top_left");
+						} else if (isNotLake(x, y + 1)) {
+							env.setSpriteName("lake_top_left");
+						} else {
+							env.setSpriteName("lake_left_" + rand_range(1, 4));
+						}
+					} else if (isNotLake(x + 1, y)) {
+						if (isNotLake(x, y - 1)) {
+							env.setSpriteName("lake_bottom_right");
+						} else if (isNotLake(x, y + 1)) {
+							env.setSpriteName("lake_top_right");
+						} else {
+							env.setSpriteName("lake_right_" + rand_range(1, 3));
+						}
+					} else if (isNotLake(x, y - 1)) {
+						env.setSpriteName("lake_down_" + rand_range(1, 2));
+					} else if (isNotLake(x, y + 1)) {
+						env.setSpriteName("lake_up_" + rand_range(1, 7));
+					} else if (isNotLake(x - 1, y - 1)) {
+						env.setSpriteName("lake_corner_bottom_left");
+					} else if (isNotLake(x + 1, y - 1)) {
+						env.setSpriteName("lake_corner_bottom_right");
+					} else if (isNotLake(x - 1, y + 1)) {
+						env.setSpriteName("lake_corner_top_left");
+					} else if (isNotLake(x + 1, y + 1)) {
+						env.setSpriteName("lake_corner_top_right");
+					}
+
+					// }
+				}
+			}
+		}
+	}
+
+	private boolean isNotLake(int x, int y) {
+		if (x >= 0 && x < width && y >= 0 && y < height) {
+			return !getEnvironmentAt(x, y).toString().equals("Lake");
+		} else {
+			return false;
 		}
 	}
 
@@ -113,48 +171,36 @@ public class Map extends Group implements Serializable {
 
 	public void setEnvironmentAt(int w, int h, Environment e) {
 		envnmt_map[w][h] = e;
+		if (e != null) {
+			addActor(e);
+		}
 	}
 
 	public void setStructAt(int w, int h, Structure s) {
 		struct_map[w][h] = s;
+		if (s != null) {
+			addActor(s);
+		}
 	}
 
+	public Environment[] getEnvironmentNeighbors(int x, int y) {
+		Environment[] ret = new Environment[8];
+		int c=0;
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				if(i != 0 && j != 0) {
+					ret[c] = getEnvironmentAt(x + i, y + i);
+					c++;
+				}
+			}
+		}
+		return ret;
+	}
 
-	//Commented for now because just adding blocks as group children work, but may need
-	//later in case something goes horribly wrong
-	//
-	// @Override
-	// public void act(float delta) {
-	// 	for(Environment[] row : envnmt_map) {
-	// 		for(Environment block : row) {
-	// 			if (block != null)
-	// 				block.act(delta);
-	// 		}
-	//     }
-	// 	for(Structure[] row : struct_map) {
-	// 		for(Structure block : row) {
-	// 			if (block != null)
-	// 				block.act(delta);
-	// 		}
-	//     }
-	// }
-	//
-	//
-	// @Override
-	// public void draw(Batch batch, float parentAlpha) {
-	//     for(Environment[] row : envnmt_map) {
-	// 		for(Environment block : row) {
-	// 			if (block != null)
-	// 				block.draw(batch, parentAlpha);
-	// 		}
-	//     }
-	// 	for(Structure[] row : struct_map) {
-	// 		for(Structure block : row) {
-	// 			if (block != null)
-	// 				block.draw(batch, parentAlpha);
-	// 		}
-	//     }
-	// }
+	private int rand_range(int min, int max) {
+		Random random = new Random();
+		return random.nextInt(max - min) + min;
+	}
 
 
 }

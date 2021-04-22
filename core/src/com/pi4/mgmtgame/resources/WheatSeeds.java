@@ -35,7 +35,7 @@ public class WheatSeeds extends Grain {
 	}
 
 	public String getFieldSpriteName() {
-		return "field_wheat";
+		return "field_carrots";
 	}
 
 	public String toString() {

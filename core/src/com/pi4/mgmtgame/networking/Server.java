@@ -119,7 +119,6 @@ public class Server {
 					Grain grain = null;
 					Plant plant = null;
 					int request = dataIn.readInt();
-					System.out.println("Got request "+request);
 					switch (request) {
 						case 0:
 							objOut.reset();
@@ -309,7 +308,7 @@ public class Server {
 
 		return (false);
 	}
-	
+
 	public boolean requestUseItem(int x, int y, Item item) {
 		Structure structBlock = map.getStructAt(x, y);
 		System.out.println("Item id: " + item.getId());
@@ -327,6 +326,8 @@ public class Server {
 	public boolean requestDestroyStructure(int x, int y) {
 		if (canDestroyStructure(x, y)) {
 			inv.receiveMoney((map.getStructAt(x, y).getConstructionCost()*30)/100);
+			if(map.getStructAt(x, y) != null)
+				map.getStructAt(x, y).remove();
 			map.setStructAt(x, y, null);
 
 			return (true);

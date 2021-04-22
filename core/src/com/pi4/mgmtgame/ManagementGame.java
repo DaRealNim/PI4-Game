@@ -15,6 +15,7 @@ public class ManagementGame extends Game {
 	public SpriteBatch batch;
 	public static int WIDTH = 1366;
 	public static int HEIGHT = 768;
+	public static int TILE_SIZE = 32;
 
 	@Override
 	public void create () {

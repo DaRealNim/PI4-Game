@@ -4,12 +4,13 @@ import com.pi4.mgmtgame.Inventory;
 import java.io.Serializable;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.pi4.mgmtgame.Map;
 
 public abstract class Structure extends Block implements Serializable {
 	private int ownerID;
 
 	public Structure(int x, int y) {
-		super(x, y);
+        super(x, y);
 	}
 
 	public boolean testOwner(int x) {

@@ -1,28 +1,7 @@
 {
 ButtonStyle: {
-	plain: {
-		up: plain
-	}
-	field_wheat: {
-		up: field_wheat
-	}
-	field_carrots: {
-		up: field_carrots
-	}
-	field_potatoes: {
-		up: field_potatoes
-	}
 	field_empty: {
 		up: field_empty
-	}
-	field_carrots_grew: {
-		up: field_carrots_grew
-	}
-	field_wheat_grew: {
-		up: field_wheat_grew
-	}
-	field_potatoes_grew: {
-		up: field_potatoes_grew
 	}
 	treefarm: {
 		up: treefarm
@@ -32,6 +11,102 @@ ButtonStyle: {
 	}
 	lake: {
 		up: lake
+	}
+	field_planted: {
+		up: field_planted
+	}
+	field_grow: {
+		up: field_grow
+	}
+	field_carrots: {
+		up: field_carrots
+	}
+	plaine1: {
+		up: plaine1
+	}
+	plaine2: {
+		up: plaine2
+	}
+	plaine3: {
+		up: plaine3
+	}
+	plaine4: {
+		up: plaine4
+	}
+	plaine5: {
+		up: plaine5
+	}
+	lake_bottom_left: {
+		up: lake_bottom_left
+	}
+	lake_bottom_right: {
+		up: lake_bottom_right
+	}
+	lake_corner_bottom_left: {
+		up: lake_corner_bottom_left
+	}
+	lake_corner_bottom_right: {
+		up: lake_corner_bottom_right
+	}
+	lake_corner_top_left: {
+		up: lake_corner_top_left
+	}
+	lake_corner_top_right: {
+		up: lake_corner_top_right
+	}
+	lake_down_1: {
+		up: lake_down_1
+	}
+	lake_down_2: {
+		up: lake_down_2
+	}
+	lake_left_1: {
+		up: lake_left_1
+	}
+	lake_left_2: {
+		up: lake_left_2
+	}
+	lake_left_3: {
+		up: lake_left_3
+	}
+	lake_left_4: {
+		up: lake_left_4
+	}
+	lake_right_1: {
+		up: lake_right_1
+	}
+	lake_right_2: {
+		up: lake_right_2
+	}
+	lake_right_3: {
+		up: lake_right_3
+	}
+	lake_top_left: {
+		up: lake_top_left
+	}
+	lake_top_right: {
+		up: lake_top_right
+	}
+	lake_up_1: {
+		up: lake_up_1
+	}
+	lake_up_2: {
+		up: lake_up_2
+	}
+	lake_up_3: {
+		up: lake_up_3
+	}
+	lake_up_4: {
+		up: lake_up_4
+	}
+	lake_up_5: {
+		up: lake_up_5
+	}
+	lake_up_6: {
+		up: lake_up_6
+	}
+	lake_up_7: {
+		up: lake_up_7
 	}
 }
 }

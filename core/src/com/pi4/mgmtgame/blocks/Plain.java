@@ -17,12 +17,13 @@ import com.pi4.mgmtgame.ServerInteraction;
 public class Plain extends Environment {
 
     public Plain(int x, int y) {
-    	super(x, y);
+        super(x, y);
+        setSpriteName("plaine1");
     }
 
     @Override
     public void addViewController(final AssetManager manager, final ServerInteraction server) {
-        super.addViewController(manager, server, "plain");
+        super.addViewController(manager, server);
     }
 
     @Override

@@ -18,6 +18,8 @@ import com.pi4.mgmtgame.ServerInteraction;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Inventory;
+import com.pi4.mgmtgame.ManagementGame;
+import com.pi4.mgmtgame.blocks.Lake;
 
 public class Field extends Structure {
 	private Grain plantedSeed;
@@ -26,16 +28,17 @@ public class Field extends Structure {
 	private int turnsSinceCrickets;
 
 	public Field(int x, int y) {
-		super(x, y);
+        super(x, y);
 		this.growingState = 0;
+		setSpriteName("field_empty");
 	}
 
 	@Override
 	public void addViewController(final AssetManager manager, final ServerInteraction server) {
 		this.manager = manager;
-		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), "field_empty");
-		button.setX(getGridX() * 16);
-		button.setY(getGridY() * 16);
+		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
+		button.setX(getGridX() * ManagementGame.TILE_SIZE);
+		button.setY(getGridY() * ManagementGame.TILE_SIZE);
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -43,8 +46,8 @@ public class Field extends Structure {
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
-					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");	
-					final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonPlant,
+					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
+					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonPlant,
 							buttonHarvest, buttonDestroy);
 					if (!hasSeed()) {
 						buttonPlant.getColor().a = (float)1;
@@ -68,7 +71,7 @@ public class Field extends Structure {
 								if (inv.hasGrain(2))
 									buttons[2] = plantCarrot;
 
-								final Popup d = new Popup((getGridX() - 2) * 16 - 12, (getGridY() + 1) * 16 + 12, manager,buttons);
+								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager,buttons);
 								getStage().addActor(d);
 
 								plantWheat.addListener(new ClickListener() {
@@ -129,7 +132,7 @@ public class Field extends Structure {
 					getStage().addActor(p);
 				} else {
 					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-					final Popup c = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager, buttonCricket);
+					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonCricket);
 					buttonCricket.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
@@ -138,7 +141,7 @@ public class Field extends Structure {
 							c.remove();
 						}
 					});
-
+					getStage().addActor(c);
 				}
 			}
 		});
@@ -149,13 +152,18 @@ public class Field extends Structure {
 	@Override
 	public void updateActors() { //besoin d'un sprite a superposer si item appliqué
 		super.updateActors();
+		double growRatio = 0;
+		if (plantedSeed != null) {
+			growRatio = ((double)this.growingState / (double)this.plantedSeed.getGrowingTime());
+		}
 		if (plantedSeed == null) {
 			changeStyle("field_empty");
+		} else if (growRatio >= 0.5 && growRatio < 1) {
+			changeStyle("field_grow");
 		} else if (!hasSeedGrown()) {
-			changeStyle(plantedSeed.getFieldSpriteName());
-			//if(usedItem) idk
+			changeStyle("field_planted");
 		} else {
-			changeStyle(plantedSeed.getFieldSpriteName() + "_grew");
+			changeStyle(plantedSeed.getFieldSpriteName());
 		}
 	}
 
@@ -182,11 +190,11 @@ public class Field extends Structure {
     public boolean hasSeed() {
         return (this.plantedSeed != null);
     }
-    
+
     public boolean hasItem() {
     	return (this.usedItem!=null);
     }
-    
+
     public Item usedItem() {
     	return (this.usedItem);
     }
@@ -196,7 +204,7 @@ public class Field extends Structure {
 			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
 			this.growingState++;
 			if (hasSeedGrown()) {
-				changeStyle(plantedSeed.getFieldSpriteName() + "_grew");
+				changeStyle(plantedSeed.getFieldSpriteName());
 			}
 		}
 	}
@@ -224,11 +232,15 @@ public class Field extends Structure {
 	@Override
 	public void passTurn() {
 		this.growSeed();
-		if(usedItem.getId()==1)
+		if(usedItem != null && usedItem.getId()==1)
 			this.turnsSinceCrickets++;
-		this.growingState-=this.turnsSinceCrickets;
+		this.growingState -= this.turnsSinceCrickets;
 		if(this.growingState<0)
 			this.growingState=0;
+		Map parentMap = (Map)getParent();
+		if(parentMap.getEnvironmentAt(getGridX(), getGridY()-1) instanceof Lake) {
+			System.out.println("Laked field!");
+		}
 	}
 
 	@Override
@@ -250,14 +262,14 @@ public class Field extends Structure {
 			addCrickets(item);
 			break;
 		}
-		
+
 	}
 
 	private void addCrickets(Item crickets) {
 		this.usedItem=crickets;
 		if (this.growingState>0)
 			this.growingState--;
-		
+
 	}
 
 }

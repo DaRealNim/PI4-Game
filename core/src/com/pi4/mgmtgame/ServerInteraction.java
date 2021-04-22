@@ -11,7 +11,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.pi4.mgmtgame.blocks.*;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
-// import java.util.ArrayList;
+import com.pi4.mgmtgame.resources.Item;
 
 public class ServerInteraction {
 	private ClientSide clientSideConnection;
@@ -330,6 +330,24 @@ public class ServerInteraction {
 			clientSideConnection.objOut.flush();
 			clientSideConnection.dataOut.writeInt(q);
 			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void requestUseItem(int x, int y, Item item) {
+		try {
+			clientSideConnection.dataOut.writeInt(17);
+			clientSideConnection.dataOut.flush();
+			//
+			// clientSideConnection.dataOut.writeInt(x);
+			// clientSideConnection.dataOut.flush();
+			//
+			// clientSideConnection.dataOut.writeInt(y);
+			// clientSideConnection.dataOut.flush();
+			//
+			// clientSideConnection.objOut.writeObject(soldPlant);
+			// clientSideConnection.objOut.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

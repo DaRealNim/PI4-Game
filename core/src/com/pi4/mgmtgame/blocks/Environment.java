@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
+import com.pi4.mgmtgame.ManagementGame;
 
 public abstract class Environment extends Block {
 
@@ -28,16 +28,16 @@ public abstract class Environment extends Block {
     //Checks if a specific building can be placed on that terrain
     abstract public boolean canBuild(Structure struct);
 
-    public void addViewController(final AssetManager manager, final ServerInteraction server, final String name) {
+    public void addViewController(final AssetManager manager, final ServerInteraction server) {
         this.manager = manager;
-        Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), name);
-        button.setX(getGridX() * 16);
-		button.setY(getGridY() * 16);
+        Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
+        button.setX(getGridX() * ManagementGame.TILE_SIZE);
+		button.setY(getGridY() * ManagementGame.TILE_SIZE);
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
-            	
+
                 Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
                 Button buttonTree = new Button(manager.get("popupIcons/popup.json", Skin.class), "tree_icon");
                 Button buttonSprink = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
@@ -47,14 +47,13 @@ public abstract class Environment extends Block {
                 f.setOwnerID(server.getCurrentPlayer());
                 g.setOwnerID(server.getCurrentPlayer());
                 h.setOwnerID(server.getCurrentPlayer());
-                
-                final Popup p = new Popup((getGridX() - 2) * 16 + 8, (getGridY() + 1) * 16, manager,buttonField, buttonTree,buttonSprink);
-                
+
+                final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager,buttonField, buttonTree,buttonSprink);
+
                 if (server.canBuildStructure(getGridX(), getGridY(), g)) {
                     buttonTree.addListener(new ClickListener(){
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            Map map = (Map)getParent();
                             boolean res = server.requestBuildStructure(getGridX(), getGridY(), g);
                             System.out.println("Could build TreeF at "+getGridX()+", "+getGridY()+": "+res+"id :");
                             updateMap(manager, server);
@@ -64,28 +63,26 @@ public abstract class Environment extends Block {
                 } else {
                     buttonTree.getColor().a = (float)0.3;
                 }
-                
+
                 if (server.canBuildStructure(getGridX(), getGridY(), h)) {
                 	buttonSprink.addListener(new ClickListener(){
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            Map map = (Map)getParent();
                             boolean res = server.requestBuildStructure(getGridX(), getGridY(), h);
                             System.out.println("Could build Sprink at "+getGridX()+", "+getGridY()+": "+res+"id :");
                             updateMap(manager, server);
                             p.remove();
                         }
                     });
-                
+
                 }else {
                     buttonSprink.getColor().a = (float)0.3;
                 }
-                
+
                 if (server.canBuildStructure(getGridX(), getGridY(), f)) {
                     buttonField.addListener(new ClickListener(){
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            Map map = (Map)getParent();
                             boolean res = server.requestBuildStructure(getGridX(), getGridY(), f);
                             System.out.println("Could build structure at "+getGridX()+", "+getGridY()+": "+res+"id :");
                             updateMap(manager, server);
@@ -95,7 +92,7 @@ public abstract class Environment extends Block {
                 } else {
                     buttonField.getColor().a = (float)0.3;
                 }
-                
+
                 getStage().addActor(p);
             }
         });
