@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.pi4.mgmtgame.resources.Carrot;
 import com.pi4.mgmtgame.resources.CarrotSeeds;
 import com.pi4.mgmtgame.resources.Grain;
+import com.pi4.mgmtgame.resources.Item;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Potato;
 import com.pi4.mgmtgame.resources.PotatoSeeds;
@@ -18,6 +19,7 @@ public class Inventory implements Serializable {
 	private int money;
 	private Plant[] plants;
 	private Grain[] seeds;
+	private Item[] items;
 	private int invID;
 	public Inventory (int x) {
 		invID = x;
@@ -32,6 +34,8 @@ public class Inventory implements Serializable {
 		seeds[1] = new PotatoSeeds();
 		seeds[2] = new CarrotSeeds();
 		seeds[3] = new TreeSeeds();
+		
+		items = new Item[2];
 		
 		money = 2000;
 		
@@ -61,6 +65,14 @@ public class Inventory implements Serializable {
 	public void addGrain(int id, int value) {
 		this.seeds[id].addVolume(value);
 	}
+	
+	public void removeItem(int id, int value) {
+		this.items[id].subVolume(value);
+	}
+	
+	public void addItem(int id, int value) {
+		this.items[id].addVolume(value);
+	}
 
 	public void giveMoney(int value) {
 		this.money -= value;
@@ -80,21 +92,27 @@ public class Inventory implements Serializable {
 	public boolean hasGrain(int i) {
 		return (this.seeds[i].getVolume() > 0);
 	}
-
 	public boolean hasPlant(Plant plant) {
 		return (this.plants[plant.getId()].getVolume() > 0);
 	}
 	public boolean hasPlant(int i) {
 		return (this.plants[i].getVolume() > 0);
 	}
-
+	public boolean hasItem(int i) {
+		return (this.items[i].getVolume() > 0);
+	}
+	public boolean hasItem(Item item) {
+		return (this.plants[item.getId()].getVolume() > 0);
+	}
 	public Grain[] getSeeds() {
 		return seeds;
 	}
 	public Plant[] getPlants() {
 		return plants;
 	}
-	
+	public Item[] getItems() {
+		return items;
+	}
 	public int getinvID() {
 		return invID;
 	}
