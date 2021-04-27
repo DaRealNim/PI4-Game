@@ -122,7 +122,7 @@ public class Field extends Structure {
 					} else {
 						buttonHarvest.getColor().a = (float)0.3;
 					}
-					if(usedItem instanceof Crickets) {
+					if(usedItem instanceof Crickets&&server.getInventory().hasItem(1)) {
 						buttonRepulsive.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
@@ -141,7 +141,7 @@ public class Field extends Structure {
 					});
 
 					getStage().addActor(p);
-				} else if(!(usedItem instanceof Crickets)){
+				} else if(!(usedItem instanceof Crickets)&&server.getInventory().hasItem(0)){
 					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonCricket);
 					buttonCricket.addListener(new ClickListener() {
