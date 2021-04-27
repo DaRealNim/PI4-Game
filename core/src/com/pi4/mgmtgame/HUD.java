@@ -20,7 +20,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.Gdx;
-
+import com.pi4.mgmtgame.resources.Item;
 
 
 
@@ -31,7 +31,7 @@ public class HUD {
     private Button marketButton;
     private AssetManager manager;
     private ServerInteraction server;
-    private Label moneyLabel, grainLabel, seedLabel, itemsLabel turnLabel, internalTurnLabel;
+    private Label moneyLabel, grainLabel, seedLabel, itemsLabel, turnLabel, internalTurnLabel;
     private Inventory inv;
     private int internalTurn;
     private String seedLabelText, grainLabelText, itemsLabelText;
@@ -72,7 +72,7 @@ public class HUD {
 
         for (Item item : inv.getItems()) {
             if (item != null)
-              itemsLabel += item + ": " + item.getVolume() + " \n";
+              itemsLabelText += item + ": " + item.getVolume() + " \n";
         }
 
         moneyLabel.setText("DOLLA BILLZ: " + inv.getMoney());
@@ -121,7 +121,7 @@ public class HUD {
 
       for (Item item : inv.getItems()) {
           if (item != null)
-            itemsLabel += item + ": " + item.getVolume() + " \n";
+            itemsLabelText += item + ": " + item.getVolume() + " \n";
       }
 
       grainLabel = new Label(grainLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
