@@ -6,77 +6,91 @@ filter: Nearest,Nearest
 repeat: none
 axe_icon
   rotate: false
-  xy: 27, 44
+  xy: 27, 57
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 bomb_icon
   rotate: false
-  xy: 1, 44
+  xy: 1, 57
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 carrotseeds_icon
   rotate: false
-  xy: 67, 78
+  xy: 67, 91
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 closeButton
   rotate: false
-  xy: 14, 31
+  xy: 14, 44
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+dollar_icon
+  rotate: false
+  xy: 93, 91
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 harvest_icon
   rotate: false
-  xy: 1, 31
+  xy: 1, 44
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 hoe_icon
   rotate: false
-  xy: 14, 44
+  xy: 14, 57
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 popup
   rotate: false
-  xy: 1, 57
+  xy: 1, 70
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 potatoseeds_icon
   rotate: false
-  xy: 67, 65
+  xy: 67, 78
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 shovel_icon
   rotate: false
-  xy: 80, 78
+  xy: 80, 91
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+sprinkler_icon
+  rotate: false
+  xy: 1, 18
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 tree_icon
   rotate: false
-  xy: 80, 65
+  xy: 80, 78
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 wheatseeds_icon
   rotate: false
-  xy: 1, 18
+  xy: 1, 31
   size: 11, 11
   orig: 11, 11
   offset: 0, 0

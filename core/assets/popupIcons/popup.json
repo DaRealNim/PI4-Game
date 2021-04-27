@@ -33,5 +33,11 @@ ButtonStyle: {
 	tree_icon: {
 		up: tree_icon
 	}
+	dollar_icon: {
+		up: dollar_icon
+	}
+	sprinker_icon: {
+		up: sprinkler_icon
+	}
 }
 }

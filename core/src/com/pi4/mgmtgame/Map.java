@@ -35,11 +35,13 @@ public class Map extends Group implements Serializable {
 			for (int j = 0; j < h; j++) {
 				if (noise.getHeight(i/2+0.5, j/2+0.5) < -0.3) {
 					Lake l = new Lake(i, j);
+					l.setOwnerID(-1);
 					l.setSpriteName("lake");
 					envnmt_map[i][j] = l;
 					addActor(l);
 				} else {
 					Plain p = new Plain(i, j);
+					p.setOwnerID(-1);
 					int type;
 					if (rand_range(1, 100) < 60)
 						type = 1;

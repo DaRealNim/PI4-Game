@@ -18,6 +18,7 @@ public class Block extends Group implements Serializable {
     protected transient AssetManager manager;
     protected String spriteName;
     private int x, y;
+    protected int ownerID;
 
     public Block(int x, int y) {
     	this.setGridX(x);
@@ -86,5 +87,19 @@ public class Block extends Group implements Serializable {
     public String getSpriteName() {
         return this.spriteName;
     }
+
+    public boolean testOwner(int x) {
+		if (x == ownerID)
+			return true;
+		return false;
+	}
+
+	public int getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(int x) {
+		ownerID = x;
+	}
 
 }
