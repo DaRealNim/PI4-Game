@@ -39,20 +39,20 @@ public abstract class Environment extends Block {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
 
                 if(getOwnerID() == -1) {
-                    Button buttonBuyTerrain = new Button(manager.get("popupIcons/popup.json", Skin.class), "dollar_icon");
-                    Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager,buttonField, buttonTree,buttonSprink);
-                    if (server.canBuyTerrain(getGridX(), getGridY())) {
-                        buttonBuyTerrain.addListener(new ClickListener()) {
-                            @Override
-                            public void clicked(InputEvent event, float x, float y) {
-                                // boolean res = server.requestBuyTerrain(getGridX(), getGridY());
-                                updateMap(manager, server);
-                                p.remove();
-                            }
-                        }
-                    } else {
-                        buttonBuyTerrain.getColor().a = 0.3f;
-                    }
+                    // Button buttonBuyTerrain = new Button(manager.get("popupIcons/popup.json", Skin.class), "dollar_icon");
+                    // Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonBuyTerrain);
+                    // if (server.canBuyTerrain(getGridX(), getGridY())) {
+                    //     buttonBuyTerrain.addListener(new ClickListener() {
+                    //         @Override
+                    //         public void clicked(InputEvent event, float x, float y) {
+                    //             boolean res = server.requestBuyTerrain(getGridX(), getGridY());
+                    //             updateMap(manager, server);
+                    //             p.remove();
+                    //         }
+                    //     });
+                    // } else {
+                    //     buttonBuyTerrain.getColor().a = 0.3f;
+                    // }
                 } else {
 
                     Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");

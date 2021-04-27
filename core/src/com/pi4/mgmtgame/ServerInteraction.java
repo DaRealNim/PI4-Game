@@ -19,8 +19,9 @@ public class ServerInteraction {
 	private int playerID;
 	private int storedInternalTurn;
 
-	public ServerInteraction() {
-		connectToServer();
+	public ServerInteraction(String ip, String port) {
+		int portInt = Integer.parseInt(port);
+		connectToServer(ip, portInt);
 	}
 
 	public void passHUD(HUD hud) {
@@ -367,10 +368,10 @@ public class ServerInteraction {
 		protected ObjectInputStream objIn;
 		protected ObjectOutputStream objOut;
 
-		public ClientSide() {
+		public ClientSide(String ip, int port) {
 			System.out.println("----Client----");
 			try {
-				clientSocket = new Socket("localhost", 51769);
+				clientSocket = new Socket(ip, port);
 				dataOut = new DataOutputStream(clientSocket.getOutputStream());
 				dataIn = new DataInputStream(clientSocket.getInputStream());
 				objOut = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -389,7 +390,7 @@ public class ServerInteraction {
 		}
 	}
 
-	public void connectToServer() {
-		clientSideConnection = new ClientSide();
+	public void connectToServer(String ip, int port) {
+		clientSideConnection = new ClientSide(ip, port);
 	}
 }

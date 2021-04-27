@@ -3,9 +3,11 @@ package com.pi4.mgmtgame.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,6 +23,9 @@ import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.ManagementGame;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.ServerInteraction;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.Group;
 
 
 public class MainMenuScreen implements Screen {
@@ -54,14 +59,21 @@ public class MainMenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		final Table mainTable = new Table();
-	  mainTable.setFillParent(true);
-	  mainTable.top();
+		final Table inputTable = new Table();
+		mainTable.setFillParent(true);
+		mainTable.top();
 
-		Skin buttonSkins = manager.get("menuButtons/ButtonStyles.json", Skin.class);
+		final Skin buttonSkins = manager.get("menuButtons/ButtonStyles.json", Skin.class);
+		final Skin uiSkins = manager.get("menuButtons/uiskin.json", Skin.class);
 
-		Button quitButton = new Button(buttonSkins, "quit");
-		Button newGameButton = new Button(buttonSkins, "default");
-		Button loadButton = new Button(buttonSkins, "load");
+		final Button quitButton = new Button(buttonSkins, "quit");
+		final Button newGameButton = new Button(buttonSkins, "default");
+		final Button loadButton = new Button(buttonSkins, "load");
+
+		final Label ipLabel = new Label(  "Server IP   : " , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		final Label portLabel = new Label("Server port : " , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		final TextField ipField = new TextField("127.0.0.1", uiSkins);
+		final TextField portField = new TextField("51769", uiSkins);
 
 		quitButton.addListener(new ClickListener(){
             @Override
@@ -80,27 +92,34 @@ public class MainMenuScreen implements Screen {
             	Inventory[] inv = new Inventory[nbOfPlayers];
             	for(int i = 0;i<nbOfPlayers;i++)
         			inv[i]= new Inventory(i);
-            	ServerInteraction server = new ServerInteraction();
+            	ServerInteraction server = new ServerInteraction(ipField.getText(), portField.getText());
 
             	game.setScreen(new MainGameScreen(game, manager, server));
             }
         });
 
+		inputTable.add(ipLabel);
+		inputTable.add(ipField);
+		inputTable.row();
 
+		inputTable.add(portLabel);
+		inputTable.add(portField);
+		inputTable.row();
 
-		 mainTable.add(newGameButton).size(300, 100).padBottom(50);
+		mainTable.add(inputTable).padBottom(40);
+		mainTable.row();
 
-		 mainTable.row();
+		mainTable.add(newGameButton).size(300, 100).padBottom(50);
+		mainTable.row();
 
-     mainTable.add(loadButton).size(300, 100);
+		mainTable.add(loadButton).size(300, 100);
+		mainTable.row();
 
-     mainTable.row();
+		mainTable.add(quitButton).size(300, 100).padTop(50);;
 
-     mainTable.add(quitButton).size(300, 100).padTop(50);;
+		mainTable.align(Align.center);
 
-     mainTable.align(Align.bottom);
-
-     stage.addActor(mainTable);
+		stage.addActor(mainTable);
 	}
 
 	@Override

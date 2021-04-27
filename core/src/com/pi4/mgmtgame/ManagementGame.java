@@ -23,6 +23,7 @@ public class ManagementGame extends Game {
 		AssetManager manager = new AssetManager();
 
 		manager.load("menuButtons/ButtonStyles.json", Skin.class, new SkinLoader.SkinParameter("menuButtons/ButtonStyles.atlas"));
+		manager.load("menuButtons/uiskin.json", Skin.class, new SkinLoader.SkinParameter("menuButtons/uiskin.atlas"));
 		manager.load("blocks/Blocks.json", Skin.class, new SkinLoader.SkinParameter("blocks/Blocks.atlas"));
 		manager.load("hudButtons/hudButton.json", Skin.class, new SkinLoader.SkinParameter("hudButtons/hudButton.atlas"));
 		manager.load("hudButtons/hudBackground.png", Texture.class);
