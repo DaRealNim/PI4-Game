@@ -1,6 +1,7 @@
 package com.pi4.mgmtgame.blocks;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -47,8 +48,10 @@ public class Field extends Structure {
 					Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
+					Button buttonRepulsive = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+						
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonPlant,
-							buttonHarvest, buttonDestroy);
+							buttonHarvest, buttonDestroy, buttonRepulsive);
 					if (!hasSeed()) {
 						buttonPlant.getColor().a = (float)1;
 						buttonPlant.addListener(new ClickListener() {
@@ -119,7 +122,15 @@ public class Field extends Structure {
 					} else {
 						buttonHarvest.getColor().a = (float)0.3;
 					}
-
+					if(usedItem instanceof Crickets) {
+						buttonRepulsive.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								removeCrickets();
+								updateMap(manager, server);
+								p.remove();
+							}
+						});					}
 					buttonDestroy.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
@@ -130,7 +141,7 @@ public class Field extends Structure {
 					});
 
 					getStage().addActor(p);
-				} else {
+				} else if(!(usedItem instanceof Crickets)){
 					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonCricket);
 					buttonCricket.addListener(new ClickListener() {
@@ -241,6 +252,17 @@ public class Field extends Structure {
 		if(parentMap.getEnvironmentAt(getGridX(), getGridY()-1) instanceof Lake) {
 			System.out.println("Laked field!");
 		}
+		if(this.turnsSinceCrickets<=3) {
+			cricketSpread();
+		}
+			
+	}
+
+	private void cricketSpread() {
+		Random rand = new Random();
+		Structure temp = getAdjacentStruct().get(rand.nextInt(getAdjacentStruct().size()));
+		if(temp instanceof Field)
+			((Field) temp).addCrickets(this.usedItem);
 	}
 
 	@Override
@@ -270,6 +292,33 @@ public class Field extends Structure {
 		if (this.growingState>0)
 			this.growingState--;
 
+	}
+	
+	private void removeCrickets(){
+		this.usedItem=null;
+		this.turnsSinceCrickets=0;
+		//mettre qqc pour virer le sprite
+	}
+	
+	private ArrayList<Structure> getAdjacentStruct() {
+		ArrayList<Structure> structs = new ArrayList<Structure>();
+		for(int i=-1;i<2;i++) {
+			for(int j=-1;j<2;j++)	{
+				if(i!=0&&j!=0)
+				structs.add(((Map) this.getParent()).getStructAt(this.getGridX()+i,this.getGridY()+j));
+			}
+		}
+		return structs;
+	}
+private ArrayList<Environment> getAdjacentEnv() {
+	ArrayList<Environment> envs = new ArrayList<Environment>();
+	for(int i=-1;i<2;i++) {
+		for(int j=-1;j<2;j++)	{
+			if(i!=0&&j!=0)
+			envs.add(((Map) this.getParent()).getEnvironmentAt(this.getGridX()+i,this.getGridY()+j));
+		}
+	}
+	return envs;
 	}
 
 }
