@@ -118,6 +118,7 @@ public class Server {
 					Structure struct = null;
 					Grain grain = null;
 					Plant plant = null;
+					Item item = null;
 					int request = dataIn.readInt();
 					switch (request) {
 						case 0:
@@ -239,6 +240,15 @@ public class Server {
 							if (internalTurn != playerID)
 								break;
 							sellPlant(plant, quantity);
+							break;
+						case 17:
+							x = dataIn.readInt();
+							y = dataIn.readInt();
+							item = (Item)objIn.readObject();
+							if (internalTurn != playerID) {
+								break;
+							}
+							requestUseItem(x, y, item);
 							break;
 
 						default:

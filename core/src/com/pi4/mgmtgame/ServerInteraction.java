@@ -340,15 +340,15 @@ public class ServerInteraction {
 		try {
 			clientSideConnection.dataOut.writeInt(17);
 			clientSideConnection.dataOut.flush();
-			//
-			// clientSideConnection.dataOut.writeInt(x);
-			// clientSideConnection.dataOut.flush();
-			//
-			// clientSideConnection.dataOut.writeInt(y);
-			// clientSideConnection.dataOut.flush();
-			//
-			// clientSideConnection.objOut.writeObject(soldPlant);
-			// clientSideConnection.objOut.flush();
+
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+
+			clientSideConnection.objOut.writeObject(item);
+			clientSideConnection.objOut.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
