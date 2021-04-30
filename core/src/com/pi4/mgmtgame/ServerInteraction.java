@@ -12,6 +12,7 @@ import com.pi4.mgmtgame.blocks.*;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Item;
+import com.pi4.mgmtgame.resources.Resources;
 
 public class ServerInteraction {
 	private ClientSide clientSideConnection;
@@ -354,11 +355,20 @@ public class ServerInteraction {
 		}
 	}
 
+		public synchronized int getPrice(Resources r) {
+			try {
+				clientSideConnection.dataOut.writeInt(20);
+				clientSideConnection.dataOut.flush();
 
+				clientSideConnection.objOut.writeObject(r);
+				clientSideConnection.objOut.flush();
 
-
-
-
+				return (clientSideConnection.dataIn.readInt());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return (-1);
+	}
 
 	private class ClientSide {
 		protected Socket clientSocket;

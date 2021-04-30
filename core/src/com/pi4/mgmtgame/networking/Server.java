@@ -250,7 +250,11 @@ public class Server {
 							}
 							requestUseItem(x, y, item);
 							break;
-
+						case 20:
+							Resources res = (Resources) objIn.readObject();
+							dataOut.writeInt(res.getPrice());
+							dataOut.flush();
+							break;
 						default:
 							System.out.println("wyd????");
 							break;
@@ -460,6 +464,7 @@ public class Server {
 			System.out.println(soldPlant.toString() + " price: " + soldPlant.getPrice());
 		}
 	}
+
 
 	public static void main(String[] args) {
 		Server gameServer = new Server(2);

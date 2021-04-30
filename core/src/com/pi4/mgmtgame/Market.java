@@ -92,12 +92,13 @@ public class Market extends Group {
 				String itemText = p.toString();
 				String priceText = "" + p.getPrice();
 				Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-				Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+				final Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 	    	sellButton.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.sellPlant(plant, 1);
+								priceLabel.setText(server.getPrice(plant));
 	            }
 	    	});
 
@@ -105,6 +106,7 @@ public class Market extends Group {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.buyPlant(plant, 1);
+								priceLabel.setText(server.getPrice(plant));
 	            }
 	    	});
 
@@ -132,7 +134,7 @@ public class Market extends Group {
 				String itemText = g.toString(); //haha g string
 				String priceText = "" + g.getPrice();
 				Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-				Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+				final Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 	    	Button buyButton = new Button(marketSkins, "buyButton");
 	    	Button sellButton = new Button(marketSkins, "sellButton");
@@ -141,6 +143,7 @@ public class Market extends Group {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.sellGrain(grain, 1);
+								priceLabel.setText(server.getPrice(grain));
 	            }
 	    	});
 
@@ -148,6 +151,7 @@ public class Market extends Group {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.buyGrain(grain, 1);
+								priceLabel.setText(server.getPrice(grain));
 	            }
 	    	});
 
