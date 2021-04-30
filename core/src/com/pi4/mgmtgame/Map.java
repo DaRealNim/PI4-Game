@@ -30,6 +30,7 @@ public class Map extends Group implements Serializable {
 		int seed = generator.nextInt();
 		System.out.println(seed);
 		PerlinNoise noise = new PerlinNoise(seed, 1, 1, 1, 1);
+		PerlinNoise treeNoise = new PerlinNoise(seed, 1, 1, 1, 1);
 
 		for(int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
@@ -40,6 +41,12 @@ public class Map extends Group implements Serializable {
 					envnmt_map[i][j] = l;
 					addActor(l);
 				} else {
+					if (treeNoise.getHeight(i+0.5, j+0.5) < 0.5){
+						TreeField t = new TreeField(i, j);
+						t.setOwnerID(-1);
+						struct_map[i][j] = t;
+						addActor(t);
+					}
 					Plain p = new Plain(i, j);
 					p.setOwnerID(-1);
 					int type;
