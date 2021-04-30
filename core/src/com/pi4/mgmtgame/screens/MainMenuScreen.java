@@ -32,8 +32,8 @@ public class MainMenuScreen implements Screen {
 
 	private SpriteBatch batch;
 	protected Stage stage;
-  	private Viewport viewport;
-  	private OrthographicCamera camera;
+	private Viewport viewport;
+  private OrthographicCamera camera;
 	private AssetManager manager;
 	ManagementGame game;
 	private int nbOfPlayers=3;

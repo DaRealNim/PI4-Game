@@ -1,5 +1,7 @@
 package com.pi4.mgmtgame;
 
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,8 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.Gdx;
 import com.pi4.mgmtgame.resources.Item;
-
-
+import com.badlogic.gdx.audio.Sound;
 
 public class HUD {
     public Stage stage;
@@ -35,7 +36,7 @@ public class HUD {
     private Inventory inv;
     private int internalTurn;
     private String seedLabelText, grainLabelText, itemsLabelText;
-
+  	private Sound gameMusic;
 
     public HUD (AssetManager man, ServerInteraction server) {
       this.manager = man;
@@ -46,6 +47,20 @@ public class HUD {
       stage = new Stage(viewport);
 
       this.show();
+
+      Random rd = new Random();
+      int max = 2;
+      int min = 1;
+      int val = rd.nextInt((max - min) + min) + min;
+
+      if (val == 1)
+        gameMusic = Gdx.audio.newSound(Gdx.files.internal("sounds/farmvilleidk.mp3"));
+      else
+        gameMusic = Gdx.audio.newSound(Gdx.files.internal("sounds/farmcityshit.mp3"));
+
+      gameMusic.setLooping(100, true);
+  		gameMusic.setVolume(100, 0.3f);
+  		gameMusic.play();
     }
 
     public int getInternalTurn() {
