@@ -111,7 +111,7 @@ ButtonStyle: {
 	field_potato_middle: {
 		up: field_potatoes_middle
 	}
-	filed_potato_grew: {
+	field_potato_grew: {
 		up: field_potatoes_grew
 	}
 	treefarm_grew_2: {

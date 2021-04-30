@@ -26,7 +26,6 @@ public class Block extends Group implements Serializable {
     }
 
     public void addViewController(final AssetManager manager, final ServerInteraction server) {
-        System.out.println("nnooooOOOOOOO");
     }
 
     public void setButton(Button b) {

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -37,6 +38,7 @@ public class HUD {
     private int internalTurn;
     private String seedLabelText, grainLabelText, itemsLabelText;
   	private Sound gameMusic;
+    private CheckBox showOwnersCheckBox;
 
     public HUD (AssetManager man, ServerInteraction server) {
       this.manager = man;
@@ -45,7 +47,6 @@ public class HUD {
 
       viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, new OrthographicCamera());
       stage = new Stage(viewport);
-
       this.show();
 
       Random rd = new Random();
@@ -102,6 +103,8 @@ public class HUD {
 
       Texture backgroundTexture = manager.get("hudButtons/hudBackground.png", Texture.class);
       Image background = new Image(backgroundTexture);
+
+      showOwnersCheckBox = new CheckBox("Show land owners", manager.get("menuButtons/uiskin.json", Skin.class));
 
       passTurnButton = new Button(buttonSkins, "passTurn");
       passTurnButton.setZIndex(1);
@@ -171,6 +174,7 @@ public class HUD {
       table.add(marketButton).center().expandX().padTop(40);
       table.add(passTurnButton).center().expandX().padTop(40);
       table.add(moneyLabel).center().expandX();
+      table.add(showOwnersCheckBox).center().expandX();
       table.add(turnLabel).center().expandX();
       table.add(internalTurnLabel).center().expandX();
       table.add(grainLabel).left().expandX();
@@ -183,6 +187,10 @@ public class HUD {
 
     public void update() {
         updateLabels();
+    }
+
+    public boolean shouldShowOwners() {
+        return showOwnersCheckBox.isChecked();
     }
 
     public void dispose() {

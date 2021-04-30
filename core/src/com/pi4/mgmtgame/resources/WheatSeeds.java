@@ -39,7 +39,7 @@ public class WheatSeeds extends Grain {
 	}
 
 	public String getFieldMiddleSpriteName() {
-		return "field_grew";
+		return "field_grow";
 	}
 
 	public String toString() {

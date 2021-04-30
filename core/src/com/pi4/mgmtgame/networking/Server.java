@@ -485,7 +485,7 @@ public class Server {
 	public boolean canBuyTerrain(int x, int y) {
         Inventory userInv = getInventory();
         int terrainPrice = 500;
-        if (map.getEnvironmentAt(x, y).testOwner(-1) && userInv.getMoney() - terrainPrice > 0) {
+        if (map.getEnvironmentAt(x, y).testOwner(-1) && userInv.getMoney() - terrainPrice >= 0) {
             return true;
         }
         return false;
@@ -494,14 +494,14 @@ public class Server {
 	public boolean requestBuyTerrain(int x, int y) {
 		Inventory userInv = getInventory();
 		int terrainPrice = 500;
-		
+
 		if (canBuyTerrain(x, y)) {
 			userInv.giveMoney(terrainPrice);
 			map.getEnvironmentAt(x, y).setOwnerID(internalTurn);
 			return true;
 		}
-		
-       return false; 
+
+       return false;
     }
 
 	public static void main(String[] args) {

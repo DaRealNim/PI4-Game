@@ -37,13 +37,13 @@ public class Map extends Group implements Serializable {
 				if (noise.getHeight(i/2+0.5, j/2+0.5) < -0.3) {
 					Lake l = new Lake(i, j);
 					l.setOwnerID(-1);
-					l.setSpriteName("lake");
 					envnmt_map[i][j] = l;
 					addActor(l);
 				} else {
-					if (treeNoise.getHeight(i+0.5, j+0.5) < 0.5){
+					if (treeNoise.getHeight(i+0.5, j+0.5) < -0.1){
 						TreeField t = new TreeField(i, j);
 						t.setOwnerID(-1);
+						t.growSeedCompletely();
 						struct_map[i][j] = t;
 						addActor(t);
 					}
@@ -130,17 +130,17 @@ public class Map extends Group implements Serializable {
 
 	@Override
     public void act(float delta) {
-		for(Structure[] row : struct_map) {
-			for(Structure block : row) {
-				if (block != null) {
-					if (block.testOwner(server.getID())) {
-						block.getColor().a = (float)1;
-					} else {
-						block.getColor().a = (float)0.7;
-					}
-				}
-			}
-	    }
+		// for(Structure[] row : struct_map) {
+		// 	for(Structure block : row) {
+		// 		if (block != null) {
+		// 			if (block.testOwner(server.getID())) {
+		// 				block.getColor().a = (float)1;
+		// 			} else {
+		// 				block.getColor().a = (float)0.7;
+		// 			}
+		// 		}
+		// 	}
+	    // }
     }
 
 	public void updateActors(final AssetManager manager, final ServerInteraction server) {

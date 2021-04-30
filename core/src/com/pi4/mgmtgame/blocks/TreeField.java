@@ -141,6 +141,10 @@ public class TreeField extends Field{
 		return null;
 	}
 
+	public void growSeedCompletely() {
+		this.growingState = this.plantedSeed.getGrowingTime();
+	}
+
 	@Override
 	public String toString() {
 		return "TreeField";
