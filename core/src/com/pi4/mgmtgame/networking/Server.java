@@ -250,6 +250,23 @@ public class Server {
 							}
 							requestUseItem(x, y, item);
 							break;
+                        case 18 :
+                            x = dataIn.readInt();
+                            y = dataIn.readInt();
+                            dataOut.writeBoolean(canBuyTerrain(x, y));
+                            dataOut.flush();
+                            break;
+                        case 19:
+                            x = dataIn.readInt();
+                            y = dataIn.readInt();
+                            if (internalTurn != playerID) {
+                                dataOut.writeBoolean(false);
+                                dataOut.flush();
+                                break;
+                            }
+                            dataOut.writeBoolean(requestBuyTerrain(x, y));
+                            dataOut.flush();
+                            break;
 						case 20:
 							Resources res = (Resources) objIn.readObject();
 							dataOut.writeInt(res.getPrice());
@@ -290,7 +307,7 @@ public class Server {
 
 	public boolean canBuildStructure(int x, int y, Structure struct) {
 		Environment envBlock = map.getEnvironmentAt(x, y);
-		return (envBlock.canBuild(struct) && struct.canBuild(getInventory()) &&inv.getMoney() >= struct.getConstructionCost() && envBlock != null);
+		return (envBlock.canBuild(struct) && struct.canBuild(getInventory()) &&inv.getMoney() >= struct.getConstructionCost() && envBlock != null && envBlock.testOwner(internalTurn));
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
@@ -465,6 +482,27 @@ public class Server {
 		}
 	}
 
+	public boolean canBuyTerrain(int x, int y) {
+        Inventory userInv = getInventory();
+        int terrainPrice = 500;
+        if (map.getEnvironmentAt(x, y).testOwner(-1) && userInv.getMoney() - terrainPrice > 0) {
+            return true;
+        }
+        return false;
+    }
+
+	public boolean requestBuyTerrain(int x, int y) {
+		Inventory userInv = getInventory();
+		int terrainPrice = 500;
+		
+		if (canBuyTerrain(x, y)) {
+			userInv.giveMoney(terrainPrice);
+			map.getEnvironmentAt(x, y).setOwnerID(internalTurn);
+			return true;
+		}
+		
+       return false; 
+    }
 
 	public static void main(String[] args) {
 		Server gameServer = new Server(2);

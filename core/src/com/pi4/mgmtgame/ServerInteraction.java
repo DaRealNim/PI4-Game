@@ -354,8 +354,48 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 	}
+	
+	public synchronized boolean canBuyTerrain(int x, int y) {
+        boolean canBuyOk = false;
+        try {
+            clientSideConnection.dataOut.writeInt(18);
+            clientSideConnection.dataOut.flush();
+            
+            clientSideConnection.dataOut.writeInt(x);
+            clientSideConnection.dataOut.flush();
 
-		public synchronized int getPrice(Resources r) {
+            clientSideConnection.dataOut.writeInt(y);
+            clientSideConnection.dataOut.flush();
+            
+            canBuyOk = clientSideConnection.dataIn.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return (canBuyOk);
+    }
+    
+    public synchronized boolean requestBuyTerrain(int x, int y) {
+        boolean canBuyOk = false;
+        try {
+            clientSideConnection.dataOut.writeInt(19);
+            clientSideConnection.dataOut.flush();
+            
+            clientSideConnection.dataOut.writeInt(x);
+            clientSideConnection.dataOut.flush();
+
+            clientSideConnection.dataOut.writeInt(y);
+            clientSideConnection.dataOut.flush();
+            
+            canBuyOk = clientSideConnection.dataIn.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return (canBuyOk);
+    }
+
+	public synchronized int getPrice(Resources r) {
 			try {
 				clientSideConnection.dataOut.writeInt(20);
 				clientSideConnection.dataOut.flush();
