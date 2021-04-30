@@ -90,7 +90,9 @@ public class Market extends Group {
 	  		Button sellButton = new Button(marketSkins, "sellButton");
 
 				String itemText = p.toString();
+				String priceText = "" + p.getPrice();
 				Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+				Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 	    	sellButton.addListener(new ClickListener() {
 	            @Override
@@ -106,9 +108,12 @@ public class Market extends Group {
 	            }
 	    	});
 
-				plantTable.add(itemLabel).padLeft(120);
+				plantTable.add(itemLabel).padLeft(110);
 				plantTable.row();
 	    	plantTable.add(i).padRight(25).padTop(25).padLeft(120);
+				plantTable.row();
+				plantTable.row();
+				plantTable.add(priceLabel).padLeft(110).padBottom(-10);
 				plantTable.row();
 	    	plantTable.add(buyButton);
 	    	plantTable.add(sellButton).padRight(10);
@@ -125,7 +130,9 @@ public class Market extends Group {
 				i.setScale(2);
 
 				String itemText = g.toString(); //haha g string
+				String priceText = "" + g.getPrice();
 				Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+				Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 	    	Button buyButton = new Button(marketSkins, "buyButton");
 	    	Button sellButton = new Button(marketSkins, "sellButton");
@@ -144,9 +151,11 @@ public class Market extends Group {
 	            }
 	    	});
 
-				grainTable.add(itemLabel).padLeft(120);
+				grainTable.add(itemLabel).padLeft(150);
 				grainTable.row();
 	    	grainTable.add(i).padRight(15).padTop(25).padLeft(150);
+				grainTable.row();
+				grainTable.add(priceLabel).padLeft(150).padBottom(-10);
 				grainTable.row();
 	    	grainTable.add(buyButton).padLeft(30);
 	    	grainTable.add(sellButton);
