@@ -38,7 +38,7 @@ public abstract class Environment extends Block {
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
 
-                if(getOwnerID() == -1) {
+                // if(getOwnerID() == -1) {
                     // Button buttonBuyTerrain = new Button(manager.get("popupIcons/popup.json", Skin.class), "dollar_icon");
                     // Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonBuyTerrain);
                     // if (server.canBuyTerrain(getGridX(), getGridY())) {
@@ -53,7 +53,7 @@ public abstract class Environment extends Block {
                     // } else {
                     //     buttonBuyTerrain.getColor().a = 0.3f;
                     // }
-                } else {
+                // } else {
 
                     Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
                     Button buttonTree = new Button(manager.get("popupIcons/popup.json", Skin.class), "tree_icon");
@@ -111,7 +111,7 @@ public abstract class Environment extends Block {
                     }
 
                     getStage().addActor(p);
-                }
+                // }
             }
         });
         setButton(button);

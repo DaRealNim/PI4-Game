@@ -4,6 +4,34 @@ size: 256,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+arbre_bas
+  rotate: false
+  xy: 137, 87
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+arbre_haut
+  rotate: false
+  xy: 171, 121
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+field_potatoes_grew
+  rotate: false
+  xy: 103, 53
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+field_potatoes_middle
+  rotate: false
+  xy: 69, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 lake
   rotate: false
   xy: 35, 189

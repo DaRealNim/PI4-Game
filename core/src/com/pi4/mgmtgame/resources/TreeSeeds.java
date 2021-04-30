@@ -30,6 +30,10 @@ public class TreeSeeds extends Grain {
 		return "treefarm_grew";
 	}
 
+	public String getFieldMiddleSpriteName() {
+		return null;
+	}
+
 	public String getTexture() {
 		return("marketRes/wood.png");
 	}

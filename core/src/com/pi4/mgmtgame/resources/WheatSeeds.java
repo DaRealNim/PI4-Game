@@ -38,6 +38,10 @@ public class WheatSeeds extends Grain {
 		return "field_carrots";
 	}
 
+	public String getFieldMiddleSpriteName() {
+		return "field_grew";
+	}
+
 	public String toString() {
 		return ("Wheat Seeds");
 	}

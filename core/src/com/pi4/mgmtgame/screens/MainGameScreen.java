@@ -26,6 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.math.Vector3;
 import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.ManagementGame;
+import com.pi4.mgmtgame.blocks.Structure;
+import com.pi4.mgmtgame.blocks.TreeField;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class MainGameScreen implements Screen	{
 
@@ -43,7 +46,7 @@ public class MainGameScreen implements Screen	{
 	private SpriteBatch batch;
 	private HUD hud;
 	private InputMultiplexer multiplexer;
-	protected Stage stage, stage2;
+	protected Stage stage, selectionSquareStage, decorationStage;
 	private ServerInteraction server;
 	private Button waitingOverlay;
 	private Image selectSquare;
@@ -89,7 +92,8 @@ public class MainGameScreen implements Screen	{
 		camera.update();
 
 		stage = new Stage(viewport, batch);
-		stage2 = new Stage(viewport, batch);
+		selectionSquareStage = new Stage(viewport, batch);
+		decorationStage = new Stage(viewport, batch);
 
 		hud = new HUD(manager, server);
 		server.passHUD(hud);
@@ -103,13 +107,14 @@ public class MainGameScreen implements Screen	{
 		Gdx.input.setInputProcessor(multiplexer);
 		stage.addActor(map);
 		map.updateActors(manager, server);
+		updateDecorations();
 
 		this.selectSquare = new Image(manager.get("select.png", Texture.class));
 		this.selectedSquare = new Image(manager.get("select.png", Texture.class));
 		this.selectedSquare.setColor(0f, 1f, 1f, 1f);
 		this.selectedSquare.setVisible(false);
-		stage2.addActor(selectSquare);
-		stage2.addActor(selectedSquare);
+		selectionSquareStage.addActor(selectSquare);
+		selectionSquareStage.addActor(selectedSquare);
 
 		waitingOverlay = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		waitingOverlay.setVisible(false);
@@ -164,8 +169,11 @@ public class MainGameScreen implements Screen	{
 			this.selectedSquare.setY(this.selectedSquareY);
 		}
 
-		stage2.act(delta);
-		stage2.draw();
+		selectionSquareStage.act(delta);
+		selectionSquareStage.draw();
+
+		decorationStage.act(delta);
+		decorationStage.draw();
 
 		processCameraMovement();
 
@@ -197,6 +205,21 @@ public class MainGameScreen implements Screen	{
 			translateY += cameraSpeed;
 		}
 		camera.translate(translateX, translateY);
+	}
+
+	private void updateDecorations() {
+		decorationStage.clear();
+		for(int x=0; x<map.getMapWidth(); x++) {
+			for(int y=0; y<map.getMapHeight(); y++) {
+				Structure struct = map.getStructAt(x, y);
+				if (struct != null && struct instanceof TreeField && ((TreeField)struct).hasSeedGrown()) {
+					Image treeTop = new Image(manager.get("blocks/arbre_haut.png", Texture.class));
+					treeTop.setX(x*ManagementGame.TILE_SIZE);
+					treeTop.setY((y+1)*ManagementGame.TILE_SIZE);
+					decorationStage.addActor(treeTop);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -232,6 +255,7 @@ public class MainGameScreen implements Screen	{
 					stage.addActor(serverMap);
 					map.remove();
 					map = serverMap;
+					updateDecorations();
 					hud.update();
 					server.getInternalTurn();
 				}

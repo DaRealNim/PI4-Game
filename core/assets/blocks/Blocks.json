@@ -7,7 +7,7 @@ ButtonStyle: {
 		up: treefarm
 	}
 	treefarm_grew: {
-		up: treefarm_grew
+		up: arbre_bas
 	}
 	lake: {
 		up: lake
@@ -107,6 +107,15 @@ ButtonStyle: {
 	}
 	lake_up_7: {
 		up: lake_up_7
+	}
+	field_potato_middle: {
+		up: field_potatoes_middle
+	}
+	filed_potato_grew: {
+		up: field_potatoes_grew
+	}
+	treefarm_grew_2: {
+		up: arbre_haut
 	}
 }
 }

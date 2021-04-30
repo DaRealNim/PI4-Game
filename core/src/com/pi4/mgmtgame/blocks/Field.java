@@ -49,7 +49,7 @@ public class Field extends Structure {
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					Button buttonRepulsive = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
-						
+
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonPlant,
 							buttonHarvest, buttonDestroy, buttonRepulsive);
 					if (!hasSeed()) {
@@ -170,7 +170,7 @@ public class Field extends Structure {
 		if (plantedSeed == null) {
 			changeStyle("field_empty");
 		} else if (growRatio >= 0.5 && growRatio < 1) {
-			changeStyle("field_grow");
+			changeStyle(plantedSeed.getFieldMiddleSpriteName());
 		} else if (!hasSeedGrown()) {
 			changeStyle("field_planted");
 		} else {
@@ -255,7 +255,7 @@ public class Field extends Structure {
 		if(this.turnsSinceCrickets<=3) {
 			cricketSpread();
 		}
-			
+
 	}
 
 	private void cricketSpread() {
@@ -293,13 +293,13 @@ public class Field extends Structure {
 			this.growingState--;
 
 	}
-	
+
 	private void removeCrickets(){
 		this.usedItem=null;
 		this.turnsSinceCrickets=0;
 		//mettre qqc pour virer le sprite
 	}
-	
+
 	private ArrayList<Structure> getAdjacentStruct() {
 		ArrayList<Structure> structs = new ArrayList<Structure>();
 		for(int i=-1;i<2;i++) {

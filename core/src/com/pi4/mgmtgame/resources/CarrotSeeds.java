@@ -33,6 +33,11 @@ public class CarrotSeeds extends Grain {
 		return "field_carrots";
 	}
 
+
+	public String getFieldMiddleSpriteName() {
+		return "field_grow";
+	}
+
 	public String toString() {
 		return ("Carrot Seeds");
 	}
