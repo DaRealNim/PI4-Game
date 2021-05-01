@@ -1,4 +1,5 @@
 package com.pi4.mgmtgame.networking;
+
 import java.io.*;
 import java.net.*;
 
@@ -34,7 +35,7 @@ public class Server {
 
 	public Server(int nbOfPlayers) {
 		System.out.println("----Server----");
-        try {
+		try {
 			serverSocket = new ServerSocket(51769);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -44,7 +45,7 @@ public class Server {
 		this.map = new Map(50, 50, null, null);
 		this.nbOfPlayers = nbOfPlayers;
 		this.invArray = new Inventory[nbOfPlayers];
-		for(int i=0; i<nbOfPlayers; i++) {
+		for (int i = 0; i < nbOfPlayers; i++) {
 			this.invArray[i] = new Inventory(i);
 		}
 		this.players = new ServerSide[nbOfPlayers];
@@ -71,8 +72,7 @@ public class Server {
 			}
 			System.out.println("Game will now start.");
 			serverSocket.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e + "\nexception on acceptConns");
 		}
@@ -87,7 +87,7 @@ public class Server {
 		protected ObjectInputStream objIn;
 		protected ObjectOutputStream objOut;
 
-		public ServerSide(Socket s, int id) 	{
+		public ServerSide(Socket s, int id) {
 			playerSocket = s;
 			playerID = id;
 			System.out.println("haha");
@@ -106,7 +106,7 @@ public class Server {
 		public void run() {
 			System.out.println("run executed!");
 			try {
-				System.out.println("sending "+playerID);
+				System.out.println("sending " + playerID);
 				dataOut.writeInt(playerID);
 				dataOut.flush();
 				System.out.println("done");
@@ -121,160 +121,160 @@ public class Server {
 					Item item = null;
 					int request = dataIn.readInt();
 					switch (request) {
-						case 0:
-							objOut.reset();
-							objOut.writeObject(getMap());
-							objOut.flush();
-							break;
-						case 1:
-							dataOut.writeInt(getCurrentPlayer());
+					case 0:
+						objOut.reset();
+						objOut.writeObject(getMap());
+						objOut.flush();
+						break;
+					case 1:
+						dataOut.writeInt(getCurrentPlayer());
+						dataOut.flush();
+						break;
+					case 2:
+						objOut.reset();
+						objOut.writeObject(getInventory());
+						objOut.flush();
+						break;
+					case 3:
+						dataOut.writeInt(getTurn());
+						dataOut.flush();
+						break;
+					case 4:
+						dataOut.writeInt(getInternalTurn());
+						dataOut.flush();
+						break;
+					case 5:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						struct = (Structure) objIn.readObject();
+						dataOut.writeBoolean(canBuildStructure(x, y, struct));
+						dataOut.flush();
+						break;
+					case 6:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						struct = (Structure) objIn.readObject();
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
 							dataOut.flush();
 							break;
-						case 2:
-							objOut.reset();
-							objOut.writeObject(getInventory());
-							objOut.flush();
-							break;
-						case 3:
-							dataOut.writeInt(getTurn());
+						}
+						dataOut.writeBoolean(requestBuildStructure(x, y, struct));
+						dataOut.flush();
+						break;
+					case 7:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						dataOut.writeBoolean(canDestroyStructure(x, y));
+						dataOut.flush();
+						break;
+					case 8:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						grain = (Grain) objIn.readObject();
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
 							dataOut.flush();
 							break;
-						case 4:
-							dataOut.writeInt(getInternalTurn());
+						}
+						dataOut.writeBoolean(requestPlantSeed(x, y, grain));
+						dataOut.flush();
+						break;
+					case 9:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
 							dataOut.flush();
 							break;
-						case 5:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							struct = (Structure) objIn.readObject();
-							dataOut.writeBoolean(canBuildStructure(x, y, struct));
+						}
+						dataOut.writeBoolean(requestDestroyStructure(x, y));
+						dataOut.flush();
+						break;
+					case 10:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						dataOut.writeBoolean(canHarvest(x, y));
+						dataOut.flush();
+						break;
+					case 11:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
 							dataOut.flush();
 							break;
-						case 6:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							struct = (Structure) objIn.readObject();
-							if (internalTurn != playerID) {
-								dataOut.writeBoolean(false);
-								dataOut.flush();
-								break;
-							}
-							dataOut.writeBoolean(requestBuildStructure(x, y, struct));
+						}
+						dataOut.writeBoolean(requestHarvest(x, y));
+						dataOut.flush();
+						break;
+					case 12:
+						if (internalTurn != playerID)
+							break;
+						passTurn();
+						break;
+					case 13:
+						grain = (Grain) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						buyGrain(grain, quantity);
+						break;
+					case 14:
+						grain = (Grain) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						sellGrain(grain, quantity);
+						break;
+					case 15:
+						plant = (Plant) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						buyPlant(plant, quantity);
+						break;
+					case 16:
+						plant = (Plant) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						sellPlant(plant, quantity);
+						break;
+					case 17:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						item = (Item) objIn.readObject();
+						if (internalTurn != playerID) {
+							break;
+						}
+						requestUseItem(x, y, item);
+						break;
+					case 18:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						dataOut.writeBoolean(canBuyTerrain(x, y));
+						dataOut.flush();
+						break;
+					case 19:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
 							dataOut.flush();
 							break;
-						case 7:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							dataOut.writeBoolean(canDestroyStructure(x, y));
-							dataOut.flush();
-							break;
-						case 8:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							grain = (Grain) objIn.readObject();
-							if (internalTurn != playerID) {
-								dataOut.writeBoolean(false);
-								dataOut.flush();
-								break;
-							}
-							dataOut.writeBoolean(requestPlantSeed(x, y, grain));
-							dataOut.flush();
-							break;
-						case 9:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							if (internalTurn != playerID) {
-								dataOut.writeBoolean(false);
-								dataOut.flush();
-								break;
-							}
-							dataOut.writeBoolean(requestDestroyStructure(x, y));
-							dataOut.flush();
-							break;
-						case 10:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							dataOut.writeBoolean(canHarvest(x, y));
-							dataOut.flush();
-							break;
-						case 11:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							if (internalTurn != playerID) {
-								dataOut.writeBoolean(false);
-								dataOut.flush();
-								break;
-							}
-							dataOut.writeBoolean(requestHarvest(x, y));
-							dataOut.flush();
-							break;
-						case 12:
-							if (internalTurn != playerID)
-								break;
-							passTurn();
-							break;
-						case 13:
-							grain = (Grain) objIn.readObject();
-							quantity = dataIn.readInt();
-							if (internalTurn != playerID)
-								break;
-							buyGrain(grain, quantity);
-							break;
-						case 14:
-							grain = (Grain) objIn.readObject();
-							quantity = dataIn.readInt();
-							if (internalTurn != playerID)
-								break;
-							sellGrain(grain, quantity);
-							break;
-						case 15:
-							plant = (Plant) objIn.readObject();
-							quantity = dataIn.readInt();
-							if (internalTurn != playerID)
-								break;
-							buyPlant(plant, quantity);
-							break;
-						case 16:
-							plant = (Plant) objIn.readObject();
-							quantity = dataIn.readInt();
-							if (internalTurn != playerID)
-								break;
-							sellPlant(plant, quantity);
-							break;
-						case 17:
-							x = dataIn.readInt();
-							y = dataIn.readInt();
-							item = (Item)objIn.readObject();
-							if (internalTurn != playerID) {
-								break;
-							}
-							requestUseItem(x, y, item);
-							break;
-                        case 18 :
-                            x = dataIn.readInt();
-                            y = dataIn.readInt();
-                            dataOut.writeBoolean(canBuyTerrain(x, y));
-                            dataOut.flush();
-                            break;
-                        case 19:
-                            x = dataIn.readInt();
-                            y = dataIn.readInt();
-                            if (internalTurn != playerID) {
-                                dataOut.writeBoolean(false);
-                                dataOut.flush();
-                                break;
-                            }
-                            dataOut.writeBoolean(requestBuyTerrain(x, y));
-                            dataOut.flush();
-                            break;
-						case 20:
-							Resources res = (Resources) objIn.readObject();
-							dataOut.writeInt(res.getPrice());
-							dataOut.flush();
-							break;
-						default:
-							System.out.println("wyd????");
-							break;
+						}
+						dataOut.writeBoolean(requestBuyTerrain(x, y));
+						dataOut.flush();
+						break;
+					case 20:
+						Resources res = (Resources) objIn.readObject();
+						dataOut.writeInt(res.getPrice());
+						dataOut.flush();
+						break;
+					default:
+						System.out.println("wyd????");
+						break;
 					}
 				}
 			} catch (Exception e) {
@@ -283,7 +283,6 @@ public class Server {
 			}
 		}
 	}
-
 
 	public int getCurrentPlayer() {
 		return (currentPlayer);
@@ -307,7 +306,9 @@ public class Server {
 
 	public boolean canBuildStructure(int x, int y, Structure struct) {
 		Environment envBlock = map.getEnvironmentAt(x, y);
-		return (envBlock.canBuild(struct) && struct.canBuild(getInventory()) &&inv.getMoney() >= struct.getConstructionCost() && envBlock != null && envBlock.testOwner(internalTurn));
+		return (envBlock.canBuild(struct) && struct.canBuild(getInventory())
+				&& inv.getMoney() >= struct.getConstructionCost() && envBlock != null
+				&& envBlock.testOwner(internalTurn));
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
@@ -321,8 +322,8 @@ public class Server {
 	}
 
 	public boolean canDestroyStructure(int x, int y) {
-	    Structure structBlock = map.getStructAt(x, y);
-	    return (structBlock != null && structBlock.testOwner(currentPlayer));
+		Structure structBlock = map.getStructAt(x, y);
+		return (structBlock != null && structBlock.testOwner(currentPlayer));
 	}
 
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
@@ -356,8 +357,8 @@ public class Server {
 
 	public boolean requestDestroyStructure(int x, int y) {
 		if (canDestroyStructure(x, y)) {
-			inv.receiveMoney((map.getStructAt(x, y).getConstructionCost()*30)/100);
-			if(map.getStructAt(x, y) != null)
+			inv.receiveMoney((map.getStructAt(x, y).getConstructionCost() * 30) / 100);
+			if (map.getStructAt(x, y) != null)
 				map.getStructAt(x, y).remove();
 			map.setStructAt(x, y, null);
 
@@ -483,13 +484,15 @@ public class Server {
 	}
 
 	public boolean canBuyTerrain(int x, int y) {
-        Inventory userInv = getInventory();
-        int terrainPrice = 500;
-        if (map.getEnvironmentAt(x, y).testOwner(-1) && userInv.getMoney() - terrainPrice >= 0) {
-            return true;
-        }
-        return false;
-    }
+		Inventory userInv = getInventory();
+		int terrainPrice = 500;
+		if (map.getStructAt(x, y) != null && userInv.getMoney() - terrainPrice >= 0)
+			return true;
+		else if (map.getEnvironmentAt(x, y).testOwner(-1) && userInv.getMoney() - terrainPrice >= 0) {
+			return true;
+		}
+		return false;
+	}
 
 	public boolean requestBuyTerrain(int x, int y) {
 		Inventory userInv = getInventory();
@@ -501,8 +504,8 @@ public class Server {
 			return true;
 		}
 
-       return false;
-    }
+		return false;
+	}
 
 	public static void main(String[] args) {
 		Server gameServer = new Server(2);
