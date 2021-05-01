@@ -32,6 +32,9 @@ import com.pi4.mgmtgame.blocks.Environment;
 import com.pi4.mgmtgame.blocks.TreeField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Color;
 
 public class MainGameScreen implements Screen	{
 
@@ -44,6 +47,7 @@ public class MainGameScreen implements Screen	{
 	ManagementGame game;
 	AssetManager manager;
 	Map map;
+	private volatile boolean gameCanStart = false;
 	private Viewport viewport;
 	private final OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -58,8 +62,10 @@ public class MainGameScreen implements Screen	{
 	private int selectedSquareX;
 	private int selectedSquareY;
 	private double cameraSpeed;
-	private Image ownerScreenBackground;
+	private Button darkScreenBackground;
 	private Group ownerColoredSquares;
+	private Label bottomLeftLabel;
+	private String bottomLeftLabelText;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -101,9 +107,13 @@ public class MainGameScreen implements Screen	{
 		decorationStage = new Stage(viewport, batch);
 		staticStage = new Stage(new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, new OrthographicCamera()), batch);
 		ownerStage = new Stage(viewport, batch);
-		ownerScreenBackground = new Image(manager.get("b l a c k.png", Texture.class));
+		darkScreenBackground = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		ownerColoredSquares = new Group();
 		popupStage = new Stage(viewport, batch);
+		bottomLeftLabelText = "Waiting for the game to start...";
+		BitmapFont font = new BitmapFont();
+		font.getData().setScale(2);
+		bottomLeftLabel = new Label(bottomLeftLabelText, new Label.LabelStyle(font, Color.WHITE));
 
 
 		hud = new HUD(manager, server);
@@ -112,6 +122,7 @@ public class MainGameScreen implements Screen	{
 
 	@Override
 	public void show() {
+		multiplexer.addProcessor(staticStage);
 		multiplexer.addProcessor(hud.stage);
 		multiplexer.addProcessor(popupStage);
 		multiplexer.addProcessor(stage);
@@ -131,10 +142,13 @@ public class MainGameScreen implements Screen	{
 		waitingOverlay = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		waitingOverlay.setVisible(false);
 		hud.stage.addActor(waitingOverlay);
+		hud.stage.addActor(darkScreenBackground);
+		hud.stage.addActor(bottomLeftLabel);
 
-		// staticStage.addActor(ownerScreenBackground);
 		ownerStage.addActor(ownerColoredSquares);
 
+		Thread threadWaitGameStart = new Thread(new WaitForGameStart());
+		threadWaitGameStart.start();
 
 		Thread t = new Thread(new MapHudUpdate());
 		t.start();
@@ -144,6 +158,8 @@ public class MainGameScreen implements Screen	{
 	public synchronized void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		bottomLeftLabel.setText(bottomLeftLabelText);
 
 		stage.act(delta);
 		stage.draw();
@@ -170,7 +186,6 @@ public class MainGameScreen implements Screen	{
 		hud.stage.act();
 		hud.stage.draw();
 
-		ownerScreenBackground.setVisible(hud.shouldShowOwners());
 		ownerColoredSquares.setVisible(hud.shouldShowOwners());
 	}
 
@@ -290,13 +305,13 @@ public class MainGameScreen implements Screen	{
 					Thread.sleep(500);
 				} catch(InterruptedException e) {
 				}
-				int t = server.getStoredInternalTurn();
 				// System.out.println(server.getID() + ", " + t);
-				if (server.getID() == t) {
+				if (server.getID() == server.getStoredInternalTurn()) {
 					waitingOverlay.setVisible(false);
 					hud.update();
 					map = getMapFromStage();
 					updateOverlay();
+					bottomLeftLabelText = "";
 				} else {
 					waitingOverlay.setVisible(true);
 					Map serverMap = server.getMap();
@@ -307,8 +322,29 @@ public class MainGameScreen implements Screen	{
 					updateOverlay();
 					hud.update();
 					server.getInternalTurn();
+					if (gameCanStart)
+						bottomLeftLabelText = "Player "+server.getStoredInternalTurn()+" is playing...";
 				}
 
+			}
+		}
+	}
+
+	private class WaitForGameStart implements Runnable {
+
+		@Override
+		public synchronized void run() {
+			while(true) {
+				try {
+					Thread.sleep(500);
+					if(server.canGameStart()) {
+						gameCanStart = true;
+						darkScreenBackground.setVisible(false);
+						bottomLeftLabelText = "";
+						break;
+					}
+				} catch(InterruptedException e) {
+				}
 			}
 		}
 	}

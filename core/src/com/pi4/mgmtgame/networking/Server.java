@@ -32,6 +32,7 @@ public class Server {
 	private int currentPlayer;
 	private int nbOfPlayers;
 	private int playerID;
+	private volatile boolean gameCanStart = false;
 
 	public Server(int nbOfPlayers) {
 		System.out.println("----Server----");
@@ -51,7 +52,7 @@ public class Server {
 		this.players = new ServerSide[nbOfPlayers];
 		this.numPlayers = 0;
 		this.turn = 0;
-		this.internalTurn = 0;
+		this.internalTurn = -1;
 		this.inv = invArray[0];
 	}
 
@@ -71,6 +72,8 @@ public class Server {
 				++numPlayers;
 			}
 			System.out.println("Game will now start.");
+			gameCanStart = true;
+			internalTurn = 0;
 			serverSocket.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +93,6 @@ public class Server {
 		public ServerSide(Socket s, int id) {
 			playerSocket = s;
 			playerID = id;
-			System.out.println("haha");
 			try {
 				dataOut = new DataOutputStream(playerSocket.getOutputStream());
 				dataIn = new DataInputStream(playerSocket.getInputStream());
@@ -104,12 +106,9 @@ public class Server {
 
 		@Override
 		public void run() {
-			System.out.println("run executed!");
 			try {
-				System.out.println("sending " + playerID);
 				dataOut.writeInt(playerID);
 				dataOut.flush();
-				System.out.println("done");
 
 				while (true) {
 					int x = 0;
@@ -119,7 +118,14 @@ public class Server {
 					Grain grain = null;
 					Plant plant = null;
 					Item item = null;
-					int request = dataIn.readInt();
+					int request = -1;
+					try {
+						request = dataIn.readInt();
+					} catch (SocketException | EOFException e) {
+						System.out.println("Player "+playerID+" disconnected");
+						break;
+					}
+
 					switch (request) {
 					case 0:
 						objOut.reset();
@@ -132,7 +138,7 @@ public class Server {
 						break;
 					case 2:
 						objOut.reset();
-						objOut.writeObject(getInventory());
+						objOut.writeObject(getInventory(playerID));
 						objOut.flush();
 						break;
 					case 3:
@@ -272,6 +278,10 @@ public class Server {
 						dataOut.writeInt(res.getPrice());
 						dataOut.flush();
 						break;
+					case 256:
+						dataOut.writeBoolean(gameCanStart);
+						dataOut.flush();
+						break;
 					default:
 						System.out.println("wyd????");
 						break;
@@ -290,6 +300,10 @@ public class Server {
 
 	public Map getMap() {
 		return map;
+	}
+
+	public Inventory getInventory(int id) {
+		return invArray[id];
 	}
 
 	public Inventory getInventory() {
@@ -461,7 +475,7 @@ public class Server {
 	public void buyPlant(Plant boughtPlant, int q) {
 		Inventory userInv = getInventory();
 		int plantPrice = boughtPlant.getPrice();
- 
+
 		if (userHasMoneyToBuy(q, boughtPlant)) {
 			userInv.giveMoney(plantPrice * q);
 			userInv.addPlant(boughtPlant.getId(), q);
@@ -496,11 +510,16 @@ public class Server {
 
 	public boolean requestBuyTerrain(int x, int y) {
 		Inventory userInv = getInventory();
+		Environment env = map.getEnvironmentAt(x, y);
+		Structure struct = map.getStructAt(x, y);
 		int terrainPrice = 500;
 
 		if (canBuyTerrain(x, y)) {
 			userInv.giveMoney(terrainPrice);
-			map.getEnvironmentAt(x, y).setOwnerID(internalTurn);
+			if (env != null)
+				env.setOwnerID(internalTurn);
+			if (struct != null)
+				struct.setOwnerID(internalTurn);
 			return true;
 		}
 

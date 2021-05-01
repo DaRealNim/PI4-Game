@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.resources;
 
 public class Crickets extends Item{
 	static int cricketsPrice = 10;
-	
+
 	public int getPrice() {
 		return cricketsPrice;
 	}
@@ -16,7 +16,7 @@ public class Crickets extends Item{
 	}
 
 	public int getId() {
-		return 1;
+		return 0;
 	}
 
 	public String getTexture() {

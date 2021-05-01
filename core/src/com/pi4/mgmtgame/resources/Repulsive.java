@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.resources;
 
 public class Repulsive extends Item{
 static int repulsivePrice = 10;
-	
+
 	public int getPrice() {
 		return repulsivePrice;
 	}

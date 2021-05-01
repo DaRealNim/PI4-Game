@@ -33,7 +33,7 @@ public class HUD {
     private Button marketButton;
     private AssetManager manager;
     private ServerInteraction server;
-    private Label moneyLabel, grainLabel, seedLabel, itemsLabel, turnLabel, internalTurnLabel;
+    private Label moneyLabel, grainLabel, seedLabel, itemsLabel, turnLabel;
     private Inventory inv;
     private int internalTurn;
     private String seedLabelText, grainLabelText, itemsLabelText;
@@ -93,7 +93,6 @@ public class HUD {
 
         moneyLabel.setText("DOLLA BILLZ: " + inv.getMoney());
         turnLabel.setText("Month : " + server.getTurn());
-        internalTurnLabel.setText("Tour du joueur : " + server.getInternalTurn());
         seedLabel.setText(seedLabelText);
         grainLabel.setText(grainLabelText);
     }
@@ -119,7 +118,6 @@ public class HUD {
 
       moneyLabel = new Label("DOLLA BILLZ: " + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
       turnLabel = new Label("Month : " + server.getTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-      internalTurnLabel = new Label("Tour du joueur : " + server.getInternalTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
       seedLabelText = "";
       grainLabelText = "";
@@ -176,7 +174,6 @@ public class HUD {
       table.add(moneyLabel).center().expandX();
       table.add(showOwnersCheckBox).center().expandX();
       table.add(turnLabel).center().expandX();
-      table.add(internalTurnLabel).center().expandX();
       table.add(grainLabel).left().expandX();
       table.add(seedLabel).left().expandX();
       table.add(itemsLabel).right().expandX().padRight(40);

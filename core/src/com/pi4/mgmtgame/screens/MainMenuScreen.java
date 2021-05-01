@@ -89,9 +89,6 @@ public class MainMenuScreen implements Screen {
             	stage.clear();
             	stage.dispose();
 
-            	Inventory[] inv = new Inventory[nbOfPlayers];
-            	for(int i = 0;i<nbOfPlayers;i++)
-        			inv[i]= new Inventory(i);
             	ServerInteraction server = new ServerInteraction(ipField.getText(), portField.getText());
 
             	game.setScreen(new MainGameScreen(game, manager, server));

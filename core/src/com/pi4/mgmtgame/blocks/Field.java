@@ -21,6 +21,7 @@ import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.ManagementGame;
 import com.pi4.mgmtgame.blocks.Lake;
+import com.pi4.mgmtgame.resources.Crickets;
 
 public class Field extends Structure {
 	private Grain plantedSeed;
@@ -144,17 +145,21 @@ public class Field extends Structure {
 					});
 
 					popupStage.addActor(p);
-				} else if(!(usedItem instanceof Crickets)&&server.getInventory().hasItem(0)){
+				} else {
 					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonCricket);
-					buttonCricket.addListener(new ClickListener() {
-						@Override
-						public void clicked(InputEvent event, float x, float y) {
-							server.requestUseItem(getGridX(), getGridY(),server.getInventory().getItems()[1]);
-							updateMap(manager, server);
-							c.remove();
-						}
-					});
+					if(!(usedItem instanceof Crickets) && server.getInventory().hasItem(0)) {
+						buttonCricket.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								server.requestUseItem(getGridX(), getGridY(), new Crickets());
+								updateMap(manager, server);
+								c.remove();
+							}
+						});
+					} else {
+						buttonCricket.getColor().a = (float)0.3;
+					}
 					popupStage.addActor(c);
 				}
 			}
@@ -222,7 +227,7 @@ public class Field extends Structure {
 			}
 		}
 	}
-	
+
 
 	private void attemptToPlant(int i, ServerInteraction server) {
 		// ERREUR (renvoie tjrs 0)
@@ -243,19 +248,19 @@ public class Field extends Structure {
 		}
 		return null;
 	}
- 
+
 	@Override
 	public void passTurn() {
 		this.growSeed();
-		
+
 		if(usedItem != null && usedItem.getId()==1)
 			this.turnsSinceCrickets++;
-		
+
 		this.growFactor -= this.turnsSinceCrickets*0.2;
-		
+
 		if(this.growingState<0)
 			this.growingState=0;
-				
+
 		if(this.turnsSinceCrickets>=3) {
 			cricketSpread();
 		}
@@ -304,6 +309,6 @@ public class Field extends Structure {
 		//mettre qqc pour virer le sprite
 	}
 
-	
+
 
 }

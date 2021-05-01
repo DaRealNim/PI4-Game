@@ -18,7 +18,7 @@ public class ServerInteraction {
 	private ClientSide clientSideConnection;
 	private HUD hud;
 	private int playerID;
-	private int storedInternalTurn;
+	private int storedInternalTurn = -1;
 
 	public ServerInteraction(String ip, String port) {
 		int portInt = Integer.parseInt(port);
@@ -354,44 +354,44 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized boolean canBuyTerrain(int x, int y) {
         boolean canBuyOk = false;
         try {
             clientSideConnection.dataOut.writeInt(18);
             clientSideConnection.dataOut.flush();
-            
+
             clientSideConnection.dataOut.writeInt(x);
             clientSideConnection.dataOut.flush();
 
             clientSideConnection.dataOut.writeInt(y);
             clientSideConnection.dataOut.flush();
-            
+
             canBuyOk = clientSideConnection.dataIn.readBoolean();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         return (canBuyOk);
     }
-    
+
     public synchronized boolean requestBuyTerrain(int x, int y) {
         boolean canBuyOk = false;
         try {
             clientSideConnection.dataOut.writeInt(19);
             clientSideConnection.dataOut.flush();
-            
+
             clientSideConnection.dataOut.writeInt(x);
             clientSideConnection.dataOut.flush();
 
             clientSideConnection.dataOut.writeInt(y);
             clientSideConnection.dataOut.flush();
-            
+
             canBuyOk = clientSideConnection.dataIn.readBoolean();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         return (canBuyOk);
     }
 
@@ -408,6 +408,18 @@ public class ServerInteraction {
 				e.printStackTrace();
 			}
 			return (-1);
+	}
+
+	public synchronized boolean canGameStart() {
+		try {
+			clientSideConnection.dataOut.writeInt(256);
+			clientSideConnection.dataOut.flush();
+
+			return (clientSideConnection.dataIn.readBoolean());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	private class ClientSide {
@@ -432,6 +444,7 @@ public class ServerInteraction {
 
 				System.out.println("\nConnection to " + clientSocket.getInetAddress() + " on port: " + clientSocket.getPort() + " successful.");
 				System.out.println("Connected as player " + playerID);
+				System.out.println("Waiting for game to start...");
 			}
 			catch (Exception e) {
 				e.printStackTrace();

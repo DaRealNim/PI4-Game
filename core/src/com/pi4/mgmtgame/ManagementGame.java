@@ -48,4 +48,9 @@ public class ManagementGame extends Game {
 	public void render () {
 		super.render();
 	}
+
+	@Override
+	public void dispose() {
+		System.exit(0);
+	}
 }

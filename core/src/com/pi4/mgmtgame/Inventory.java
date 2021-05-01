@@ -14,6 +14,8 @@ import com.pi4.mgmtgame.resources.TreeSeeds;
 import com.pi4.mgmtgame.resources.Wheat;
 import com.pi4.mgmtgame.resources.WheatSeeds;
 import com.pi4.mgmtgame.resources.Wood;
+import com.pi4.mgmtgame.resources.Repulsive;
+import com.pi4.mgmtgame.resources.Crickets;
 
 public class Inventory implements Serializable {
 	private int money;
@@ -28,17 +30,19 @@ public class Inventory implements Serializable {
 		plants[1] = new Potato();
 		plants[2] = new Carrot();
 		plants[3] = new Wood();
-		
+
 		seeds = new Grain[4];
 		seeds[0] = new WheatSeeds();
 		seeds[1] = new PotatoSeeds();
 		seeds[2] = new CarrotSeeds();
 		seeds[3] = new TreeSeeds();
-		
+
 		items = new Item[2];
-		
+		items[0] = new Repulsive();
+		items[1] = new Crickets();
+
 		money = 2000;
-		
+
 		for(int i = 0; i < 4; i++)
 			seeds[i].addVolume(2);
 	}
@@ -65,11 +69,11 @@ public class Inventory implements Serializable {
 	public void addGrain(int id, int value) {
 		this.seeds[id].addVolume(value);
 	}
-	
+
 	public void removeItem(int id, int value) {
 		this.items[id].subVolume(value);
 	}
-	
+
 	public void addItem(int id, int value) {
 		this.items[id].addVolume(value);
 	}
@@ -116,7 +120,7 @@ public class Inventory implements Serializable {
 	public int getinvID() {
 		return invID;
 	}
-	
+
 
 	@Override
 	public String toString() {
