@@ -24,13 +24,15 @@ import com.pi4.mgmtgame.blocks.Lake;
 
 public class Field extends Structure {
 	private Grain plantedSeed;
-	private int growingState;
+	private float growingState;
 	private Item usedItem;
 	private int turnsSinceCrickets;
+	private float growFactor;
 
 	public Field(int x, int y) {
         super(x, y);
 		this.growingState = 0;
+		this.growFactor = 3;
 		setSpriteName("field_empty");
 	}
 
@@ -214,12 +216,13 @@ public class Field extends Structure {
 	public void growSeed() {
 		if (plantedSeed != null && !hasSeedGrown()) {
 			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
-			this.growingState++;
+			this.growingState+=growFactor+getNearbyBoosts()*0.3f;
 			if (hasSeedGrown()) {
 				changeStyle(plantedSeed.getFieldSpriteName());
 			}
 		}
 	}
+	
 
 	private void attemptToPlant(int i, ServerInteraction server) {
 		// ERREUR (renvoie tjrs 0)
@@ -244,16 +247,16 @@ public class Field extends Structure {
 	@Override
 	public void passTurn() {
 		this.growSeed();
+		
 		if(usedItem != null && usedItem.getId()==1)
 			this.turnsSinceCrickets++;
-		this.growingState -= this.turnsSinceCrickets;
+		
+		this.growFactor -= this.turnsSinceCrickets*0.2;
+		
 		if(this.growingState<0)
 			this.growingState=0;
-		Map parentMap = (Map)getParent();
-		if(parentMap.getEnvironmentAt(getGridX(), getGridY()-1) instanceof Lake) {
-			System.out.println("Laked field!");
-		}
-		if(this.turnsSinceCrickets<=3) {
+				
+		if(this.turnsSinceCrickets>=3) {
 			cricketSpread();
 		}
 
@@ -301,25 +304,6 @@ public class Field extends Structure {
 		//mettre qqc pour virer le sprite
 	}
 
-	private ArrayList<Structure> getAdjacentStruct() {
-		ArrayList<Structure> structs = new ArrayList<Structure>();
-		for(int i=-1;i<2;i++) {
-			for(int j=-1;j<2;j++)	{
-				if(i!=0&&j!=0)
-				structs.add(((Map) this.getParent()).getStructAt(this.getGridX()+i,this.getGridY()+j));
-			}
-		}
-		return structs;
-	}
-private ArrayList<Environment> getAdjacentEnv() {
-	ArrayList<Environment> envs = new ArrayList<Environment>();
-	for(int i=-1;i<2;i++) {
-		for(int j=-1;j<2;j++)	{
-			if(i!=0&&j!=0)
-			envs.add(((Map) this.getParent()).getEnvironmentAt(this.getGridX()+i,this.getGridY()+j));
-		}
-	}
-	return envs;
-	}
+	
 
 }

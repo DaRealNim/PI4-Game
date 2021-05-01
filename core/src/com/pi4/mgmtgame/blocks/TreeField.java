@@ -19,7 +19,7 @@ import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.ManagementGame;
 
 public class TreeField extends Field{
-	private int growingState;
+	private float growingState;
 	final private Grain plantedSeed = new TreeSeeds();
 	public TreeField(int x, int y) {
         super(x, y);

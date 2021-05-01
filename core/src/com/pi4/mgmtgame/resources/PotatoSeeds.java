@@ -7,8 +7,8 @@ public class PotatoSeeds extends Grain {
 		return new Potato();
 	}
 
-	public int getGrowingTime() {
-		return 3;
+	public float getGrowingTime() {
+		return 3*3;
 	}
 	public void addPrice(int p) {
 		potatoSeedPrice += p;

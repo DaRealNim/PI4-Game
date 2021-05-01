@@ -13,8 +13,8 @@ public class WheatSeeds extends Grain {
 	}
 
 
-	public int getGrowingTime() {
-		return 2;
+	public float getGrowingTime() {
+		return 2*3;
 	}
 
 	public int getPrice() {

@@ -1,6 +1,7 @@
 package com.pi4.mgmtgame.blocks;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -80,7 +81,52 @@ public class Block extends Group implements Serializable {
 
 	public void passTurn() {
 	}
+	
+	public ArrayList<Structure> getAdjacentStruct() {
+		ArrayList<Structure> structs = new ArrayList<Structure>();
+		for(int i=-1;i<2;i++) {
+			for(int j=-1;j<2;j++)	{
+				if(i!=0&&j!=0)
+				structs.add(((Map) this.getParent()).getStructAt(this.getGridX()+i,this.getGridY()+j));
+			}
+		}
+		return structs;
+	}
+	public ArrayList<Environment> getAdjacentEnv() {
+	ArrayList<Environment> envs = new ArrayList<Environment>();
+	for(int i=-1;i<2;i++) {
+		for(int j=-1;j<2;j++)	{
+			if(i!=0&&j!=0)
+			envs.add(((Map) this.getParent()).getEnvironmentAt(this.getGridX()+i,this.getGridY()+j));
+		}
+	}
+	return envs;
+	}
 
+	public int getNearbyLakes() {
+		int lks=0;
+		ArrayList<Environment> envs = getAdjacentEnv();
+		for(Environment e:envs){  
+			if(e instanceof Lake)
+				lks++;
+		}
+		return lks;
+	}
+	
+	public int getNearbySprinklers() {
+		int spk=0;
+		ArrayList<Structure> strs = getAdjacentStruct();
+		for(Structure e:strs){  
+			if(e instanceof Sprinkler)
+				spk++;
+		}
+		return spk;
+	}
+	
+	public int getNearbyBoosts() {
+		return getNearbySprinklers()+getNearbyLakes();
+	}
+	
     public void setSpriteName(String name) {
         this.spriteName = name;
     }

@@ -11,8 +11,8 @@ public class CarrotSeeds extends Grain {
 		return 2;
 	}
 
-	public int getGrowingTime() {
-		return 2;
+	public float getGrowingTime() {
+		return 2*3;
 	}
 	public void addPrice(int p) {
 		carrotSeedPrice += p;
