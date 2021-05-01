@@ -221,7 +221,7 @@ public class Field extends Structure {
 	public void growSeed() {
 		if (plantedSeed != null && !hasSeedGrown()) {
 			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");
-			this.growingState+=growFactor+getNearbyBoosts()*0.3f;
+			this.growingState+=growFactor+getNearbyBoosts()*0.4f*3;
 			if (hasSeedGrown()) {
 				changeStyle(plantedSeed.getFieldSpriteName());
 			}
