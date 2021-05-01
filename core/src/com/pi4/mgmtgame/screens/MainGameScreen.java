@@ -49,7 +49,7 @@ public class MainGameScreen implements Screen	{
 	private SpriteBatch batch;
 	private HUD hud;
 	private InputMultiplexer multiplexer;
-	protected Stage stage, selectionSquareStage, decorationStage, ownerStage, staticStage;
+	protected Stage stage, selectionSquareStage, decorationStage, ownerStage, staticStage, popupStage;
 	private ServerInteraction server;
 	private Button waitingOverlay;
 	private Image selectSquare;
@@ -103,6 +103,7 @@ public class MainGameScreen implements Screen	{
 		ownerStage = new Stage(viewport, batch);
 		ownerScreenBackground = new Image(manager.get("b l a c k.png", Texture.class));
 		ownerColoredSquares = new Group();
+		popupStage = new Stage(viewport, batch);
 
 
 		hud = new HUD(manager, server);
@@ -112,11 +113,12 @@ public class MainGameScreen implements Screen	{
 	@Override
 	public void show() {
 		multiplexer.addProcessor(hud.stage);
+		multiplexer.addProcessor(popupStage);
 		multiplexer.addProcessor(stage);
 
 		Gdx.input.setInputProcessor(multiplexer);
 		stage.addActor(map);
-		map.updateActors(manager, server);
+		map.updateActors(manager, server, popupStage);
 		updateOverlay();
 
 		this.selectSquare = new Image(manager.get("select.png", Texture.class));
@@ -158,6 +160,9 @@ public class MainGameScreen implements Screen	{
 
 		ownerStage.act(delta);
 		ownerStage.draw();
+
+		popupStage.act(delta);
+		popupStage.draw();
 
 		processCameraMovement();
 
@@ -295,7 +300,7 @@ public class MainGameScreen implements Screen	{
 				} else {
 					waitingOverlay.setVisible(true);
 					Map serverMap = server.getMap();
-					serverMap.updateActors(manager, server);
+					serverMap.updateActors(manager, server, popupStage);
 					stage.addActor(serverMap);
 					map.remove();
 					map = serverMap;

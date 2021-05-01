@@ -22,8 +22,8 @@ public class Lake extends Environment {
     }
 
     @Override
-    public void addViewController(final AssetManager manager, final ServerInteraction server) {
-        super.addViewController(manager, server);
+    public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
+        super.addViewController(manager, server, popupStage);
     }
 
     @Override

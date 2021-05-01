@@ -35,7 +35,8 @@ public class Field extends Structure {
 	}
 
 	@Override
-	public void addViewController(final AssetManager manager, final ServerInteraction server) {
+	public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
+		super.addViewController(manager, server, popupStage);
 		this.manager = manager;
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
 		button.setX(getGridX() * ManagementGame.TILE_SIZE);
@@ -75,7 +76,7 @@ public class Field extends Structure {
 									buttons[2] = plantCarrot;
 
 								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager,buttons);
-								getStage().addActor(d);
+								popupStage.addActor(d);
 
 								plantWheat.addListener(new ClickListener() {
 									@Override
@@ -140,7 +141,7 @@ public class Field extends Structure {
 						}
 					});
 
-					getStage().addActor(p);
+					popupStage.addActor(p);
 				} else if(!(usedItem instanceof Crickets)&&server.getInventory().hasItem(0)){
 					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonCricket);
@@ -152,7 +153,7 @@ public class Field extends Structure {
 							c.remove();
 						}
 					});
-					getStage().addActor(c);
+					popupStage.addActor(c);
 				}
 			}
 		});

@@ -7,6 +7,7 @@ import com.pi4.mgmtgame.ServerInteraction;
 import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.Map;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,7 +29,9 @@ public abstract class Environment extends Block {
     //Checks if a specific building can be placed on that terrain
     abstract public boolean canBuild(Structure struct);
 
-    public void addViewController(final AssetManager manager, final ServerInteraction server) {
+    @Override
+    public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
+        super.addViewController(manager, server, popupStage);
         this.manager = manager;
         Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
         button.setX(getGridX() * ManagementGame.TILE_SIZE);
@@ -53,7 +56,7 @@ public abstract class Environment extends Block {
                     } else {
                         buttonBuyTerrain.getColor().a = 0.3f;
                     }
-                    getStage().addActor(p);
+                    popupStage.addActor(p);
                 } else {
 
                     Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
@@ -111,7 +114,7 @@ public abstract class Environment extends Block {
                         buttonField.getColor().a = (float)0.3;
                     }
 
-                    getStage().addActor(p);
+                    popupStage.addActor(p);
                 }
             }
         });

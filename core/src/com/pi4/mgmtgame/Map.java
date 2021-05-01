@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.warmwaffles.noise.prime.PerlinNoise;
 import java.util.Random;
 
@@ -143,18 +144,18 @@ public class Map extends Group implements Serializable {
 	    // }
     }
 
-	public void updateActors(final AssetManager manager, final ServerInteraction server) {
+	public void updateActors(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
 		clear();
 		this.server = server;
 		for(int i = 0; i < this.width; i++) {
 			for (int j = 0; j < this.height; j++) {
 				if (envnmt_map[i][j] != null) {
-					envnmt_map[i][j].addViewController(manager, server);
+					envnmt_map[i][j].addViewController(manager, server, popupStage);
 					addActor(envnmt_map[i][j]);
 					envnmt_map[i][j].updateActors();
 				}
 				if (struct_map[i][j] != null) {
-					struct_map[i][j].addViewController(manager, server);
+					struct_map[i][j].addViewController(manager, server, popupStage);
 					addActor(struct_map[i][j]);
 					struct_map[i][j].updateActors();
 				}

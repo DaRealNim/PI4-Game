@@ -19,13 +19,15 @@ public class Block extends Group implements Serializable {
     protected String spriteName;
     private int x, y;
     protected int ownerID;
+    private Stage popupStage;
 
     public Block(int x, int y) {
     	this.setGridX(x);
     	this.setGridY(y);
     }
 
-    public void addViewController(final AssetManager manager, final ServerInteraction server) {
+    public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
+        this.popupStage = popupStage;
     }
 
     public void setButton(Button b) {
@@ -54,7 +56,7 @@ public class Block extends Group implements Serializable {
     protected void updateMap(AssetManager manager, ServerInteraction server) {
         Map map = (Map) getParent();
         Map serverMap = server.getMap();
-        serverMap.updateActors(manager, server);
+        serverMap.updateActors(manager, server, popupStage);
         Stage stage = getStage();
         map.remove();
         stage.addActor(serverMap);

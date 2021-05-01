@@ -28,7 +28,8 @@ public class TreeField extends Field{
 	}
 
 	@Override
-	public void addViewController(final AssetManager manager, final ServerInteraction server) {
+	public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
+		super.addViewController(manager, server, popupStage);
 		this.manager = manager;
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
 		button.setX(getGridX() * ManagementGame.TILE_SIZE);
@@ -64,7 +65,7 @@ public class TreeField extends Field{
 						}
 					});
 
-					getStage().addActor(p);
+					popupStage.addActor(p);
 				}
 			}
 		});
