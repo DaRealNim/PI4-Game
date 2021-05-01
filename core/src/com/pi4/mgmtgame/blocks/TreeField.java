@@ -131,7 +131,7 @@ public class TreeField extends Field{
 			changeStyle("treefarm_grew");
 		}
 	}
-
+ 
 	@Override
 	public boolean hasSeedGrown() {
 		return (this.growingState >= this.plantedSeed.getGrowingTime());

@@ -122,7 +122,7 @@ public class Block extends Group implements Serializable {
 		}
 		return spk;
 	}
-	
+	 
 	public int getNearbyBoosts() {
 		return getNearbySprinklers()+getNearbyLakes();
 	}

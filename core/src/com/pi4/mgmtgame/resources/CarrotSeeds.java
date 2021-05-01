@@ -10,7 +10,7 @@ public class CarrotSeeds extends Grain {
 	public int getId() {
 		return 2;
 	}
-
+ 
 	public float getGrowingTime() {
 		return 2*3;
 	}

@@ -243,7 +243,7 @@ public class Field extends Structure {
 		}
 		return null;
 	}
-
+ 
 	@Override
 	public void passTurn() {
 		this.growSeed();

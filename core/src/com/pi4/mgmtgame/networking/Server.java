@@ -461,7 +461,7 @@ public class Server {
 	public void buyPlant(Plant boughtPlant, int q) {
 		Inventory userInv = getInventory();
 		int plantPrice = boughtPlant.getPrice();
-
+ 
 		if (userHasMoneyToBuy(q, boughtPlant)) {
 			userInv.giveMoney(plantPrice * q);
 			userInv.addPlant(boughtPlant.getId(), q);

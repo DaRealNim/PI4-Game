@@ -12,4 +12,5 @@ public abstract class Grain extends Resources implements Serializable {
 	public abstract String getFieldSpriteName();
 	public abstract String getFieldMiddleSpriteName();
 	public abstract String getTexture();
+	
 }

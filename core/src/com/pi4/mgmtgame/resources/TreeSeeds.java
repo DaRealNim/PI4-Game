@@ -14,7 +14,7 @@ public class TreeSeeds extends Grain {
 	public void addPrice(int p) {
 		treeSeedPrice += p;
 	}
-
+ 
 	public void subPrice(int p) {
 		treeSeedPrice -= p;
 	}
@@ -41,4 +41,5 @@ public class TreeSeeds extends Grain {
 	public String toString() {
 		return ("Tree Seeds");
 	}
+	
 }

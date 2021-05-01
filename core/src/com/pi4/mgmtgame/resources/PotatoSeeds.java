@@ -13,7 +13,7 @@ public class PotatoSeeds extends Grain {
 	public void addPrice(int p) {
 		potatoSeedPrice += p;
 	}
-
+ 
 	public void subPrice(int p) {
 		potatoSeedPrice -= p;
 	}
