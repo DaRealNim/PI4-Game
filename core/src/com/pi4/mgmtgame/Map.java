@@ -106,7 +106,7 @@ public class Map extends Group implements Serializable {
 		}
 	}
 
-	private boolean isNotLake(int x, int y) {
+	public boolean isNotLake(int x, int y) {
 		if (x >= 0 && x < width && y >= 0 && y < height) {
 			return !getEnvironmentAt(x, y).toString().equals("Lake");
 		} else {
@@ -206,7 +206,7 @@ public class Map extends Group implements Serializable {
 		}
 		return ret;
 	}
- 
+
 	private int rand_range(int min, int max) {
 		Random random = new Random();
 		return random.nextInt(max - min) + min;

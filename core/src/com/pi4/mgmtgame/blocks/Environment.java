@@ -16,8 +16,12 @@ import com.pi4.mgmtgame.ManagementGame;
 
 public abstract class Environment extends Block {
 
+    private int terrainPrice;
+
     public Environment(int x, int y) {
         super(x, y);
+
+        terrainPrice = 500;
     }
 
     //Returns a growing penalty for fields in months
@@ -120,9 +124,13 @@ public abstract class Environment extends Block {
         });
         setButton(button);
     }
-    
- 
-    @Override
-    public void passTurn() {
+
+
+  @Override
+  public void passTurn() {
 	}
+
+  public int getPrice() {
+    return (terrainPrice);
+  }
 }

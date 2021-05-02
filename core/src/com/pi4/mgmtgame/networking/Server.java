@@ -499,10 +499,14 @@ public class Server {
 
 	public boolean canBuyTerrain(int x, int y) {
 		Inventory userInv = getInventory();
-		int terrainPrice = 500;
-		if (map.getStructAt(x, y) != null && userInv.getMoney() - terrainPrice >= 0)
+		Environment terrainEnv = map.getEnvironmentAt(x, y);
+		Structure terrainStruct = map.getStructAt(x, y);
+		int terrainPrice = terrainEnv.getPrice();
+		int availableMoney = userInv.getMoney();
+
+		if (terrainStruct != null && availableMoney >= terrainPrice)
 			return true;
-		else if (map.getEnvironmentAt(x, y).testOwner(-1) && userInv.getMoney() - terrainPrice >= 0) {
+		else if (terrainEnv.testOwner(-1) && availableMoney >= terrainPrice) {
 			return true;
 		}
 		return false;
@@ -512,7 +516,7 @@ public class Server {
 		Inventory userInv = getInventory();
 		Environment env = map.getEnvironmentAt(x, y);
 		Structure struct = map.getStructAt(x, y);
-		int terrainPrice = 500;
+		int terrainPrice = env.getPrice();
 
 		if (canBuyTerrain(x, y)) {
 			userInv.giveMoney(terrainPrice);

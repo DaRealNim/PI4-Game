@@ -81,7 +81,7 @@ public class Block extends Group implements Serializable {
 
 	public void passTurn() {
 	}
-	
+
 	public ArrayList<Structure> getAdjacentStruct() {
 		ArrayList<Structure> structs = new ArrayList<Structure>();
 		for(int i=-1;i<2;i++) {
@@ -106,27 +106,27 @@ public class Block extends Group implements Serializable {
 	public int getNearbyLakes() {
 		int lks=0;
 		ArrayList<Environment> envs = getAdjacentEnv();
-		for(Environment e:envs){  
+		for(Environment e:envs){
 			if(e instanceof Lake)
 				lks++;
 		}
 		return lks;
 	}
-	
+
 	public int getNearbySprinklers() {
 		int spk=0;
 		ArrayList<Structure> strs = getAdjacentStruct();
-		for(Structure e:strs){  
+		for(Structure e:strs){
 			if(e instanceof Sprinkler)
 				spk++;
 		}
 		return spk;
 	}
-	 
+
 	public int getNearbyBoosts() {
 		return getNearbySprinklers()+getNearbyLakes();
 	}
-	
+
     public void setSpriteName(String name) {
         this.spriteName = name;
     }
