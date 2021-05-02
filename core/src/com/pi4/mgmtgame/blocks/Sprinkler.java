@@ -16,7 +16,7 @@ public class Sprinkler extends Structure{
 
 	public Sprinkler(int x, int y) {
         super(x, y);
-		setSpriteName("treefarm");
+		setSpriteName("sprinkler");
 	}
 
 	@Override

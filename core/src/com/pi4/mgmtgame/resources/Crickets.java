@@ -24,6 +24,6 @@ public class Crickets extends Item{
 	}
 
 	public String toString() {
-		return ("crickets");
+		return ("Tub of grasshoppers");
 	}
 }

@@ -4,6 +4,27 @@ size: 256,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+QG-1
+  rotate: false
+  xy: 171, 87
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+QG-2
+  rotate: false
+  xy: 205, 121
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Sprinkler
+  rotate: false
+  xy: 137, 53
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 arbre_bas
   rotate: false
   xy: 137, 87
@@ -28,6 +49,20 @@ field_potatoes_grew
 field_potatoes_middle
   rotate: false
   xy: 69, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+field_wheat_grew
+  rotate: false
+  xy: 103, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+field_wheat_middle
+  rotate: false
+  xy: 205, 155
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

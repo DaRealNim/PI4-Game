@@ -16,7 +16,7 @@ public class WheatSeeds extends Grain {
 	public float getGrowingTime() {
 		return 2*3;
 	}
- 
+
 	public int getPrice() {
 		return (wheatSeedPrice);
 	}
@@ -35,11 +35,11 @@ public class WheatSeeds extends Grain {
 	}
 
 	public String getFieldSpriteName() {
-		return "field_carrots";
+		return "field_wheat_grew";
 	}
 
 	public String getFieldMiddleSpriteName() {
-		return "field_grow";
+		return "field_wheat_middle";
 	}
 
 	public String toString() {

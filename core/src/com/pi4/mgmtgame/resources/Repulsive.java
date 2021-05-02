@@ -24,6 +24,6 @@ static int repulsivePrice = 10;
 	}
 
 	public String toString() {
-		return ("repulsive");
+		return ("Grasshoppers repellent");
 	}
 }

@@ -117,5 +117,17 @@ ButtonStyle: {
 	treefarm_grew_2: {
 		up: arbre_haut
 	}
+	field_wheat_middle: {
+		up: field_wheat_middle
+	}
+	field_wheat_grew: {
+		up: field_wheat_grew
+	}
+	sprinkler: {
+		up: Sprinkler
+	}
+	QG-1: {
+		up: QG-1
+	}
 }
 }
