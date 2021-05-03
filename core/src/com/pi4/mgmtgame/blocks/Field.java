@@ -22,6 +22,9 @@ import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.ManagementGame;
 import com.pi4.mgmtgame.blocks.Lake;
 import com.pi4.mgmtgame.resources.Crickets;
+import com.pi4.mgmtgame.screens.MainGameScreen;
+import com.pi4.mgmtgame.HoverListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Field extends Structure {
 	private Grain plantedSeed;
@@ -53,6 +56,31 @@ public class Field extends Structure {
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					Button buttonRepulsive = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+
+					buttonPlant.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Plant a seed.";
+                        }
+                    });
+					buttonHarvest.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Harvest\nHarvest this field if the plantations have fully matured.";
+                        }
+                    });
+					buttonDestroy.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Destroy this building and sell the ressources\nRefund: $"+getDestructionGain();
+                        }
+                    });
+					buttonRepulsive.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Grasshopper repellent\nApplies a repellent if grasshoppers were released in your field";
+                        }
+                    });
 
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonPlant,
 							buttonHarvest, buttonDestroy, buttonRepulsive);

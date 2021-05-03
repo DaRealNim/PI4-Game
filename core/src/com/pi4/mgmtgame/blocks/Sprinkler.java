@@ -11,6 +11,9 @@ import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.ServerInteraction;
 import com.pi4.mgmtgame.ManagementGame;
 import com.pi4.mgmtgame.Map;
+import com.pi4.mgmtgame.screens.MainGameScreen;
+import com.pi4.mgmtgame.HoverListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Sprinkler extends Structure{
 
@@ -31,6 +34,13 @@ public class Sprinkler extends Structure{
 			public void clicked(InputEvent event, float x, float y) {
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
+					buttonDestroy.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Destroy this building and sell the ressources\nRefund: $"+getDestructionGain();
+                        }
+                    });
+					
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonDestroy);
 					buttonDestroy.addListener(new ClickListener() {
 						@Override

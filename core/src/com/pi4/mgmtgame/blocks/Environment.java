@@ -13,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.pi4.mgmtgame.ManagementGame;
+import com.pi4.mgmtgame.screens.MainGameScreen;
+import com.pi4.mgmtgame.HoverListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public abstract class Environment extends Block {
 
@@ -47,6 +50,12 @@ public abstract class Environment extends Block {
 
                 if(getOwnerID() == -1) {
                     Button buttonBuyTerrain = new Button(manager.get("popupIcons/popup.json", Skin.class), "dollar_icon");
+                    buttonBuyTerrain.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Buy this terrain\nCost: $500";
+                        }
+                    });
                     final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonBuyTerrain);
                     if (server.canBuyTerrain(getGridX(), getGridY())) {
                         buttonBuyTerrain.addListener(new ClickListener() {
@@ -72,6 +81,25 @@ public abstract class Environment extends Block {
                     f.setOwnerID(server.getCurrentPlayer());
                     g.setOwnerID(server.getCurrentPlayer());
                     h.setOwnerID(server.getCurrentPlayer());
+
+                    buttonField.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Build a field\nThe field allows you to grow multiple types of seeds.\nCost: $"+f.getConstructionCost();
+                        }
+                    });
+                    buttonTree.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Plant a tree\nCost: 1 tree seed";
+                        }
+                    });
+                    buttonSprink.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Build a sprinkler\nThe sprinkler gives a speed boost to all surrounding fields.\nCost: $"+h.getConstructionCost();
+                        }
+                    });
 
                     final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager,buttonField, buttonTree,buttonSprink);
 

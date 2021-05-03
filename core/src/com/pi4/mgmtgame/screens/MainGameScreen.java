@@ -35,6 +35,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+
 
 public class MainGameScreen implements Screen	{
 
@@ -66,6 +74,8 @@ public class MainGameScreen implements Screen	{
 	private Group ownerColoredSquares;
 	private Label bottomLeftLabel;
 	private String bottomLeftLabelText;
+	private Label mouseLabel;
+	public static String mouseLabelText = "Hello world";
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -112,9 +122,12 @@ public class MainGameScreen implements Screen	{
 		popupStage = new Stage(viewport, batch);
 		bottomLeftLabelText = "Waiting for the game to start...";
 		BitmapFont font = new BitmapFont();
+		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		font.getData().setScale(2);
 		bottomLeftLabel = new Label(bottomLeftLabelText, new Label.LabelStyle(font, Color.WHITE));
+		bottomLeftLabel.setFontScale(2);
 
+		mouseLabel = new Label(mouseLabelText, createLabelStyleWithBackground());
 
 		hud = new HUD(manager, server);
 		server.passHUD(hud);
@@ -142,8 +155,9 @@ public class MainGameScreen implements Screen	{
 		waitingOverlay = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		waitingOverlay.setVisible(false);
 		hud.stage.addActor(waitingOverlay);
-		hud.stage.addActor(darkScreenBackground);
+		// hud.stage.addActor(darkScreenBackground);
 		hud.stage.addActor(bottomLeftLabel);
+		hud.stage.addActor(mouseLabel);
 
 		ownerStage.addActor(ownerColoredSquares);
 
@@ -160,6 +174,10 @@ public class MainGameScreen implements Screen	{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		bottomLeftLabel.setText(bottomLeftLabelText);
+		mouseLabel.setText(mouseLabelText);
+
+		mouseLabel.setX(Gdx.input.getX() + 10);
+		mouseLabel.setY(ManagementGame.HEIGHT - Gdx.input.getY() + 15);
 
 		stage.act(delta);
 		stage.draw();
@@ -296,6 +314,33 @@ public class MainGameScreen implements Screen	{
 		return null;
 	}
 
+	private LabelStyle createLabelStyleWithBackground() {
+	    LabelStyle labelStyle = new LabelStyle();
+	    labelStyle.font = new BitmapFont();
+	    labelStyle.fontColor = Color.WHITE;
+	    labelStyle.background = createBackground();
+	    return labelStyle;
+	}
+
+	private Drawable createBackground() {
+	    Pixmap labelColor = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+	    Color color = new Color(Color.BLACK);
+	    color.a = 0.65f;
+	    labelColor.setColor(color);
+	    labelColor.fill();
+
+	    final Texture texture = new Texture(labelColor);
+	    return new BaseDrawable() {
+	        @Override
+	        public void draw(Batch batch, float x, float y, float width, float height) {
+	            GlyphLayout layout = mouseLabel.getGlyphLayout();
+	            x = mouseLabel.getX();
+	            y = mouseLabel.getY() - (layout.height) / 2; // +15 is some space
+	            batch.draw(texture, x, y, layout.width, layout.height + 15);
+	        }
+	    };
+	}
+
 	private class MapHudUpdate implements Runnable {
 
 		@Override
@@ -339,7 +384,7 @@ public class MainGameScreen implements Screen	{
 					Thread.sleep(500);
 					if(server.canGameStart()) {
 						gameCanStart = true;
-						darkScreenBackground.setVisible(false);
+						// darkScreenBackground.setVisible(false);
 						bottomLeftLabelText = "";
 						break;
 					}

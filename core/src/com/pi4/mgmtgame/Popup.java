@@ -19,6 +19,7 @@ public class Popup extends Group {
         Table table = new Table();
         setX(x);
         setY(y);
+        setScale(2);
         for (Button button : buttons) {
             table.add(button).padLeft(2).padBottom(19).fillY();
         }

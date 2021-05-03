@@ -17,6 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.ManagementGame;
+import com.pi4.mgmtgame.screens.MainGameScreen;
+import com.pi4.mgmtgame.HoverListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class TreeField extends Field{
 	private float growingState;
@@ -40,6 +43,12 @@ public class TreeField extends Field{
                 System.out.println("Clicked TreeField!");
                 if(getOwnerID() == -1) {
                     Button buttonBuyTerrain = new Button(manager.get("popupIcons/popup.json", Skin.class), "dollar_icon");
+					buttonBuyTerrain.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Buy this terrain\nCost: $500";
+                        }
+                    });
                     final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonBuyTerrain);
                     if (server.canBuyTerrain(getGridX(), getGridY())) {
                         buttonBuyTerrain.addListener(new ClickListener() {
@@ -58,6 +67,20 @@ public class TreeField extends Field{
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "axe_icon");
+
+					buttonDestroy.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Destroy this building and sell the ressources\nRefund: $"+getDestructionGain();
+                        }
+                    });
+					buttonHarvest.addListener(new HoverListener() {
+						@Override
+						public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+							MainGameScreen.mouseLabelText = "Cut this tree\nCut this tree and get 4 units of wood";
+						}
+					});
+
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonHarvest, buttonDestroy);
 					if(server.canHarvest(getGridX(), getGridY())) {
 						buttonHarvest.addListener(new ClickListener() {
@@ -131,7 +154,7 @@ public class TreeField extends Field{
 			changeStyle("treefarm_grew");
 		}
 	}
- 
+
 	@Override
 	public boolean hasSeedGrown() {
 		return (this.growingState >= this.plantedSeed.getGrowingTime());
