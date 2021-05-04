@@ -25,6 +25,7 @@ import com.pi4.mgmtgame.resources.Crickets;
 import com.pi4.mgmtgame.screens.MainGameScreen;
 import com.pi4.mgmtgame.HoverListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.pi4.mgmtgame.resources.Repulsive;
 
 public class Field extends Structure {
 	private Grain plantedSeed;
@@ -154,15 +155,18 @@ public class Field extends Structure {
 					} else {
 						buttonHarvest.getColor().a = (float)0.3;
 					}
-					if(usedItem instanceof Crickets&&server.getInventory().hasItem(1)) {
+					if(usedItem instanceof Crickets && server.getInventory().hasItem(1)) {
 						buttonRepulsive.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
-								removeCrickets();
+								server.requestUseItem(getGridX(), getGridY(), new Repulsive());
 								updateMap(manager, server);
 								p.remove();
 							}
-						});					}
+						});
+					} else {
+						buttonRepulsive.getColor().a = (float)0.3;
+					}
 					buttonDestroy.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
@@ -175,6 +179,12 @@ public class Field extends Structure {
 					popupStage.addActor(p);
 				} else {
 					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "grasshopper_icon");
+					buttonCricket.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Infect this field with hungry crickets\nExponentially slows down the growth of crops util treated.\nCost: 1 tub of grasshoppers";
+                        }
+                    });
 					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Field", buttonCricket);
 					if(!(usedItem instanceof Crickets) && server.getInventory().hasItem(0)) {
 						buttonCricket.addListener(new ClickListener() {
@@ -281,7 +291,7 @@ public class Field extends Structure {
 	public void passTurn() {
 		this.growSeed();
 
-		if(usedItem != null && usedItem.getId()==1)
+		if(usedItem != null && usedItem.getId() == 0)
 			this.turnsSinceCrickets++;
 
 		this.growFactor -= this.turnsSinceCrickets*0.2;
@@ -317,9 +327,12 @@ public class Field extends Structure {
 
 	public void UseItem(Item item) {
 		switch(item.getId()) {
-		case 1 :
-			addCrickets(item);
-			break;
+			case 0 :
+				addCrickets(item);
+				break;
+			case 1 :
+				removeCrickets();
+				break;
 		}
 
 	}
@@ -332,8 +345,10 @@ public class Field extends Structure {
 	}
 
 	private void removeCrickets(){
+		System.out.println("Removing crickets");
 		this.usedItem=null;
 		this.turnsSinceCrickets=0;
+		this.growFactor = 3;
 		//mettre qqc pour virer le sprite
 	}
 

@@ -38,8 +38,11 @@ public class Inventory implements Serializable {
 		seeds[3] = new TreeSeeds();
 
 		items = new Item[2];
-		items[0] = new Repulsive();
-		items[1] = new Crickets();
+		items[0] = new Crickets();
+		items[1] = new Repulsive();
+
+		items[0].addVolume(1);
+		items[1].addVolume(1);
 
 		money = 2000;
 
@@ -106,7 +109,7 @@ public class Inventory implements Serializable {
 		return (this.items[i].getVolume() > 0);
 	}
 	public boolean hasItem(Item item) {
-		return (this.plants[item.getId()].getVolume() > 0);
+		return (this.items[item.getId()].getVolume() > 0);
 	}
 	public Grain[] getSeeds() {
 		return seeds;
@@ -124,6 +127,16 @@ public class Inventory implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.money+"$\nWheat seeds: "+this.seeds[0].getVolume()+"\nPotato seeds: "+this.seeds[1].getVolume()+"\nCarrot seeds: "+this.seeds[2].getVolume();
+		String ret = this.money+"$\n";
+		for (int i=0; i<4; i++) {
+			ret += seeds[i] + ": " + seeds[i].getVolume() + "\n";
+		}
+		for (int i=0; i<4; i++) {
+			ret += plants[i] + ": " + plants[i].getVolume() + "\n";
+		}
+		for (int i=0; i<2; i++) {
+			ret += items[i] + ": " + items[i].getVolume() + "\n";
+		}
+		return ret;
 	}
 }

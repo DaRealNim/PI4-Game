@@ -358,14 +358,15 @@ public class Server {
 	public boolean requestUseItem(int x, int y, Item item) {
 		Structure structBlock = map.getStructAt(x, y);
 		System.out.println("Item id: " + item.getId());
-		if (structBlock instanceof Field && inv.hasItem(item) && structBlock != null) {
-			if (!((Field) structBlock).hasItem()) {
+		if (structBlock instanceof Field && inv.hasItem(item)) {
+			if ((!((Field) structBlock).hasItem() && item.getId() == 0)
+			   || ((Field) structBlock).hasItem() && item.getId() == 1) {
 				((Field) structBlock).UseItem(item);
 				inv.removeItem(item.getId(), 1);
 				return (true);
 			}
-		}
 
+		}
 		return (false);
 	}
 

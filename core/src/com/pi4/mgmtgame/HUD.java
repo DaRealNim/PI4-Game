@@ -61,7 +61,7 @@ public class HUD {
 
       gameMusic.setLooping(100, true);
   		gameMusic.setVolume(100, 0.3f);
-  		gameMusic.play();
+  		// gameMusic.play();
     }
 
     public int getInternalTurn() {
@@ -95,6 +95,7 @@ public class HUD {
         turnLabel.setText("Month : " + server.getTurn());
         seedLabel.setText(seedLabelText);
         grainLabel.setText(grainLabelText);
+        itemsLabel.setText(itemsLabelText);
     }
 
     public void show() {
