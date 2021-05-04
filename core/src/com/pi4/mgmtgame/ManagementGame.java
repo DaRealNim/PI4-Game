@@ -63,6 +63,6 @@ public class ManagementGame extends Game {
 
 	@Override
 	public void dispose() {
-		Gdx.app.exit();
+		System.exit(0);
 	}
 }

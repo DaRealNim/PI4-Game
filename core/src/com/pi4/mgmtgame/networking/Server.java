@@ -123,6 +123,9 @@ public class Server {
 						request = dataIn.readInt();
 					} catch (SocketException | EOFException e) {
 						System.out.println("Player "+playerID+" disconnected");
+						players[playerID] = null;
+						if (internalTurn == playerID)
+							passTurn();
 						break;
 					}
 
@@ -315,7 +318,7 @@ public class Server {
 	}
 
 	public int getInternalTurn() {
-		return internalTurn;
+		return internalTurn % nbOfPlayers;
 	}
 
 	public boolean canBuildStructure(int x, int y, Structure struct) {
@@ -414,6 +417,10 @@ public class Server {
 		int heightIndex;
 		Block currBlock;
 		internalTurn++;
+		// System.out.println("Player "+internalTurn+" turn");
+		if (players[internalTurn % nbOfPlayers] == null)
+			passTurn();
+		// System.out.println("Player "+internalTurn+" turn after while");
 		// à modifier
 		inv = invArray[internalTurn % nbOfPlayers];
 		currentPlayer = internalTurn % nbOfPlayers;
