@@ -1,5 +1,6 @@
 package com.pi4.mgmtgame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,9 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import com.pi4.mgmtgame.screens.MainMenuScreen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-// import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.pi4.mgmtgame.MyAssetManager;
 
@@ -64,6 +63,6 @@ public class ManagementGame extends Game {
 
 	@Override
 	public void dispose() {
-		System.exit(0);
+		Gdx.app.exit();
 	}
 }
