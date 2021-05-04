@@ -42,6 +42,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 public class MainGameScreen implements Screen	{
 
@@ -75,6 +80,7 @@ public class MainGameScreen implements Screen	{
 	private String bottomLeftLabelText;
 	private Label mouseLabel;
 	public static String mouseLabelText = "";
+	private Table echapMenu;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -114,7 +120,7 @@ public class MainGameScreen implements Screen	{
 		stage = new Stage(viewport, batch);
 		selectionSquareStage = new Stage(viewport, batch);
 		decorationStage = new Stage(viewport, batch);
-		staticStage = new Stage(new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, new OrthographicCamera()), batch);
+		staticStage = new Stage(new FitViewport(ManagementGame.WIDTH / 2, ManagementGame.HEIGHT / 2, new OrthographicCamera()), batch);
 		ownerStage = new Stage(viewport, batch);
 		darkScreenBackground = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		ownerColoredSquares = new Group();
@@ -124,8 +130,29 @@ public class MainGameScreen implements Screen	{
 
 		mouseLabel = new Label(mouseLabelText, createLabelStyleWithBackground(manager.get("PixelOperator20", BitmapFont.class)));
 
+		echapMenu = new Table();
+		echapMenu.setFillParent(true);
+		echapMenu.top();
+		echapMenu.setVisible(false);
+		darkScreenBackground.setVisible(false);
+
 		hud = new HUD(manager, server);
 		server.passHUD(hud);
+
+		final Label volumeLabel = new Label("Music volume", new  Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
+		final Slider slider = new Slider(0, 1, 0.05f, false, manager.get("menuButtons/uiskin.json", Skin.class));
+		slider.setValue(0.3f);
+		slider.addCaptureListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				hud.setMusicVolume(slider.getValue());
+			}
+		});
+		echapMenu.add(volumeLabel).fillY();
+		echapMenu.add(slider).fillY().padLeft(50);
+		echapMenu.row();
+
+		echapMenu.align(Align.center);
 	}
 
 	@Override
@@ -149,10 +176,13 @@ public class MainGameScreen implements Screen	{
 
 		waitingOverlay = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		waitingOverlay.setVisible(false);
+
 		hud.stage.addActor(waitingOverlay);
-		// hud.stage.addActor(darkScreenBackground);
 		hud.stage.addActor(bottomLeftLabel);
 		hud.stage.addActor(mouseLabel);
+
+		staticStage.addActor(darkScreenBackground);
+		staticStage.addActor(echapMenu);
 
 		ownerStage.addActor(ownerColoredSquares);
 
@@ -167,6 +197,11 @@ public class MainGameScreen implements Screen	{
 	public synchronized void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			darkScreenBackground.setVisible(!echapMenu.isVisible());
+			echapMenu.setVisible(!echapMenu.isVisible());
+		}
 
 		bottomLeftLabel.setText(bottomLeftLabelText);
 		mouseLabel.setText(mouseLabelText);
@@ -185,8 +220,6 @@ public class MainGameScreen implements Screen	{
 		decorationStage.act(delta);
 		decorationStage.draw();
 
-		staticStage.draw();
-
 		ownerStage.act(delta);
 		ownerStage.draw();
 
@@ -198,6 +231,9 @@ public class MainGameScreen implements Screen	{
 		game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.act();
 		hud.stage.draw();
+
+		staticStage.act(delta);
+		staticStage.draw();
 
 		ownerColoredSquares.setVisible(hud.shouldShowOwners());
 	}
