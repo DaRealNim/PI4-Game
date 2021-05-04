@@ -18,7 +18,7 @@ public class HQ extends Structure{
 	        setSpriteName("HQ");
 	    }
 
-	
+
 	@Override
     public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
 		super.addViewController(manager, server, popupStage);
@@ -31,7 +31,7 @@ public class HQ extends Structure{
 			public void clicked(InputEvent event, float x, float y) {
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
-					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonResearch);
+					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "House", buttonResearch);
 					buttonResearch.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
@@ -47,11 +47,11 @@ public class HQ extends Structure{
 		});
 		setButton(button);
     }
-	
+
 	private void Research() {
 		//TBD
 	}
-	
+
 	@Override
 	public int getConstructionCost() {
 		return 0;
@@ -68,11 +68,16 @@ public class HQ extends Structure{
 	}
 
 	@Override
-	public void doBuild(Inventory inv) {		
+	public void doBuild(Inventory inv) {
 	}
 
 	@Override
     public void passTurn() {
 	}
-	
+
+	@Override
+	public String toString() {
+		return "House";
+	}
+
 }

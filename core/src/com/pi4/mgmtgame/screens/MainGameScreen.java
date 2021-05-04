@@ -43,7 +43,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
-
 public class MainGameScreen implements Screen	{
 
 	public static final float SPEED = 140;
@@ -75,7 +74,7 @@ public class MainGameScreen implements Screen	{
 	private Label bottomLeftLabel;
 	private String bottomLeftLabelText;
 	private Label mouseLabel;
-	public static String mouseLabelText = "Hello world";
+	public static String mouseLabelText = "";
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -121,13 +120,9 @@ public class MainGameScreen implements Screen	{
 		ownerColoredSquares = new Group();
 		popupStage = new Stage(viewport, batch);
 		bottomLeftLabelText = "Waiting for the game to start...";
-		BitmapFont font = new BitmapFont();
-		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		font.getData().setScale(2);
-		bottomLeftLabel = new Label(bottomLeftLabelText, new Label.LabelStyle(font, Color.WHITE));
-		bottomLeftLabel.setFontScale(2);
+		bottomLeftLabel = new Label(bottomLeftLabelText, new Label.LabelStyle(manager.get("PixelOperator40", BitmapFont.class), Color.WHITE));
 
-		mouseLabel = new Label(mouseLabelText, createLabelStyleWithBackground());
+		mouseLabel = new Label(mouseLabelText, createLabelStyleWithBackground(manager.get("PixelOperator20", BitmapFont.class)));
 
 		hud = new HUD(manager, server);
 		server.passHUD(hud);
@@ -314,9 +309,9 @@ public class MainGameScreen implements Screen	{
 		return null;
 	}
 
-	private LabelStyle createLabelStyleWithBackground() {
+	private LabelStyle createLabelStyleWithBackground(BitmapFont font) {
 	    LabelStyle labelStyle = new LabelStyle();
-	    labelStyle.font = new BitmapFont();
+	    labelStyle.font = font;
 	    labelStyle.fontColor = Color.WHITE;
 	    labelStyle.background = createBackground();
 	    return labelStyle;

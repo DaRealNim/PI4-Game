@@ -55,7 +55,7 @@ public class Field extends Structure {
 					Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-					Button buttonRepulsive = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+					Button buttonRepulsive = new Button(manager.get("popupIcons/popup.json", Skin.class), "repellent_icon");
 
 					buttonPlant.addListener(new HoverListener() {
                         @Override
@@ -82,7 +82,7 @@ public class Field extends Structure {
                         }
                     });
 
-					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonPlant,
+					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Field", buttonPlant,
 							buttonHarvest, buttonDestroy, buttonRepulsive);
 					if (!hasSeed()) {
 						buttonPlant.getColor().a = (float)1;
@@ -106,7 +106,7 @@ public class Field extends Structure {
 								if (inv.hasGrain(2))
 									buttons[2] = plantCarrot;
 
-								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager,buttons);
+								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager, "Plant a seed", buttons);
 								popupStage.addActor(d);
 
 								plantWheat.addListener(new ClickListener() {
@@ -174,8 +174,8 @@ public class Field extends Structure {
 
 					popupStage.addActor(p);
 				} else {
-					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonCricket);
+					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "grasshopper_icon");
+					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Field", buttonCricket);
 					if(!(usedItem instanceof Crickets) && server.getInventory().hasItem(0)) {
 						buttonCricket.addListener(new ClickListener() {
 							@Override

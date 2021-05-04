@@ -1,97 +1,118 @@
 
 popup.png
-size: 128,128
+size: 512,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 axe_icon
   rotate: false
-  xy: 27, 57
-  size: 11, 11
-  orig: 11, 11
+  xy: 1, 263
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
-bomb_icon
+bulldozer_icon
   rotate: false
-  xy: 1, 57
-  size: 11, 11
-  orig: 11, 11
+  xy: 343, 445
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 carrotseeds_icon
   rotate: false
-  xy: 67, 91
-  size: 11, 11
-  orig: 11, 11
+  xy: 1, 211
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
-closeButton
+close_icon
   rotate: false
-  xy: 14, 44
-  size: 11, 11
-  orig: 11, 11
+  xy: 53, 263
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 dollar_icon
   rotate: false
-  xy: 93, 91
-  size: 11, 11
-  orig: 11, 11
+  xy: 343, 393
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
-harvest_icon
+fishing_icon
   rotate: false
-  xy: 1, 44
-  size: 11, 11
-  orig: 11, 11
+  xy: 395, 445
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+grasshopper_icon
+  rotate: false
+  xy: 1, 159
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 hoe_icon
   rotate: false
-  xy: 14, 57
-  size: 11, 11
-  orig: 11, 11
-  offset: 0, 0
-  index: -1
-popup
-  rotate: false
-  xy: 1, 70
-  size: 64, 32
-  orig: 64, 32
+  xy: 53, 211
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 potatoseeds_icon
   rotate: false
-  xy: 67, 78
-  size: 11, 11
-  orig: 11, 11
+  xy: 105, 263
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+repellent_icon
+  rotate: false
+  xy: 343, 341
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 shovel_icon
   rotate: false
-  xy: 80, 91
-  size: 11, 11
-  orig: 11, 11
+  xy: 395, 393
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+sickle_icon
+  rotate: false
+  xy: 447, 445
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 sprinkler_icon
   rotate: false
-  xy: 1, 18
-  size: 11, 11
-  orig: 11, 11
+  xy: 1, 107
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 tree_icon
   rotate: false
-  xy: 80, 78
-  size: 11, 11
-  orig: 11, 11
+  xy: 53, 159
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 wheatseeds_icon
   rotate: false
-  xy: 1, 31
-  size: 11, 11
-  orig: 11, 11
+  xy: 105, 211
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+popup
+  rotate: false
+  xy: 1, 315
+  size: 340, 180
+  orig: 340, 180
   offset: 0, 0
   index: -1

@@ -49,7 +49,7 @@ public class TreeField extends Field{
                             MainGameScreen.mouseLabelText = "Buy this terrain\nCost: $500";
                         }
                     });
-                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonBuyTerrain);
+                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Tree", buttonBuyTerrain);
                     if (server.canBuyTerrain(getGridX(), getGridY())) {
                         buttonBuyTerrain.addListener(new ClickListener() {
                             @Override
@@ -81,7 +81,7 @@ public class TreeField extends Field{
 						}
 					});
 
-					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonHarvest, buttonDestroy);
+					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Tree", buttonHarvest, buttonDestroy);
 					if(server.canHarvest(getGridX(), getGridY())) {
 						buttonHarvest.addListener(new ClickListener() {
 							@Override
@@ -188,7 +188,7 @@ public class TreeField extends Field{
 
 	@Override
 	public String toString() {
-		return "TreeField";
+		return "Tree";
 	}
 
 

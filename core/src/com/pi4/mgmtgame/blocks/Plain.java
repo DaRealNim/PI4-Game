@@ -17,7 +17,7 @@ import com.pi4.mgmtgame.ServerInteraction;
 public class Plain extends Environment {
 
     public Plain(int x, int y) {
-        super(x, y);
+        super(x, y, "Plain");
         setSpriteName("plaine1");
     }
 

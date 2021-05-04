@@ -9,6 +9,12 @@ import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import com.pi4.mgmtgame.screens.MainMenuScreen;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+// import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
+import com.pi4.mgmtgame.MyAssetManager;
 
 public class ManagementGame extends Game {
 
@@ -20,7 +26,14 @@ public class ManagementGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		AssetManager manager = new AssetManager();
+		MyAssetManager manager = new MyAssetManager();
+
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/PixelOperator-Bold.ttf"));
+		FreeTypeFontParameter params = new FreeTypeFontParameter();
+		params.size = 40;
+		manager.addAsset("PixelOperator40", BitmapFont.class, generator.generateFont(params));
+		params.size = 20;
+		manager.addAsset("PixelOperator20", BitmapFont.class, generator.generateFont(params));
 
 		manager.load("menuButtons/ButtonStyles.json", Skin.class, new SkinLoader.SkinParameter("menuButtons/ButtonStyles.atlas"));
 		manager.load("menuButtons/uiskin.json", Skin.class, new SkinLoader.SkinParameter("menuButtons/uiskin.atlas"));

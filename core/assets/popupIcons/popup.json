@@ -10,10 +10,10 @@ ButtonStyle: {
 		up: shovel_icon
 	}
 	bomb_icon: {
-		up: bomb_icon
+		up: bulldozer_icon
 	}
 	harvest_icon: {
-		up: harvest_icon
+		up: sickle_icon
 	}
 	wheatseeds_icon: {
 		up: wheatseeds_icon
@@ -25,7 +25,7 @@ ButtonStyle: {
 		up: carrotseeds_icon
 	}
 	closeButton: {
-		up: closeButton
+		up: close_icon
 	}
 	axe_icon: {
 		up: axe_icon
@@ -38,6 +38,12 @@ ButtonStyle: {
 	}
 	sprinkler_icon: {
 		up: sprinkler_icon
+	}
+	grasshopper_icon: {
+		up: grasshopper_icon
+	}
+	repellent_icon: {
+		up: repellent_icon
 	}
 }
 }
