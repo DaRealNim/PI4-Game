@@ -2,6 +2,7 @@ package com.pi4.mgmtgame.networking;
 
 import java.io.*;
 import java.net.*;
+import java.util.Random;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.pi4.mgmtgame.Inventory;
@@ -9,6 +10,8 @@ import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.blocks.Block;
 import com.pi4.mgmtgame.blocks.Environment;
 import com.pi4.mgmtgame.blocks.Field;
+import com.pi4.mgmtgame.blocks.HQ;
+import com.pi4.mgmtgame.blocks.Plain;
 import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Grain;
