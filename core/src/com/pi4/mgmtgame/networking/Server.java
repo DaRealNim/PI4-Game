@@ -96,6 +96,12 @@ public class Server {
 
 				ServerSide serverSideConnection = new ServerSide(playerSocket, numPlayers);
 				this.players[numPlayers] = serverSideConnection;
+				
+				int [] hqcoords = placeHQ();
+				HQ hq = new HQ(hqcoords[0],hqcoords[1]);
+				hq.setOwnerID(numPlayers);
+				map.setStructAt(hqcoords[0],hqcoords[1],hq);
+
 
 				Thread t = new Thread(serverSideConnection);
 				t.start();
@@ -635,6 +641,31 @@ public class Server {
 		}
 
 		return false;
+	}
+	
+	public int[] placeHQ() {
+		int x;
+		int y;
+		Random random = new Random();
+		int height = map.getMapHeight();
+		int width = map.getMapWidth();
+		while (true) {
+			boolean ok = true;
+			x = random.nextInt(width);
+			y = random.nextInt(height);
+			if(!(map.getEnvironmentAt(x,y) instanceof Plain))
+				ok = false; 
+			for (int i = -5; i < 5; i++) {
+				for (int j = -5; j < 5; j++) {
+					if(map.getStructAt(x+i,y+j) instanceof HQ)
+						ok = false;
+				}
+			}
+			if (ok)
+				break;
+		}
+		int[] v = {x,y};
+		return v;
 	}
 
 	public boolean canBreed(int x, int y, int animalID) {
