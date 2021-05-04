@@ -7,6 +7,7 @@ import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.blocks.*;
+import com.pi4.mgmtgame.blocks.Field;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class Bot {
   }
 
   private ArrayList<Coord> ownedStructures;
+  private ArrayList<Coord> ownedTerrains;
   private ArrayList<Coord> goodFieldSpots;
   private Map map;
   private Inventory inv;
@@ -40,6 +42,8 @@ public class Bot {
     id = botID;
     server = sv;
     goodFieldSpots = scanForPlainsNearLakes();
+    ownedTerrains = new ArrayList<Coord>();
+    ownedStructures = new ArrayList<Coord>();
   }
 
   public void play() //This is the most abstract function, so it is at the top
@@ -47,7 +51,8 @@ public class Bot {
     //start turn
     //harvest()
     sellResources();
-    //buildStructures()
+    buyTerrains();
+    buildStructures();
     //sabotage()
     //end
   }
@@ -56,20 +61,79 @@ public class Bot {
   {
     for (Plant p : inv.getPlants())
     {
-      if (isWorthSelling(p))
+      if (priceIsHigherThanMarketAverage(p))
         server.sellPlant(p, p.getVolume());
     }
     for (Grain g : inv.getSeeds())
     {
-      if (isWorthSelling(g))
+      if (priceIsHigherThanMarketAverage(g))
         server.sellGrain(g, g.getVolume());
     }
   }
 
-  public void buildStructures()
+  public void buyTerrains()
   {
+    int initialFunds = inv.getMoney();
+
+    while (inv.getMoney() > initialFunds / 3 && inv.getMoney() >= 500) //This condition will be changed to something more elegant when there are maintenance costs.
+    {
+      for (Coord c : goodFieldSpots)
+      {
+        buyTerrainAt(c);
+      }
+    }
   }
 
+  public void buildStructures() //This function will be modified when new structures are implemented.
+  {
+      buildFields();
+      //buildFishpods?
+      //buildRoads?
+  }
+
+
+  public void buildFields()
+  {
+    int initialFunds = inv.getMoney();
+
+    while (inv.getMoney() > initialFunds && inv.getMoney() >= 300) //This condition will be changed to something more elegant when there are maintenance costs.
+    {
+      for (Coord c : ownedTerrains)
+      {
+        buildFieldAt(c);
+      }
+    }
+  }
+
+  public void buyTerrainAt(Coord c)
+  {
+    Environment terrain = map.getEnvironmentAt(c.x, c.y);
+    int terrainCost = terrain.getPrice();
+
+    if (canBuyTerrainAt(c))
+    {
+      inv.giveMoney(terrainCost);
+      terrain.setOwnerID(botID);
+      ownedTerrains.add(c);
+    }
+  }
+
+  public void buildFieldAt(Coord c)
+  {
+    Environment terrain = map.getEnvironmentAt(c.x, c.y);
+    Field newField = new Field(c.x, c.y);
+    int fieldCost = newField.getConstructionCost();
+
+    if (fieldCost < inv.getMoney() && map.getStructAt(c.x, c.y) == null)
+    {
+      inv.giveMoney(fieldCost);
+      map.setStructAt(c.x, c.y, newField);
+      newField.setOwnerID(botID);
+      ownedStructures.add(c);
+    }
+  }
+
+  //This function will be modified when trade routes are implemented
   public ArrayList<Coord> scanForPlainsNearLakes()
   {
     ArrayList<Coord> goodFieldSpots = new ArrayList();
@@ -88,6 +152,26 @@ public class Bot {
     return (goodFieldSpots);
   }
 
+  public int totalFieldTerrainCost(ArrayList<Coord> spots)
+  {
+    Environment currBlockEnv;
+    int totalCost = 0;
+
+    for (Coord c : spots)
+    {
+      currBlockEnv = map.getEnvironmentAt(c.x, c.y);
+
+      if (currBlockEnv.testOwner(-1)) //if terrain has no owner
+        totalCost += currBlockEnv.getPrice();
+    }
+
+    return (totalCost);
+  }
+
+  /*public int totalMaintenanceCost(ArrayList<Coord> owned) //for future use.
+  {
+    return (0)
+  }*/
 
   public int priceAverage(Inventory inv)
   {
@@ -115,14 +199,15 @@ public class Bot {
     {
       for (int vert = -1; vert <= 1; vert++)
       {
-        if (!map.isNotLake(x + hor, y + vert)) //negative boolean functions suck dick fuck you
+        if (!map.isNotLake(x + hor, y + vert)) //would be more interesting to know when things ARE lakes instead of !lakes.
           return (true);
       }
     }
     return (false);
   }
 
-  public boolean canBuyTerrain(Coord c) //I know this function also exists in Server but it's only for players since the server's invArray doesn't account for the inventory in this class. 
+  //I know this function also exists in Server but it's only for players since the server's invArray doesn't account for the inventory of bots.
+  public boolean canBuyTerrainAt(Coord c)
   {
     Structure currBlockStruct = map.getStructAt(c.x, c.y);
     Environment currBlockEnv = map.getEnvironmentAt(c.x, c.y);
@@ -137,7 +222,7 @@ public class Bot {
     return (false);
   }
 
-  public boolean isWorthSelling(Resources r)
+  public boolean priceIsHigherThanMarketAverage(Resources r)
   {
     if (r.getPrice() >= priceAverage(inv))
       return (true);

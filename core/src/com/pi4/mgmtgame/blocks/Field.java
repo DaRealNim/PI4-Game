@@ -33,12 +33,17 @@ public class Field extends Structure {
 	private Item usedItem;
 	private int turnsSinceCrickets;
 	private float growFactor;
+	private int constructionPrice;
+	private int salvageBenefit;
 
 	public Field(int x, int y) {
-        super(x, y);
+    super(x, y);
 		this.growingState = 0;
 		this.growFactor = 3;
 		setSpriteName("field_empty");
+
+		constructionPrice = 300;
+		salvageBenefit = 100;
 	}
 
 	@Override
@@ -226,12 +231,12 @@ public class Field extends Structure {
 
 	@Override
 	public int getConstructionCost() {
-		return 300;
+		return (constructionPrice);
 	}
 
 	@Override
 	public int getDestructionGain() {
-		return 100;
+		return (salvageBenefit);
 	}
 
 	public void plantSeed(Grain seed) {
