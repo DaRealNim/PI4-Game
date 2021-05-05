@@ -59,7 +59,7 @@ public class Pasture extends Structure{
                         }
                     });
 					
-					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonBreed, buttonDestroy);
+					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Enclot", buttonBreed, buttonDestroy);
 					if (!hasAnimal()) {
 						buttonBreed.getColor().a = (float)1;
 						buttonBreed.addListener(new ClickListener() {
@@ -75,7 +75,7 @@ public class Pasture extends Structure{
 								if (inv.hasAnimal(1))
 									buttons[1] = breedSheep;
 								
-								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1 ) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager, buttons);
+								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1 ) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager, "Enclot", buttons);
 								
 								breedCow.addListener(new ClickListener() {
 									@Override
