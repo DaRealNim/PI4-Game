@@ -2,18 +2,25 @@ package com.pi4.mgmtgame;
 
 import java.io.Serializable;
 
+import com.pi4.mgmtgame.resources.Animal;
 import com.pi4.mgmtgame.resources.Carrot;
 import com.pi4.mgmtgame.resources.CarrotSeeds;
+import com.pi4.mgmtgame.resources.Cow;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Item;
+import com.pi4.mgmtgame.resources.Leather;
+import com.pi4.mgmtgame.resources.Meat;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Potato;
 import com.pi4.mgmtgame.resources.PotatoSeeds;
+import com.pi4.mgmtgame.resources.Product;
 import com.pi4.mgmtgame.resources.Resources;
+import com.pi4.mgmtgame.resources.Sheep;
 import com.pi4.mgmtgame.resources.TreeSeeds;
 import com.pi4.mgmtgame.resources.Wheat;
 import com.pi4.mgmtgame.resources.WheatSeeds;
 import com.pi4.mgmtgame.resources.Wood;
+import com.pi4.mgmtgame.resources.Wool;
 import com.pi4.mgmtgame.resources.Repulsive;
 import com.pi4.mgmtgame.resources.Crickets;
 
@@ -22,6 +29,8 @@ public class Inventory implements Serializable {
 	private Plant[] plants;
 	private Grain[] seeds;
 	private Item[] items;
+	private Animal[] animal;
+	private Product[] product;
 	private int invID;
 	public Inventory (int x) {
 		invID = x;
@@ -40,16 +49,27 @@ public class Inventory implements Serializable {
 		items = new Item[2];
 		items[0] = new Repulsive();
 		items[1] = new Crickets();
-
-		money = 2000;
+		
+		animal = new Animal[2];
+		animal[0] = new Cow();
+		animal[1] = new Sheep();
+		
+		product = new Product[3];
+		product[0] = new Meat();
+		product[1] = new Leather();
+		product[2] = new Wool();
+		
+		money = 2000;		
 
 		for(int i = 0; i < 4; i++)
 			seeds[i].addVolume(2);
 	}
 
-	public Inventory (Plant[] plantArray, Grain[] grainArray, int money) {
+	public Inventory (Plant[] plantArray, Grain[] grainArray, Animal[] animalArray, Product[] productArray, int money) {
 		plants = new Plant[10];
 		seeds = new Grain[10];
+		animal = new Animal[10];
+		product = new Product[10];
 		this.money = money;
 	}
 
@@ -76,6 +96,22 @@ public class Inventory implements Serializable {
 
 	public void addItem(int id, int value) {
 		this.items[id].addVolume(value);
+	}
+	
+	public void removeAnimal(int id, int value) {
+		this.animal[id].subVolume(value);
+	}
+	
+	public void addAnimal(int id, int value) {
+		this.animal[id].addVolume(value);
+	}
+	
+	public void removeProduct(int id, int value) {
+		this.product[id].subVolume(value);
+	}
+	
+	public void addProduct(int id, int value) {
+		this.product[id].addVolume(value);
 	}
 
 	public void giveMoney(int value) {
@@ -106,8 +142,21 @@ public class Inventory implements Serializable {
 		return (this.items[i].getVolume() > 0);
 	}
 	public boolean hasItem(Item item) {
-		return (this.plants[item.getId()].getVolume() > 0);
+		return (this.items[item.getId()].getVolume() > 0);
 	}
+	public boolean hasAnimal(int i) {
+		return (this.animal[i].getVolume() > 0);
+	}
+	public boolean hasAnimal(Animal animal) {
+		return (this.animal[animal.getId()].getVolume() > 0);
+	}
+	public boolean hasProduct(int i) {
+		return (this.product[i].getVolume() > 0);
+	}
+	public boolean hasProduct(Animal animal) {
+		return (this.product[animal.getId()].getVolume() > 0);
+	}
+	
 	public Grain[] getSeeds() {
 		return seeds;
 	}
@@ -117,6 +166,12 @@ public class Inventory implements Serializable {
 	public Item[] getItems() {
 		return items;
 	}
+	public Animal[] getAnimals() {
+		return animal;
+	}
+	public Product[] getProduct() {
+		return product;
+	}
 	public int getinvID() {
 		return invID;
 	}
@@ -124,6 +179,6 @@ public class Inventory implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.money+"$\nWheat seeds: "+this.seeds[0].getVolume()+"\nPotato seeds: "+this.seeds[1].getVolume()+"\nCarrot seeds: "+this.seeds[2].getVolume();
+		return this.money+"$\nWheat seeds: "+this.seeds[0].getVolume()+"\nPotato seeds: "+this.seeds[1].getVolume()+"\nCarrot seeds: "+this.seeds[2].getVolume()+"\nCows: "+this.animal[0].getVolume()+"\nSheeps: "+this.animal[1].getVolume()+"\nMeat: "+this.product[0].getVolume()+"\nLeather: "+this.product[1]+"\nWool"+this.product[2];
 	}
 }

@@ -11,10 +11,11 @@ import com.pi4.mgmtgame.blocks.Environment;
 import com.pi4.mgmtgame.blocks.Field;
 import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.resources.Resources;
+import com.pi4.mgmtgame.resources.Animal;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Item;
 import com.pi4.mgmtgame.resources.Plant;
-
+import com.pi4.mgmtgame.resources.Product;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Texture;
@@ -528,6 +529,32 @@ public class Server {
 		}
 
 		return false;
+	}
+	
+	public boolean canBreed(int x, int y, Animal animal) {
+		//pour benj
+		return true;
+	}
+	
+	public boolean requestBreed(int x, int y, Animal animal) {
+		//pour benj
+		return true;
+	}
+	
+	public void buyAnimal(Animal boughtAnimal, int q) {
+		
+	}
+	
+	public void sellAnimal(Animal soldAnimal, int q) {
+		
+	}
+	
+	public void buyProduct(Product boughtProduct, int q) {
+		
+	}
+	
+	public void sellProduct(Product soldProduct, int q) {
+		
 	}
 
 	public static void main(String[] args) {

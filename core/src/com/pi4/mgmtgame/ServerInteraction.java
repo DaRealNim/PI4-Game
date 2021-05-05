@@ -9,8 +9,10 @@ import java.net.Socket;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.pi4.mgmtgame.blocks.*;
+import com.pi4.mgmtgame.resources.Animal;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
+import com.pi4.mgmtgame.resources.Product;
 import com.pi4.mgmtgame.resources.Item;
 import com.pi4.mgmtgame.resources.Resources;
 
@@ -408,6 +410,30 @@ public class ServerInteraction {
 				e.printStackTrace();
 			}
 			return (-1);
+	}
+	
+	public synchronized boolean canBreed(int x, int y, Animal animal) {
+		return true;
+	}
+	
+	public synchronized boolean requestBreed(int x, int y, Animal animal) {
+		return true;
+	}
+	
+	public synchronized void buyAnimal(Animal boughtAnimal, int q) {
+		
+	}
+	
+	public synchronized void sellAnimal(Animal soldAnimal, int q) {
+		
+	}
+	
+	public synchronized void buyProduct(Product boughtProduct, int q) {
+		
+	}
+	
+	public synchronized void sellProduct(Product soldProduct, int q) {
+		
 	}
 
 	public synchronized boolean canGameStart() {
