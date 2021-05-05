@@ -157,6 +157,12 @@ public class Pasture extends Structure{
 				growingState--;
 			}
 			
+			if (growingState <= 0) {
+				residentAnimal = null;
+				changeStyle("pasture_empty");
+				return;
+			}
+			
 			if (hasPopulationGrown()) {
 				changeStyle(residentAnimal.getPastureSpriteName());
 			}
