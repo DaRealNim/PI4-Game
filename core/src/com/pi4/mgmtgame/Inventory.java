@@ -47,19 +47,23 @@ public class Inventory implements Serializable {
 		seeds[3] = new TreeSeeds();
 
 		items = new Item[2];
-		items[0] = new Repulsive();
-		items[1] = new Crickets();
-		
+		items[0] = new Crickets();
+		items[1] = new Repulsive();
+
+		items[0].addVolume(1);
+		items[1].addVolume(1);
+
 		animal = new Animal[2];
 		animal[0] = new Cow();
 		animal[1] = new Sheep();
-		
+
 		product = new Product[3];
 		product[0] = new Meat();
 		product[1] = new Leather();
 		product[2] = new Wool();
-		
-		money = 2000;		
+
+		money = 2000;
+
 
 		for(int i = 0; i < 4; i++)
 			seeds[i].addVolume(2);
@@ -97,19 +101,19 @@ public class Inventory implements Serializable {
 	public void addItem(int id, int value) {
 		this.items[id].addVolume(value);
 	}
-	
+
 	public void removeAnimal(int id, int value) {
 		this.animal[id].subVolume(value);
 	}
-	
+
 	public void addAnimal(int id, int value) {
 		this.animal[id].addVolume(value);
 	}
-	
+
 	public void removeProduct(int id, int value) {
 		this.product[id].subVolume(value);
 	}
-	
+
 	public void addProduct(int id, int value) {
 		this.product[id].addVolume(value);
 	}
@@ -156,7 +160,7 @@ public class Inventory implements Serializable {
 	public boolean hasProduct(Animal animal) {
 		return (this.product[animal.getId()].getVolume() > 0);
 	}
-	
+
 	public Grain[] getSeeds() {
 		return seeds;
 	}
@@ -179,6 +183,22 @@ public class Inventory implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.money+"$\nWheat seeds: "+this.seeds[0].getVolume()+"\nPotato seeds: "+this.seeds[1].getVolume()+"\nCarrot seeds: "+this.seeds[2].getVolume()+"\nCows: "+this.animal[0].getVolume()+"\nSheeps: "+this.animal[1].getVolume()+"\nMeat: "+this.product[0].getVolume()+"\nLeather: "+this.product[1]+"\nWool"+this.product[2];
+		String ret = this.money+"$\n";
+		for (int i=0; i<4; i++) {
+			ret += seeds[i] + ": " + seeds[i].getVolume() + "\n";
+		}
+		for (int i=0; i<4; i++) {
+			ret += plants[i] + ": " + plants[i].getVolume() + "\n";
+		}
+		for (int i=0; i<2; i++) {
+			ret += items[i] + ": " + items[i].getVolume() + "\n";
+		}
+		for (int i=0; i<2; i++) {
+			ret += animal[i] + ": " + animal[i].getVolume() + "\n";
+		}
+		for (int i=0; i<3; i++) {
+			ret += product[i] + ": " + product[i].getVolume() + "\n";
+		}
+		return ret;
 	}
 }

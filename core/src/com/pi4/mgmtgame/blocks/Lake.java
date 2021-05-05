@@ -17,7 +17,7 @@ import com.pi4.mgmtgame.ServerInteraction;
 public class Lake extends Environment {
 
     public Lake(int x, int y) {
-        super(x, y);
+        super(x, y, "Lake");
         setSpriteName("lake");
     }
 

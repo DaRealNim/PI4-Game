@@ -42,7 +42,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.pi4.mgmtgame.blocks.HQ;
+import java.util.HashMap;
 
 public class MainGameScreen implements Screen	{
 
@@ -75,7 +81,9 @@ public class MainGameScreen implements Screen	{
 	private Label bottomLeftLabel;
 	private String bottomLeftLabelText;
 	private Label mouseLabel;
-	public static String mouseLabelText = "Hello world";
+	public static String mouseLabelText = "";
+	private Table echapMenu;
+	private HashMap<Integer, java.awt.Color> idToColorMap;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -109,28 +117,47 @@ public class MainGameScreen implements Screen	{
 		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
 		viewport.apply();
 
-		camera.position.set((map.getMapWidth()/2)*ManagementGame.TILE_SIZE, (map.getMapHeight()/2)*ManagementGame.TILE_SIZE, 0);
+		// camera.position.set(server.getHqX()*ManagementGame.TILE_SIZE, server.getHqY()*ManagementGame.TILE_SIZE, 0);
 		camera.update();
 
 		stage = new Stage(viewport, batch);
 		selectionSquareStage = new Stage(viewport, batch);
 		decorationStage = new Stage(viewport, batch);
-		staticStage = new Stage(new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, new OrthographicCamera()), batch);
+		staticStage = new Stage(new FitViewport(ManagementGame.WIDTH / 2, ManagementGame.HEIGHT / 2, new OrthographicCamera()), batch);
 		ownerStage = new Stage(viewport, batch);
 		darkScreenBackground = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		ownerColoredSquares = new Group();
 		popupStage = new Stage(viewport, batch);
 		bottomLeftLabelText = "Waiting for the game to start...";
-		BitmapFont font = new BitmapFont();
-		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		font.getData().setScale(2);
-		bottomLeftLabel = new Label(bottomLeftLabelText, new Label.LabelStyle(font, Color.WHITE));
-		bottomLeftLabel.setFontScale(2);
+		bottomLeftLabel = new Label(bottomLeftLabelText, new Label.LabelStyle(manager.get("PixelOperator40", BitmapFont.class), Color.WHITE));
 
-		mouseLabel = new Label(mouseLabelText, createLabelStyleWithBackground());
+		mouseLabel = new Label(mouseLabelText, createLabelStyleWithBackground(manager.get("PixelOperator20", BitmapFont.class)));
+
+		echapMenu = new Table();
+		echapMenu.setFillParent(true);
+		echapMenu.top();
+		echapMenu.setVisible(false);
+		darkScreenBackground.setVisible(false);
 
 		hud = new HUD(manager, server);
 		server.passHUD(hud);
+
+		final Label volumeLabel = new Label("Music volume", new  Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
+		final Slider slider = new Slider(0, 1, 0.05f, false, manager.get("menuButtons/uiskin.json", Skin.class));
+		slider.setValue(0.3f);
+		slider.addCaptureListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				hud.setMusicVolume(slider.getValue());
+			}
+		});
+		echapMenu.add(volumeLabel).fillY();
+		echapMenu.add(slider).fillY().padLeft(50);
+		echapMenu.row();
+
+		echapMenu.align(Align.center);
+
+		idToColorMap = server.getIdToColorMap();
 	}
 
 	@Override
@@ -154,10 +181,13 @@ public class MainGameScreen implements Screen	{
 
 		waitingOverlay = new Button(new TextureRegionDrawable(manager.get("b l a c k.png", Texture.class)));
 		waitingOverlay.setVisible(false);
+
 		hud.stage.addActor(waitingOverlay);
-		// hud.stage.addActor(darkScreenBackground);
 		hud.stage.addActor(bottomLeftLabel);
 		hud.stage.addActor(mouseLabel);
+
+		staticStage.addActor(darkScreenBackground);
+		staticStage.addActor(echapMenu);
 
 		ownerStage.addActor(ownerColoredSquares);
 
@@ -166,12 +196,20 @@ public class MainGameScreen implements Screen	{
 
 		Thread t = new Thread(new MapHudUpdate());
 		t.start();
+
+		System.out.println(server.getHqX()*ManagementGame.TILE_SIZE + ", " + server.getHqY()*ManagementGame.TILE_SIZE);
+		camera.position.set(server.getHqX()*ManagementGame.TILE_SIZE, server.getHqY()*ManagementGame.TILE_SIZE, 0);
 	}
 
 	@Override
 	public synchronized void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			darkScreenBackground.setVisible(!echapMenu.isVisible());
+			echapMenu.setVisible(!echapMenu.isVisible());
+		}
 
 		bottomLeftLabel.setText(bottomLeftLabelText);
 		mouseLabel.setText(mouseLabelText);
@@ -190,8 +228,6 @@ public class MainGameScreen implements Screen	{
 		decorationStage.act(delta);
 		decorationStage.draw();
 
-		staticStage.draw();
-
 		ownerStage.act(delta);
 		ownerStage.draw();
 
@@ -203,6 +239,9 @@ public class MainGameScreen implements Screen	{
 		game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.act();
 		hud.stage.draw();
+
+		staticStage.act(delta);
+		staticStage.draw();
 
 		ownerColoredSquares.setVisible(hud.shouldShowOwners());
 	}
@@ -247,7 +286,7 @@ public class MainGameScreen implements Screen	{
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
-		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		// camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
 	}
 
@@ -276,15 +315,24 @@ public class MainGameScreen implements Screen	{
 			for(int y=0; y<map.getMapHeight(); y++) {
 				Structure struct = map.getStructAt(x, y);
 				Environment env = map.getEnvironmentAt(x, y);
-				if (struct != null && struct instanceof TreeField && ((TreeField)struct).hasSeedGrown()) {
-					Image treeTop = new Image(manager.get("blocks/arbre_haut.png", Texture.class));
-					treeTop.setX(x*ManagementGame.TILE_SIZE);
-					treeTop.setY((y+1)*ManagementGame.TILE_SIZE);
-					decorationStage.addActor(treeTop);
+				if (struct != null) {
+					if (struct instanceof TreeField && ((TreeField)struct).hasSeedGrown()) {
+						Image treeTop = new Image(manager.get("blocks/arbre_haut.png", Texture.class));
+						treeTop.setX(x*ManagementGame.TILE_SIZE);
+						treeTop.setY((y+1)*ManagementGame.TILE_SIZE);
+						decorationStage.addActor(treeTop);
+					}
+					if (struct instanceof HQ) {
+						Image hqTop = new Image(manager.get("blocks/QG-2.png", Texture.class));
+						hqTop.setX(x*ManagementGame.TILE_SIZE);
+						hqTop.setY((y+1)*ManagementGame.TILE_SIZE);
+						decorationStage.addActor(hqTop);
+					}
 				}
 				if (env != null && !env.testOwner(-1)) {
+					java.awt.Color c = idToColorMap.getOrDefault(env.getOwnerID(), new java.awt.Color(0.0f, 0.0f, 0.0f, 1.0f));
 					Image square = new Image(manager.get("square.png", Texture.class));
-					square.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+					square.setColor((float)c.getRed()/255.0f, (float)c.getGreen()/255.0f, (float)c.getBlue()/255.0f, 1.0f);
 					square.setX(x*ManagementGame.TILE_SIZE);
 					square.setY(y*ManagementGame.TILE_SIZE);
 					ownerColoredSquares.addActor(square);
@@ -314,9 +362,9 @@ public class MainGameScreen implements Screen	{
 		return null;
 	}
 
-	private LabelStyle createLabelStyleWithBackground() {
+	private LabelStyle createLabelStyleWithBackground(BitmapFont font) {
 	    LabelStyle labelStyle = new LabelStyle();
-	    labelStyle.font = new BitmapFont();
+	    labelStyle.font = font;
 	    labelStyle.fontColor = Color.WHITE;
 	    labelStyle.background = createBackground();
 	    return labelStyle;

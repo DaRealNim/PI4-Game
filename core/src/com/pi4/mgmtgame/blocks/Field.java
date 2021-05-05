@@ -25,6 +25,7 @@ import com.pi4.mgmtgame.resources.Crickets;
 import com.pi4.mgmtgame.screens.MainGameScreen;
 import com.pi4.mgmtgame.HoverListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.pi4.mgmtgame.resources.Repulsive;
 
 public class Field extends Structure {
 	private Grain plantedSeed;
@@ -32,12 +33,17 @@ public class Field extends Structure {
 	private Item usedItem;
 	private int turnsSinceCrickets;
 	private float growFactor;
+	private int constructionPrice;
+	private int salvageBenefit;
 
 	public Field(int x, int y) {
-        super(x, y);
+    super(x, y);
 		this.growingState = 0;
 		this.growFactor = 3;
 		setSpriteName("field_empty");
+
+		constructionPrice = 300;
+		salvageBenefit = 100;
 	}
 
 	@Override
@@ -55,7 +61,7 @@ public class Field extends Structure {
 					Button buttonPlant = new Button(manager.get("popupIcons/popup.json", Skin.class), "shovel_icon");
 					Button buttonHarvest = new Button(manager.get("popupIcons/popup.json", Skin.class), "harvest_icon");
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-					Button buttonRepulsive = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+					Button buttonRepulsive = new Button(manager.get("popupIcons/popup.json", Skin.class), "repellent_icon");
 
 					buttonPlant.addListener(new HoverListener() {
                         @Override
@@ -82,7 +88,7 @@ public class Field extends Structure {
                         }
                     });
 
-					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonPlant,
+					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Field", buttonPlant,
 							buttonHarvest, buttonDestroy, buttonRepulsive);
 					if (!hasSeed()) {
 						buttonPlant.getColor().a = (float)1;
@@ -106,7 +112,7 @@ public class Field extends Structure {
 								if (inv.hasGrain(2))
 									buttons[2] = plantCarrot;
 
-								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager,buttons);
+								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager, "Plant a seed", buttons);
 								popupStage.addActor(d);
 
 								plantWheat.addListener(new ClickListener() {
@@ -154,15 +160,18 @@ public class Field extends Structure {
 					} else {
 						buttonHarvest.getColor().a = (float)0.3;
 					}
-					if(usedItem instanceof Crickets&&server.getInventory().hasItem(1)) {
+					if(usedItem instanceof Crickets && server.getInventory().hasItem(1)) {
 						buttonRepulsive.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
-								removeCrickets();
+								server.requestUseItem(getGridX(), getGridY(), new Repulsive());
 								updateMap(manager, server);
 								p.remove();
 							}
-						});					}
+						});
+					} else {
+						buttonRepulsive.getColor().a = (float)0.3;
+					}
 					buttonDestroy.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
@@ -174,8 +183,14 @@ public class Field extends Structure {
 
 					popupStage.addActor(p);
 				} else {
-					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonCricket);
+					Button buttonCricket = new Button(manager.get("popupIcons/popup.json", Skin.class), "grasshopper_icon");
+					buttonCricket.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Infect this field with hungry crickets\nExponentially slows down the growth of crops util treated.\nCost: 1 tub of grasshoppers";
+                        }
+                    });
+					final Popup c = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Field", buttonCricket);
 					if(!(usedItem instanceof Crickets) && server.getInventory().hasItem(0)) {
 						buttonCricket.addListener(new ClickListener() {
 							@Override
@@ -216,12 +231,12 @@ public class Field extends Structure {
 
 	@Override
 	public int getConstructionCost() {
-		return 300;
+		return (constructionPrice);
 	}
 
 	@Override
 	public int getDestructionGain() {
-		return 100;
+		return (salvageBenefit);
 	}
 
 	public void plantSeed(Grain seed) {
@@ -281,7 +296,7 @@ public class Field extends Structure {
 	public void passTurn() {
 		this.growSeed();
 
-		if(usedItem != null && usedItem.getId()==1)
+		if(usedItem != null && usedItem.getId() == 0)
 			this.turnsSinceCrickets++;
 
 		this.growFactor -= this.turnsSinceCrickets*0.2;
@@ -317,9 +332,12 @@ public class Field extends Structure {
 
 	public void UseItem(Item item) {
 		switch(item.getId()) {
-		case 1 :
-			addCrickets(item);
-			break;
+			case 0 :
+				addCrickets(item);
+				break;
+			case 1 :
+				removeCrickets();
+				break;
 		}
 
 	}
@@ -332,8 +350,10 @@ public class Field extends Structure {
 	}
 
 	private void removeCrickets(){
+		System.out.println("Removing crickets");
 		this.usedItem=null;
 		this.turnsSinceCrickets=0;
+		this.growFactor = 3;
 		//mettre qqc pour virer le sprite
 	}
 

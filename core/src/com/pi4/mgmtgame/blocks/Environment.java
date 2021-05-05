@@ -20,10 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class Environment extends Block {
 
     private int terrainPrice;
+    private String displayName;
 
-    public Environment(int x, int y) {
+    public Environment(int x, int y, String displayName) {
         super(x, y);
-
+        this.displayName = displayName;
         terrainPrice = 500;
     }
 
@@ -56,7 +57,7 @@ public abstract class Environment extends Block {
                             MainGameScreen.mouseLabelText = "Buy this terrain\nCost: $500";
                         }
                     });
-                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, buttonBuyTerrain);
+                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, displayName, buttonBuyTerrain);
                     if (server.canBuyTerrain(getGridX(), getGridY())) {
                         buttonBuyTerrain.addListener(new ClickListener() {
                             @Override
@@ -101,7 +102,7 @@ public abstract class Environment extends Block {
                         }
                     });
 
-                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager,buttonField, buttonTree,buttonSprink);
+                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, displayName, buttonField, buttonTree,buttonSprink);
 
                     if (server.canBuildStructure(getGridX(), getGridY(), g)) {
                         buttonTree.addListener(new ClickListener(){
@@ -160,5 +161,10 @@ public abstract class Environment extends Block {
 
   public int getPrice() {
     return (terrainPrice);
+  }
+
+  @Override
+  public String toString() {
+      return displayName;
   }
 }

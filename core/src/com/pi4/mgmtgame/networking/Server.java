@@ -2,6 +2,7 @@ package com.pi4.mgmtgame.networking;
 
 import java.io.*;
 import java.net.*;
+import java.util.Random;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.pi4.mgmtgame.Inventory;
@@ -9,6 +10,8 @@ import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.blocks.Block;
 import com.pi4.mgmtgame.blocks.Environment;
 import com.pi4.mgmtgame.blocks.Field;
+import com.pi4.mgmtgame.blocks.HQ;
+import com.pi4.mgmtgame.blocks.Plain;
 import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Animal;
@@ -19,6 +22,9 @@ import com.pi4.mgmtgame.resources.Product;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Texture;
+import com.pi4.mgmtgame.blocks.TreeField;
+import java.util.HashMap;
+import java.awt.Color;
 
 public class Server {
 	private ServerSocket serverSocket;
@@ -33,6 +39,7 @@ public class Server {
 	private int currentPlayer;
 	private int nbOfPlayers;
 	private int playerID;
+	private HashMap<Integer, Color> idToColorMap;
 	private volatile boolean gameCanStart = false;
 
 	public Server(int nbOfPlayers) {
@@ -55,6 +62,14 @@ public class Server {
 		this.turn = 0;
 		this.internalTurn = -1;
 		this.inv = invArray[0];
+		this.idToColorMap = new HashMap<Integer, Color>();
+		for(int i=0; i<nbOfPlayers; i++) {
+			// float r = Math.round(Math.random() * 100.0f) / 100.0f;
+			// float g = Math.round(Math.random() * 100.0f) / 100.0f;
+			// float b = Math.round(Math.random() * 100.0f) / 100.0f;
+			Color col = Color.getHSBColor(Map.rand_range(0, 255)/255.0f, Map.rand_range(50, 255)/255.0f, 1.0f);
+			idToColorMap.put(i, col);
+		}
 	}
 
 	public void acceptConnections() {
@@ -111,6 +126,30 @@ public class Server {
 				dataOut.writeInt(playerID);
 				dataOut.flush();
 
+				int [] hqcoords = placeHQ();
+				HQ hq = new HQ(hqcoords[0],hqcoords[1]);
+				hq.setOwnerID(playerID);
+				map.setStructAt(hqcoords[0], hqcoords[1], hq);
+
+				for (int i = -1; i <= 1; i++) {
+					for (int j = -1; j <= 1; j++) {
+						Environment env = map.getEnvironmentAt(hqcoords[0]+i, hqcoords[1]+j);
+						Structure struct = map.getStructAt(hqcoords[0]+i, hqcoords[1]+j);
+						if (env != null)
+							env.setOwnerID(playerID);
+						if (struct != null)
+							struct.setOwnerID(playerID);
+					}
+				}
+
+				dataOut.writeInt(hqcoords[0]);
+				dataOut.flush();
+				dataOut.writeInt(hqcoords[1]);
+				dataOut.flush();
+
+				objOut.writeObject(idToColorMap);
+				objOut.flush();
+
 				while (true) {
 					int x = 0;
 					int y = 0;
@@ -124,6 +163,9 @@ public class Server {
 						request = dataIn.readInt();
 					} catch (SocketException | EOFException e) {
 						System.out.println("Player "+playerID+" disconnected");
+						players[playerID] = null;
+						if (internalTurn == playerID)
+							passTurn();
 						break;
 					}
 
@@ -316,7 +358,7 @@ public class Server {
 	}
 
 	public int getInternalTurn() {
-		return internalTurn;
+		return internalTurn % nbOfPlayers;
 	}
 
 	public boolean canBuildStructure(int x, int y, Structure struct) {
@@ -359,14 +401,15 @@ public class Server {
 	public boolean requestUseItem(int x, int y, Item item) {
 		Structure structBlock = map.getStructAt(x, y);
 		System.out.println("Item id: " + item.getId());
-		if (structBlock instanceof Field && inv.hasItem(item) && structBlock != null) {
-			if (!((Field) structBlock).hasItem()) {
+		if (structBlock instanceof Field && inv.hasItem(item)) {
+			if ((!((Field) structBlock).hasItem() && item.getId() == 0)
+			   || ((Field) structBlock).hasItem() && item.getId() == 1) {
 				((Field) structBlock).UseItem(item);
 				inv.removeItem(item.getId(), 1);
 				return (true);
 			}
-		}
 
+		}
 		return (false);
 	}
 
@@ -414,6 +457,10 @@ public class Server {
 		int heightIndex;
 		Block currBlock;
 		internalTurn++;
+		// System.out.println("Player "+internalTurn+" turn");
+		if (players[internalTurn % nbOfPlayers] == null)
+			passTurn();
+		// System.out.println("Player "+internalTurn+" turn after while");
 		// à modifier
 		inv = invArray[internalTurn % nbOfPlayers];
 		currentPlayer = internalTurn % nbOfPlayers;
@@ -505,11 +552,27 @@ public class Server {
 		int terrainPrice = terrainEnv.getPrice();
 		int availableMoney = userInv.getMoney();
 
-		if (terrainStruct != null && availableMoney >= terrainPrice)
+		Environment envLeft = map.getEnvironmentAt(x-1, y);
+		Environment envRight = map.getEnvironmentAt(x+1, y);
+		Environment envUp = map.getEnvironmentAt(x, y+1);
+		Environment envDown = map.getEnvironmentAt(x, y-1);
+		boolean ownLeft = false;
+		boolean ownRight = false;
+		boolean ownUp = false;
+		boolean ownDown = false;
+
+		if (envLeft != null)
+			ownLeft = envLeft.testOwner(currentPlayer);
+		if (envRight != null)
+			ownRight = envRight.testOwner(currentPlayer);
+		if (envUp != null)
+			ownUp = envUp.testOwner(currentPlayer);
+		if (envDown != null)
+			ownDown = envDown.testOwner(currentPlayer);
+
+
+		if (terrainEnv != null && terrainEnv.testOwner(-1) && availableMoney >= terrainPrice && (ownUp || ownDown || ownLeft || ownRight))
 			return true;
-		else if (terrainEnv.testOwner(-1) && availableMoney >= terrainPrice) {
-			return true;
-		}
 		return false;
 	}
 
@@ -556,6 +619,32 @@ public class Server {
 	public void sellProduct(Product soldProduct, int q) {
 		
 	}
+
+	public int[] placeHQ() {
+		int x;
+		int y;
+		int height = map.getMapHeight();
+		int width = map.getMapWidth();
+		while (true) {
+			boolean ok = true;
+			x = Map.rand_range(1, height-2);
+			y = Map.rand_range(1, height-2);
+			if(!(map.getEnvironmentAt(x,y) instanceof Plain) || (map.getStructAt(x,y) instanceof TreeField))
+				ok = false;
+			for (int i = -5; i < 5; i++) {
+				for (int j = -5; j < 5; j++) {
+					if(map.getStructAt(x+i,y+j) instanceof HQ)
+						ok = false;
+				}
+			}
+			if (ok)
+				break;
+		}
+		int[] v = {x,y};
+		return v;
+	}
+
+
 
 	public static void main(String[] args) {
 		Server gameServer = new Server(2);

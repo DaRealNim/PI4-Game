@@ -84,20 +84,27 @@ public class Block extends Group implements Serializable {
 
 	public ArrayList<Structure> getAdjacentStruct() {
 		ArrayList<Structure> structs = new ArrayList<Structure>();
+        Map map = (Map) this.getParent();
+        int x = getGridX();
+        int y = getGridY();
 		for(int i=-1;i<2;i++) {
 			for(int j=-1;j<2;j++)	{
-				if(i!=0&&j!=0)
-				structs.add(((Map) this.getParent()).getStructAt(this.getGridX()+i,this.getGridY()+j));
+				if(i!=0 && j!=0 && x+i>=0 && x+i<map.getMapWidth() && y+j>=0 && y+j<map.getMapHeight())
+				structs.add(map.getStructAt(x+i,y+j));
 			}
 		}
 		return structs;
 	}
+
 	public ArrayList<Environment> getAdjacentEnv() {
 	ArrayList<Environment> envs = new ArrayList<Environment>();
+    Map map = (Map) this.getParent();
+    int x = getGridX();
+    int y = getGridY();
 	for(int i=-1;i<2;i++) {
 		for(int j=-1;j<2;j++)	{
-			if(i!=0&&j!=0)
-			envs.add(((Map) this.getParent()).getEnvironmentAt(this.getGridX()+i,this.getGridY()+j));
+			if(i!=0 && j!=0 && x+i>=0 && x+i<map.getMapWidth() && y+j>=0 && y+j<map.getMapHeight())
+			envs.add(map.getEnvironmentAt(x+i,y+j));
 		}
 	}
 	return envs;

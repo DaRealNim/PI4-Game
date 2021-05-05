@@ -172,11 +172,19 @@ public class Map extends Group implements Serializable {
 	}
 
 	public Environment getEnvironmentAt(int w, int h) {
-		return envnmt_map[w][h];
+		try {
+			return envnmt_map[w][h];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	public Structure getStructAt(int w, int h) {
-		return struct_map[w][h];
+		try {
+			return struct_map[w][h];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	public void setEnvironmentAt(int w, int h, Environment e) {
@@ -207,7 +215,7 @@ public class Map extends Group implements Serializable {
 		return ret;
 	}
 
-	private int rand_range(int min, int max) {
+	public static int rand_range(int min, int max) {
 		Random random = new Random();
 		return random.nextInt(max - min) + min;
 	}

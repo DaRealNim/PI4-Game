@@ -38,6 +38,7 @@ public class HUD {
     private int internalTurn;
     private String seedLabelText, grainLabelText, itemsLabelText;
   	private Sound gameMusic;
+    private long gameMusicId;
     private CheckBox showOwnersCheckBox;
 
     public HUD (AssetManager man, ServerInteraction server) {
@@ -59,9 +60,10 @@ public class HUD {
       else
         gameMusic = Gdx.audio.newSound(Gdx.files.internal("sounds/farmcityshit.mp3"));
 
-      gameMusic.setLooping(100, true);
-  		gameMusic.setVolume(100, 0.3f);
-  		gameMusic.play();
+      gameMusicId = gameMusic.play();
+      gameMusic.setLooping(gameMusicId, true);
+      gameMusic.setVolume(gameMusicId, 0.3f);
+
     }
 
     public int getInternalTurn() {
@@ -95,6 +97,7 @@ public class HUD {
         turnLabel.setText("Month : " + server.getTurn());
         seedLabel.setText(seedLabelText);
         grainLabel.setText(grainLabelText);
+        itemsLabel.setText(itemsLabelText);
     }
 
     public void show() {
@@ -192,5 +195,9 @@ public class HUD {
 
     public void dispose() {
       stage.dispose();
+    }
+
+    public void setMusicVolume(float value) {
+        gameMusic.setVolume(gameMusicId, value);
     }
 }
