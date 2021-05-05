@@ -48,6 +48,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.pi4.mgmtgame.blocks.HQ;
+import java.util.HashMap;
 
 public class MainGameScreen implements Screen	{
 
@@ -82,6 +83,7 @@ public class MainGameScreen implements Screen	{
 	private Label mouseLabel;
 	public static String mouseLabelText = "";
 	private Table echapMenu;
+	private HashMap<Integer, java.awt.Color> idToColorMap;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -154,6 +156,8 @@ public class MainGameScreen implements Screen	{
 		echapMenu.row();
 
 		echapMenu.align(Align.center);
+
+		idToColorMap = server.getIdToColorMap();
 	}
 
 	@Override
@@ -326,8 +330,9 @@ public class MainGameScreen implements Screen	{
 					}
 				}
 				if (env != null && !env.testOwner(-1)) {
+					java.awt.Color c = idToColorMap.getOrDefault(env.getOwnerID(), new java.awt.Color(0.0f, 0.0f, 0.0f, 1.0f));
 					Image square = new Image(manager.get("square.png", Texture.class));
-					square.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+					square.setColor((float)c.getRed()/255.0f, (float)c.getGreen()/255.0f, (float)c.getBlue()/255.0f, 1.0f);
 					square.setX(x*ManagementGame.TILE_SIZE);
 					square.setY(y*ManagementGame.TILE_SIZE);
 					ownerColoredSquares.addActor(square);

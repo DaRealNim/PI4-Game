@@ -22,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.pi4.mgmtgame.blocks.TreeField;
+import java.util.HashMap;
+import java.awt.Color;
 
 public class Server {
 	private ServerSocket serverSocket;
@@ -36,6 +38,7 @@ public class Server {
 	private int currentPlayer;
 	private int nbOfPlayers;
 	private int playerID;
+	private HashMap<Integer, Color> idToColorMap;
 	private volatile boolean gameCanStart = false;
 
 	public Server(int nbOfPlayers) {
@@ -58,6 +61,14 @@ public class Server {
 		this.turn = 0;
 		this.internalTurn = -1;
 		this.inv = invArray[0];
+		this.idToColorMap = new HashMap<Integer, Color>();
+		for(int i=0; i<nbOfPlayers; i++) {
+			// float r = Math.round(Math.random() * 100.0f) / 100.0f;
+			// float g = Math.round(Math.random() * 100.0f) / 100.0f;
+			// float b = Math.round(Math.random() * 100.0f) / 100.0f;
+			Color col = Color.getHSBColor(Map.rand_range(0, 255)/255.0f, Map.rand_range(50, 255)/255.0f, 1.0f);
+			idToColorMap.put(i, col);
+		}
 	}
 
 	public void acceptConnections() {
@@ -134,6 +145,9 @@ public class Server {
 				dataOut.flush();
 				dataOut.writeInt(hqcoords[1]);
 				dataOut.flush();
+
+				objOut.writeObject(idToColorMap);
+				objOut.flush();
 
 				while (true) {
 					int x = 0;
@@ -582,13 +596,12 @@ public class Server {
 	public int[] placeHQ() {
 		int x;
 		int y;
-		Random random = new Random();
 		int height = map.getMapHeight();
 		int width = map.getMapWidth();
 		while (true) {
 			boolean ok = true;
-			x = random.nextInt(width);
-			y = random.nextInt(height);
+			x = Map.rand_range(1, height-2);
+			y = Map.rand_range(1, height-2);
 			if(!(map.getEnvironmentAt(x,y) instanceof Plain) || (map.getStructAt(x,y) instanceof TreeField))
 				ok = false;
 			for (int i = -5; i < 5; i++) {
@@ -603,6 +616,8 @@ public class Server {
 		int[] v = {x,y};
 		return v;
 	}
+
+
 
 	public static void main(String[] args) {
 		Server gameServer = new Server(2);

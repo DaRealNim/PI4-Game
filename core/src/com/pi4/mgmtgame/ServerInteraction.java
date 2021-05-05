@@ -13,6 +13,7 @@ import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Item;
 import com.pi4.mgmtgame.resources.Resources;
+import java.util.HashMap;
 
 public class ServerInteraction {
 	private ClientSide clientSideConnection;
@@ -21,6 +22,7 @@ public class ServerInteraction {
 	private int storedInternalTurn = -1;
 	private int hqX;
 	private int hqY;
+	private HashMap<Integer, java.awt.Color> idToColorMap;
 
 	public ServerInteraction(String ip, String port) {
 		int portInt = Integer.parseInt(port);
@@ -432,6 +434,10 @@ public class ServerInteraction {
 		return hqY;
 	}
 
+	public HashMap<Integer, java.awt.Color> getIdToColorMap() {
+		return idToColorMap;
+	}
+
 	private class ClientSide {
 		protected Socket clientSocket;
 
@@ -453,6 +459,7 @@ public class ServerInteraction {
 				playerID = dataIn.readInt();
 				hqX = dataIn.readInt();
 				hqY = dataIn.readInt();
+				idToColorMap = (HashMap<Integer, java.awt.Color>)objIn.readObject();
 
 
 				System.out.println("\nConnection to " + clientSocket.getInetAddress() + " on port: " + clientSocket.getPort() + " successful.");
