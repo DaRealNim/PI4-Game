@@ -15,7 +15,7 @@ public class HQ extends Structure{
 
 	public HQ(int x, int y) {
 	        super(x, y);
-	        setSpriteName("HQ");
+	        setSpriteName("QG-1");
 	    }
 
 

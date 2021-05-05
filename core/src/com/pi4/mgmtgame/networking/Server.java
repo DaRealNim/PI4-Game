@@ -21,6 +21,7 @@ import com.pi4.mgmtgame.resources.Plant;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Texture;
+import com.pi4.mgmtgame.blocks.TreeField;
 
 public class Server {
 	private ServerSocket serverSocket;
@@ -69,12 +70,6 @@ public class Server {
 
 				ServerSide serverSideConnection = new ServerSide(playerSocket, numPlayers);
 				this.players[numPlayers] = serverSideConnection;
-				
-				int [] hqcoords = placeHQ();
-				HQ hq = new HQ(hqcoords[0],hqcoords[1]);
-				hq.setOwnerID(numPlayers);
-				map.setStructAt(hqcoords[0],hqcoords[1],hq);
-
 
 				Thread t = new Thread(serverSideConnection);
 				t.start();
@@ -117,6 +112,27 @@ public class Server {
 		public void run() {
 			try {
 				dataOut.writeInt(playerID);
+				dataOut.flush();
+
+				int [] hqcoords = placeHQ();
+				HQ hq = new HQ(hqcoords[0],hqcoords[1]);
+				hq.setOwnerID(playerID);
+				map.setStructAt(hqcoords[0], hqcoords[1], hq);
+
+				for (int i = -1; i <= 1; i++) {
+					for (int j = -1; j <= 1; j++) {
+						Environment env = map.getEnvironmentAt(hqcoords[0]+i, hqcoords[1]+j);
+						Structure struct = map.getStructAt(hqcoords[0]+i, hqcoords[1]+j);
+						if (env != null)
+							env.setOwnerID(playerID);
+						if (struct != null)
+							struct.setOwnerID(playerID);
+					}
+				}
+
+				dataOut.writeInt(hqcoords[0]);
+				dataOut.flush();
+				dataOut.writeInt(hqcoords[1]);
 				dataOut.flush();
 
 				while (true) {
@@ -521,11 +537,27 @@ public class Server {
 		int terrainPrice = terrainEnv.getPrice();
 		int availableMoney = userInv.getMoney();
 
-		if (terrainStruct != null && availableMoney >= terrainPrice)
+		Environment envLeft = map.getEnvironmentAt(x-1, y);
+		Environment envRight = map.getEnvironmentAt(x+1, y);
+		Environment envUp = map.getEnvironmentAt(x, y+1);
+		Environment envDown = map.getEnvironmentAt(x, y-1);
+		boolean ownLeft = false;
+		boolean ownRight = false;
+		boolean ownUp = false;
+		boolean ownDown = false;
+
+		if (envLeft != null)
+			ownLeft = envLeft.testOwner(currentPlayer);
+		if (envRight != null)
+			ownRight = envRight.testOwner(currentPlayer);
+		if (envUp != null)
+			ownUp = envUp.testOwner(currentPlayer);
+		if (envDown != null)
+			ownDown = envDown.testOwner(currentPlayer);
+
+
+		if (terrainEnv != null && terrainEnv.testOwner(-1) && availableMoney >= terrainPrice && (ownUp || ownDown || ownLeft || ownRight))
 			return true;
-		else if (terrainEnv.testOwner(-1) && availableMoney >= terrainPrice) {
-			return true;
-		}
 		return false;
 	}
 
@@ -546,7 +578,7 @@ public class Server {
 
 		return false;
 	}
-	
+
 	public int[] placeHQ() {
 		int x;
 		int y;
@@ -557,8 +589,8 @@ public class Server {
 			boolean ok = true;
 			x = random.nextInt(width);
 			y = random.nextInt(height);
-			if(!(map.getEnvironmentAt(x,y) instanceof Plain))
-				ok = false; 
+			if(!(map.getEnvironmentAt(x,y) instanceof Plain) || (map.getStructAt(x,y) instanceof TreeField))
+				ok = false;
 			for (int i = -5; i < 5; i++) {
 				for (int j = -5; j < 5; j++) {
 					if(map.getStructAt(x+i,y+j) instanceof HQ)

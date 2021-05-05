@@ -19,6 +19,8 @@ public class ServerInteraction {
 	private HUD hud;
 	private int playerID;
 	private int storedInternalTurn = -1;
+	private int hqX;
+	private int hqY;
 
 	public ServerInteraction(String ip, String port) {
 		int portInt = Integer.parseInt(port);
@@ -422,6 +424,14 @@ public class ServerInteraction {
 		return false;
 	}
 
+	public int getHqX() {
+		return hqX;
+	}
+
+	public int getHqY() {
+		return hqY;
+	}
+
 	private class ClientSide {
 		protected Socket clientSocket;
 
@@ -441,6 +451,9 @@ public class ServerInteraction {
 
 
 				playerID = dataIn.readInt();
+				hqX = dataIn.readInt();
+				hqY = dataIn.readInt();
+
 
 				System.out.println("\nConnection to " + clientSocket.getInetAddress() + " on port: " + clientSocket.getPort() + " successful.");
 				System.out.println("Connected as player " + playerID);

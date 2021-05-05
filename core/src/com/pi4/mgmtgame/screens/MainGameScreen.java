@@ -47,6 +47,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.pi4.mgmtgame.blocks.HQ;
 
 public class MainGameScreen implements Screen	{
 
@@ -114,7 +115,7 @@ public class MainGameScreen implements Screen	{
 		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
 		viewport.apply();
 
-		camera.position.set((map.getMapWidth()/2)*ManagementGame.TILE_SIZE, (map.getMapHeight()/2)*ManagementGame.TILE_SIZE, 0);
+		// camera.position.set(server.getHqX()*ManagementGame.TILE_SIZE, server.getHqY()*ManagementGame.TILE_SIZE, 0);
 		camera.update();
 
 		stage = new Stage(viewport, batch);
@@ -191,6 +192,9 @@ public class MainGameScreen implements Screen	{
 
 		Thread t = new Thread(new MapHudUpdate());
 		t.start();
+
+		System.out.println(server.getHqX()*ManagementGame.TILE_SIZE + ", " + server.getHqY()*ManagementGame.TILE_SIZE);
+		camera.position.set(server.getHqX()*ManagementGame.TILE_SIZE, server.getHqY()*ManagementGame.TILE_SIZE, 0);
 	}
 
 	@Override
@@ -278,7 +282,7 @@ public class MainGameScreen implements Screen	{
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
-		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		// camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
 	}
 
@@ -307,11 +311,19 @@ public class MainGameScreen implements Screen	{
 			for(int y=0; y<map.getMapHeight(); y++) {
 				Structure struct = map.getStructAt(x, y);
 				Environment env = map.getEnvironmentAt(x, y);
-				if (struct != null && struct instanceof TreeField && ((TreeField)struct).hasSeedGrown()) {
-					Image treeTop = new Image(manager.get("blocks/arbre_haut.png", Texture.class));
-					treeTop.setX(x*ManagementGame.TILE_SIZE);
-					treeTop.setY((y+1)*ManagementGame.TILE_SIZE);
-					decorationStage.addActor(treeTop);
+				if (struct != null) {
+					if (struct instanceof TreeField && ((TreeField)struct).hasSeedGrown()) {
+						Image treeTop = new Image(manager.get("blocks/arbre_haut.png", Texture.class));
+						treeTop.setX(x*ManagementGame.TILE_SIZE);
+						treeTop.setY((y+1)*ManagementGame.TILE_SIZE);
+						decorationStage.addActor(treeTop);
+					}
+					if (struct instanceof HQ) {
+						Image hqTop = new Image(manager.get("blocks/QG-2.png", Texture.class));
+						hqTop.setX(x*ManagementGame.TILE_SIZE);
+						hqTop.setY((y+1)*ManagementGame.TILE_SIZE);
+						decorationStage.addActor(hqTop);
+					}
 				}
 				if (env != null && !env.testOwner(-1)) {
 					Image square = new Image(manager.get("square.png", Texture.class));
