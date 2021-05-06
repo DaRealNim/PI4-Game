@@ -26,6 +26,7 @@ public class Bot {
 
   private ArrayList<Coord> ownedStructures;
   private ArrayList<Coord> ownedTerrains;
+  private ArrayList<Coord> ownedLakes;
   private ArrayList<Coord> goodFieldSpots;
   private Map map;
   private Inventory inv;
@@ -56,8 +57,11 @@ public class Bot {
     {
       for (int y = -1; y < 1; y++)
       {
-        ownedStructures.add(new Coord(HQ.x + x, HQ.y + y));
-        ownedTerrains.add(new Coord(HQ.x + x, HQ.y + y));
+        if (x != 0 && y != 0)
+        {
+          ownedStructures.add(new Coord(HQ.x + x, HQ.y + y));
+          ownedTerrains.add(new Coord(HQ.x + x, HQ.y + y));
+        }
       }
     }
   }
@@ -68,7 +72,8 @@ public class Bot {
     System.out.println("Bot start");
     harvestFields();
     sellPlants();
-    buyTerrains();
+    if (allTerrainsUsed())
+      buyTerrains();
     buildStructures();
     buySeeds();
     plantSeeds();
@@ -88,8 +93,12 @@ public class Bot {
 
         if (canHarvest(currField))
         {
+
           harvested = currField.harvest();
           harvested.addVolume(4);
+          if (currField instanceof TreeField)
+            map.setStructAt(c.x, c.y, null);
+
           inv.addPlant(harvested.getId(), harvested.getVolume());
           System.out.println("Bot " + botID + " harvested " + harvested.toString() + " at " + c.x + ", " + c.y);
         }
@@ -100,19 +109,30 @@ public class Bot {
   {
     for (Plant p : inv.getPlants())
     {
-      if (priceIsHigherThanMarketAverage(p))
+      int numberOfPlants = p.getVolume();
+
+      if (priceIsHigherThanMarketAverage(p) && numberOfPlants > 0 && p.getPrice() > 0)
+      {
         System.out.println("Bot " + botID + " sold " + p.toString() + " at " + p.getPrice());
         server.sellPlant(p, p.getVolume());
+      }
     }
   }
 
   private void buyTerrains()
   {
     int initialFunds = inv.getMoney();
+    ArrayList<Coord> buyablePlains = getBuyablePlains();
+    ArrayList<Coord> buyableLakes = getBuyableLakes();
 
-    while (inv.getMoney() > initialFunds / 3 && inv.getMoney() >= 500) //This condition will be changed to something more elegant when there are maintenance costs.
+    while (inv.getMoney() > initialFunds / 3 && inv.getMoney() >= 1100) //This condition will be changed to something more elegant when there are maintenance costs.
     {
-      for (Coord c : goodFieldSpots)
+      for (Coord c : buyableLakes)
+      {
+        buyTerrainAt(c);
+      }
+
+      for (Coord c : buyablePlains)
       {
         buyTerrainAt(c);
       }
@@ -164,12 +184,12 @@ public class Bot {
   {
     int initialFunds = inv.getMoney();
 
-    while (inv.getMoney() > initialFunds && inv.getMoney() >= 300) //This condition will be changed to something more elegant when there are maintenance costs.
+    while (inv.getMoney() >= 900) //This condition will be changed to something more elegant when there are maintenance costs.
     {
+      System.out.println(inv.getMoney());
       for (Coord c : ownedTerrains)
       {
-        if (map.getStructAt(c.x, c.y) == null)
-          buildFieldAt(c);
+        buildFieldAt(c);
       }
     }
   }
@@ -183,7 +203,11 @@ public class Bot {
     {
       inv.giveMoney(terrainCost);
       terrain.setOwnerID(botID);
-      ownedTerrains.add(c);
+
+      if (isLake(c))
+        ownedLakes.add(c);
+      else
+        ownedTerrains.add(c);
 
       System.out.println("Bot " + botID + " bought terrain at " + c.x + ", " + c.y);
     }
@@ -195,7 +219,7 @@ public class Bot {
     Field newField = new Field(c.x, c.y);
     int fieldCost = newField.getConstructionCost();
 
-    if (fieldCost < inv.getMoney() && map.getStructAt(c.x, c.y) == null)
+    if (fieldCost < inv.getMoney()) //&& map.getStructAt(c.x, c.y) == null
     {
       inv.giveMoney(fieldCost);
       map.setStructAt(c.x, c.y, newField);
@@ -223,6 +247,50 @@ public class Bot {
     }
 
     return (goodFieldSpots);
+  }
+
+  private ArrayList<Coord> getBuyablePlains()
+  {
+    ArrayList<Coord> buyablePlains = new ArrayList<Coord>();
+
+    for (Coord c : ownedTerrains)
+    {
+      for (int x = -1; x < 1; x++)
+      {
+        for (int y = -1; y < 1; y++)
+        {
+          Coord nextBlock = new Coord(c.x + x, c.y + y);
+
+          if (botOwnsAllTerrainAround(nextBlock))
+            break;
+          else if (!botOwnsTerrain(nextBlock) && isPlain(nextBlock))
+            buyablePlains.add(c);
+        }
+      }
+    }
+    return (buyablePlains);
+  }
+
+  private ArrayList<Coord> getBuyableLakes()
+  {
+    ArrayList<Coord> buyableLakes = new ArrayList<Coord>();
+
+    for (Coord c : ownedTerrains)
+    {
+      for (int x = -1; x < 1; x++)
+      {
+        for (int y = -1; y < 1; y++)
+        {
+          Coord nextBlock = new Coord(c.x + x, c.y + y);
+
+          if (botOwnsAllTerrainAround(nextBlock))
+            break;
+          else if (!botOwnsTerrain(nextBlock) && isLake(nextBlock))
+            buyableLakes.add(c);
+        }
+      }
+    }
+    return (buyableLakes);
   }
 
   private ArrayList<Coord> getOwnedFields()
@@ -282,11 +350,13 @@ public class Bot {
 
   private boolean thereIsLakeNear(int x, int y)
   {
+    Coord blockToCheck;
     for (int hor = -1; hor <= 1; hor++)
     {
       for (int vert = -1; vert <= 1; vert++)
       {
-        if (!map.isNotLake(x + hor, y + vert)) //would be more interesting to know when things ARE lakes instead of !lakes.
+        blockToCheck = new Coord(x + hor, y + vert);
+        if (!isLake(blockToCheck))
           return (true);
       }
     }
@@ -307,6 +377,47 @@ public class Bot {
       return (true);
 
     return (false);
+  }
+
+  private boolean botOwnsAllTerrainAround(Coord c)
+  {
+    Environment terrainCheck;
+    for (int hor = -1; hor <= 1; hor++)
+    {
+      for (int vert = -1; vert <= 1; vert++)
+      {
+        terrainCheck = map.getEnvironmentAt(c.x + hor, c.y + vert);
+        if (terrainCheck != null)
+        {
+          if (!terrainCheck.testOwner(botID))
+            return (false);
+        }
+      }
+    }
+
+    return (true);
+  }
+
+  private boolean botOwnsTerrain(Coord c)
+  {
+    Environment terrainCheck = map.getEnvironmentAt(c.x, c.y);
+    if (terrainCheck != null)
+    {
+      if (terrainCheck.testOwner(botID))
+        return (true);
+    }
+    return (false);
+  }
+
+
+  private boolean allTerrainsUsed()
+  {
+    for (Coord c : ownedTerrains)
+    {
+      if (map.getStructAt(c.x, c.y) == null)
+        return (false);
+    }
+    return (true);
   }
 
   private boolean priceIsHigherThanMarketAverage(Resources r)
@@ -332,4 +443,16 @@ public class Bot {
   {
     return (field.hasSeedGrown());
   }
+
+  private boolean isLake(Coord c)
+  {
+    return (map.getEnvironmentAt(c.x, c.y) instanceof Lake);
+  }
+
+  private boolean isPlain(Coord c)
+  {
+    return (map.getEnvironmentAt(c.x, c.y) instanceof Plain);
+  }
+
+
 }
