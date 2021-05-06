@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.pi4.mgmtgame.blocks.TreeField;
+import com.pi4.mgmtgame.bot.Bot;
 import java.util.HashMap;
 import java.awt.Color;
 
@@ -30,7 +31,8 @@ public class Server {
 	private ServerSocket serverSocket;
 	private int numPlayers;
 	private ServerSide[] players;
-
+	private Bot[] bots;
+	private int botID;
 	private Map map;
 	private Inventory[] invArray;
 	private Inventory inv;
@@ -63,6 +65,11 @@ public class Server {
 		this.internalTurn = -1;
 		this.inv = invArray[0];
 		this.idToColorMap = new HashMap<Integer, Color>();
+
+		this.bots = new Bot[10];
+		this.botID = 400;
+		bots[0] = createBot();
+
 		for(int i=0; i<nbOfPlayers; i++) {
 			// float r = Math.round(Math.random() * 100.0f) / 100.0f;
 			// float g = Math.round(Math.random() * 100.0f) / 100.0f;
@@ -126,7 +133,7 @@ public class Server {
 				dataOut.writeInt(playerID);
 				dataOut.flush();
 
-				int [] hqcoords = placeHQ();
+				int[] hqcoords = placeHQ();
 				HQ hq = new HQ(hqcoords[0],hqcoords[1]);
 				hq.setOwnerID(playerID);
 				map.setStructAt(hqcoords[0], hqcoords[1], hq);
@@ -465,6 +472,11 @@ public class Server {
 		inv = invArray[internalTurn % nbOfPlayers];
 		currentPlayer = internalTurn % nbOfPlayers;
 		if (internalTurn == nbOfPlayers) {
+			for (Bot bot : bots)
+			{
+				if (bot != null)
+					bot.play();
+			}
 			turn++;
 			internalTurn = 0;
 			for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {
@@ -593,31 +605,31 @@ public class Server {
 
 		return false;
 	}
-	
+
 	public boolean canBreed(int x, int y, Animal animal) {
 		//pour benj
 		return true;
 	}
-	
+
 	public boolean requestBreed(int x, int y, Animal animal) {
 		//pour benj
 		return true;
 	}
-	
+
 	public void buyAnimal(Animal boughtAnimal, int q) {
-		
+
 	}
-	
+
 	public void sellAnimal(Animal soldAnimal, int q) {
-		
+
 	}
-	
+
 	public void buyProduct(Product boughtProduct, int q) {
-		
+
 	}
-	
+
 	public void sellProduct(Product soldProduct, int q) {
-		
+
 	}
 
 	public int[] placeHQ() {
@@ -644,7 +656,14 @@ public class Server {
 		return v;
 	}
 
+	public Bot createBot()
+	{
+		int[] hq = placeHQ();
+		Bot newBot = new Bot(this.map, new Inventory(botID), botID, this, hq[0], hq[1]);
+		++botID;
 
+		return (newBot);
+	}
 
 	public static void main(String[] args) {
 		Server gameServer = new Server(2);

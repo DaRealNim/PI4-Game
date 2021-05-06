@@ -30,6 +30,7 @@ public class Bot {
   private Map map;
   private Inventory inv;
   private int botID;
+  private HQ botHQ;
   private Server server;
 
 //Respect clean code rules and indentation I'm tired of the code looking like a slum
@@ -44,6 +45,10 @@ public class Bot {
     goodFieldSpots = scanForPlainsNearLakes();
     ownedTerrains = new ArrayList<Coord>();
     ownedStructures = new ArrayList<Coord>();
+
+    botHQ = new HQ(HQx, HQy);
+    botHQ.setOwnerID(botID);
+    map.setStructAt(HQx, HQy, botHQ);
 
     Coord HQ = new Coord(HQx, HQy);
 
@@ -60,17 +65,19 @@ public class Bot {
   public void play() //This is the most abstract function, so it is at the top
   {
     //start turn
+    System.out.println("Bot start");
     harvestFields();
     sellPlants();
     buyTerrains();
     buildStructures();
     buySeeds();
     plantSeeds();
+    System.out.println("Bot end");
     //sabotage()
     //end
   }
 
-  public void harvestFields() //Second most abstract, so on.
+  private void harvestFields() //Second most abstract, so on.
   {
     ArrayList<Coord> ownedFields = getOwnedFields();
 
@@ -84,20 +91,22 @@ public class Bot {
           harvested = currField.harvest();
           harvested.addVolume(4);
           inv.addPlant(harvested.getId(), harvested.getVolume());
+          System.out.println("Bot " + botID + " harvested " + harvested.toString() + " at " + c.x + ", " + c.y);
         }
     }
   }
 
-  public void sellPlants()
+  private void sellPlants()
   {
     for (Plant p : inv.getPlants())
     {
       if (priceIsHigherThanMarketAverage(p))
+        System.out.println("Bot " + botID + " sold " + p.toString() + " at " + p.getPrice());
         server.sellPlant(p, p.getVolume());
     }
   }
 
-  public void buyTerrains()
+  private void buyTerrains()
   {
     int initialFunds = inv.getMoney();
 
@@ -110,12 +119,12 @@ public class Bot {
     }
   }
 
-  public void buildStructures() //TODO: buildPastures()
+  private void buildStructures() //TODO: buildPastures()
   {
       buildFields();
   }
 
-  public void buySeeds() //TODO: optimize seed buying by using seed prices
+  private void buySeeds() //TODO: optimize seed buying by using seed prices
   {
     int ownedFields = getOwnedFields().size();
     int boughtGrains = 0;
@@ -125,13 +134,14 @@ public class Bot {
       while(priceIsLowerThanMarketAverage(g) &&
             boughtGrains < ownedFields ) //TODO: failsafe this so the bot doesn't bankrupt itself
       {
+        System.out.println("Bot " + botID + " bought " + g.toString() + " at " + g.getPrice());
         server.buyGrain(g, 1);
         ++boughtGrains;
       }
     }
   }
 
-  public void plantSeeds()
+  private void plantSeeds()
   {
     ArrayList<Coord> ownedFields = getOwnedFields();
     Field currField;
@@ -150,7 +160,7 @@ public class Bot {
     }
   }
 
-  public void buildFields()
+  private void buildFields()
   {
     int initialFunds = inv.getMoney();
 
@@ -158,12 +168,13 @@ public class Bot {
     {
       for (Coord c : ownedTerrains)
       {
-        buildFieldAt(c);
+        if (map.getStructAt(c.x, c.y) == null)
+          buildFieldAt(c);
       }
     }
   }
 
-  public void buyTerrainAt(Coord c)
+  private void buyTerrainAt(Coord c)
   {
     Environment terrain = map.getEnvironmentAt(c.x, c.y);
     int terrainCost = terrain.getPrice();
@@ -173,10 +184,12 @@ public class Bot {
       inv.giveMoney(terrainCost);
       terrain.setOwnerID(botID);
       ownedTerrains.add(c);
+
+      System.out.println("Bot " + botID + " bought terrain at " + c.x + ", " + c.y);
     }
   }
 
-  public void buildFieldAt(Coord c)
+  private void buildFieldAt(Coord c)
   {
     Environment terrain = map.getEnvironmentAt(c.x, c.y);
     Field newField = new Field(c.x, c.y);
@@ -188,11 +201,13 @@ public class Bot {
       map.setStructAt(c.x, c.y, newField);
       newField.setOwnerID(botID);
       ownedStructures.add(c);
+
+      System.out.println("Bot " + botID + " built field at " + c.x + ", " + c.y);
     }
   }
 
   //This function will be modified when trade routes are implemented
-  public ArrayList<Coord> scanForPlainsNearLakes()
+  private ArrayList<Coord> scanForPlainsNearLakes()
   {
     ArrayList<Coord> goodFieldSpots = new ArrayList();
 
@@ -210,13 +225,13 @@ public class Bot {
     return (goodFieldSpots);
   }
 
-  public ArrayList<Coord> getOwnedFields()
+  private ArrayList<Coord> getOwnedFields()
   {
     ArrayList<Coord> ownedFields = new ArrayList();
 
     for (Coord c : ownedStructures)
     {
-      Structure currStruct = (Field) map.getStructAt(c.x, c.y);
+      Structure currStruct = map.getStructAt(c.x, c.y);
       if (structIsField(currStruct))
         ownedFields.add(c);
     }
@@ -224,7 +239,7 @@ public class Bot {
     return (ownedFields);
   }
 
-  public int totalFieldTerrainCost(ArrayList<Coord> spots)
+  private int totalFieldTerrainCost(ArrayList<Coord> spots)
   {
     Environment currBlockEnv;
     int totalCost = 0;
@@ -245,7 +260,7 @@ public class Bot {
     return (0)
   }*/
 
-  public int priceAverage(Inventory inv)
+  private int priceAverage(Inventory inv)
   {
     int sumOfPrices = 0;
     int resCount = 0;
@@ -265,7 +280,7 @@ public class Bot {
     return (sumOfPrices / resCount);
   }
 
-  public boolean thereIsLakeNear(int x, int y)
+  private boolean thereIsLakeNear(int x, int y)
   {
     for (int hor = -1; hor <= 1; hor++)
     {
@@ -279,7 +294,7 @@ public class Bot {
   }
 
   //I know this function also exists in Server but it's only for players since the server's invArray doesn't account for the inventory of bots.
-  public boolean canBuyTerrainAt(Coord c)
+  private boolean canBuyTerrainAt(Coord c)
   {
     Structure currBlockStruct = map.getStructAt(c.x, c.y);
     Environment currBlockEnv = map.getEnvironmentAt(c.x, c.y);
@@ -294,26 +309,26 @@ public class Bot {
     return (false);
   }
 
-  public boolean priceIsHigherThanMarketAverage(Resources r)
+  private boolean priceIsHigherThanMarketAverage(Resources r)
   {
     if (r.getPrice() >= priceAverage(inv))
       return (true);
     return (false);
   }
 
-  public boolean priceIsLowerThanMarketAverage(Resources r)
+  private boolean priceIsLowerThanMarketAverage(Resources r)
   {
     if (r.getPrice() >= priceAverage(inv))
       return (true);
     return (false);
   }
 
-  public boolean structIsField(Structure structBlock)
+  private boolean structIsField(Structure structBlock)
   {
     return (structBlock instanceof Field && structBlock != null);
   }
 
-  public boolean canHarvest(Field field)
+  private boolean canHarvest(Field field)
   {
     return (field.hasSeedGrown());
   }
