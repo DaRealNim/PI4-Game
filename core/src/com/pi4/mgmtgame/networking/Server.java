@@ -40,11 +40,12 @@ public class Server {
 	private int internalTurn;
 	private int currentPlayer;
 	private int nbOfPlayers;
+	private int nbOfBots;
 	private int playerID;
 	private HashMap<Integer, Color> idToColorMap;
 	private volatile boolean gameCanStart = false;
 
-	public Server(int nbOfPlayers) {
+	public Server(int nbOfPlayers, int nbOfBots) {
 		System.out.println("----Server----");
 		try {
 			serverSocket = new ServerSocket(51769);
@@ -55,6 +56,7 @@ public class Server {
 
 		this.map = new Map(50, 50, null, null);
 		this.nbOfPlayers = nbOfPlayers;
+		this.nbOfBots = nbOfBots;
 		this.invArray = new Inventory[nbOfPlayers];
 		for (int i = 0; i < nbOfPlayers; i++) {
 			this.invArray[i] = new Inventory(i);
@@ -66,11 +68,13 @@ public class Server {
 		this.inv = invArray[0];
 		this.idToColorMap = new HashMap<Integer, Color>();
 
-		this.bots = new Bot[10];
+		this.bots = new Bot[nbOfBots];
 		this.botID = nbOfPlayers;
-		bots[0] = createBot();
+		for(int i=0; i<nbOfBots; i++) {
+			this.bots[i] = createBot();
+		}
 
-		for(int i=0; i<nbOfPlayers; i++) {
+		for(int i=0; i<nbOfPlayers+nbOfBots; i++) {
 			// float r = Math.round(Math.random() * 100.0f) / 100.0f;
 			// float g = Math.round(Math.random() * 100.0f) / 100.0f;
 			// float b = Math.round(Math.random() * 100.0f) / 100.0f;
@@ -392,7 +396,7 @@ public class Server {
 
 	public boolean requestPlantSeed(int x, int y, Grain seed) {
 		Structure structBlock = map.getStructAt(x, y);
-		System.out.println("Seed id: " + seed.getId());
+		// System.out.println("Seed id: " + seed.getId());
 		if (structBlock instanceof Field && inv.hasGrain(seed) && structBlock != null
 				&& structBlock.testOwner(currentPlayer)) {
 			if (!((Field) structBlock).hasSeed()) {
@@ -407,7 +411,7 @@ public class Server {
 
 	public boolean requestUseItem(int x, int y, Item item) {
 		Structure structBlock = map.getStructAt(x, y);
-		System.out.println("Item id: " + item.getId());
+		// System.out.println("Item id: " + item.getId());
 		if (structBlock instanceof Field && inv.hasItem(item)) {
 			if ((!((Field) structBlock).hasItem() && item.getId() == 0)
 			   || ((Field) structBlock).hasItem() && item.getId() == 1) {
@@ -491,8 +495,8 @@ public class Server {
 				}
 			}
 		}
-		System.out.println(this.inv);
-		System.out.println(turn);
+		// System.out.println(this.inv);
+		System.out.println("Turn "+turn+"\n=======================");
 	}
 
 	public boolean userHasMoneyToBuy(int q, Resources r) {
@@ -515,7 +519,7 @@ public class Server {
 			userInv.giveMoney(grainPrice * q);
 			userInv.addGrain(boughtGrain.getId(), q);
 			boughtGrain.addPrice(1);
-			System.out.println(boughtGrain.toString() + " price: " + boughtGrain.getPrice());
+			// System.out.println(boughtGrain.toString() + " price: " + boughtGrain.getPrice());
 		}
 	}
 
@@ -528,7 +532,7 @@ public class Server {
 			grainPrice = soldGrain.getPrice();
 			userInv.receiveMoney(grainPrice * q);
 			userInv.removeGrain(soldGrain.getId(), q);
-			System.out.println(soldGrain.toString() + " price: " + soldGrain.getPrice());
+			// System.out.println(soldGrain.toString() + " price: " + soldGrain.getPrice());
 		}
 	}
 
@@ -540,7 +544,7 @@ public class Server {
 			userInv.giveMoney(plantPrice * q);
 			userInv.addPlant(boughtPlant.getId(), q);
 			boughtPlant.addPrice(1);
-			System.out.println(boughtPlant.toString() + " price: " + boughtPlant.getPrice());
+			// System.out.println(boughtPlant.toString() + " price: " + boughtPlant.getPrice());
 		}
 	}
 
@@ -553,7 +557,7 @@ public class Server {
 			plantPrice = soldPlant.getPrice();
 			userInv.receiveMoney(plantPrice * q);
 			userInv.removePlant(soldPlant.getId(), q);
-			System.out.println(soldPlant.toString() + " price: " + soldPlant.getPrice());
+			// System.out.println(soldPlant.toString() + " price: " + soldPlant.getPrice());
 		}
 	}
 
@@ -660,13 +664,23 @@ public class Server {
 	{
 		int[] hq = placeHQ();
 		Bot newBot = new Bot(this.map, new Inventory(botID), botID, this, hq[0], hq[1]);
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				Environment env = map.getEnvironmentAt(hq[0]+i, hq[1]+j);
+				Structure struct = map.getStructAt(hq[0]+i, hq[1]+j);
+				if (env != null)
+					env.setOwnerID(botID);
+				if (struct != null)
+					struct.setOwnerID(botID);
+			}
+		}
 		++botID;
 
 		return (newBot);
 	}
 
 	public static void main(String[] args) {
-		Server gameServer = new Server(2);
+		Server gameServer = new Server(1, 10);
 		gameServer.acceptConnections();
 	}
 }
