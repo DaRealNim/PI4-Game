@@ -35,7 +35,7 @@ public class Bot {
 //Respect clean code rules and indentation I'm tired of the code looking like a slum
 //if I see another "if" tree I'm going insane.
 
-  public Bot(Map m, Inventory i, int id, Server sv)
+  public Bot(Map m, Inventory i, int id, Server sv, int HQx, int HQy)
   {
     map = m;
     inv = i;
@@ -44,12 +44,23 @@ public class Bot {
     goodFieldSpots = scanForPlainsNearLakes();
     ownedTerrains = new ArrayList<Coord>();
     ownedStructures = new ArrayList<Coord>();
+
+    Coord HQ = new Coord(HQx, HQy);
+
+    for (int x = -1; x < 1; x++)
+    {
+      for (int y = -1; y < 1; y++)
+      {
+        ownedStructures.add(new Coord(HQ.x + x, HQ.y + y));
+        ownedTerrains.add(new Coord(HQ.x + x, HQ.y + y));
+      }
+    }
   }
 
   public void play() //This is the most abstract function, so it is at the top
   {
     //start turn
-    //harvest()
+    harvestFields();
     sellResources();
     buyTerrains();
     buildStructures();
@@ -57,7 +68,25 @@ public class Bot {
     //end
   }
 
-  public void sellResources() //Second most abstract, so on.
+  public void harvestFields() //Second most abstract, so on.
+  {
+    ArrayList<Coord> ownedFields = getOwnedFields();
+
+    for (Coord c : ownedFields)
+    {
+        Plant harvested;
+        Field currField = (Field) map.getStructAt(c.x, c.y);
+
+        if (canHarvest(currField))
+        {
+          harvested = currField.harvest();
+          harvested.addVolume(4);
+          inv.addPlant(harvested.getId(), harvested.getVolume());
+        }
+    }
+  }
+
+  public void sellResources()
   {
     for (Plant p : inv.getPlants())
     {
@@ -87,8 +116,6 @@ public class Bot {
   public void buildStructures() //This function will be modified when new structures are implemented.
   {
       buildFields();
-      //buildFishpods?
-      //buildRoads?
   }
 
 
@@ -150,6 +177,20 @@ public class Bot {
     }
 
     return (goodFieldSpots);
+  }
+
+  public ArrayList<Coord> getOwnedFields()
+  {
+    ArrayList<Coord> ownedFields = new ArrayList();
+
+    for (Coord c : ownedStructures)
+    {
+      Structure currStruct = (Field) map.getStructAt(c.x, c.y);
+      if (structIsField(currStruct))
+        ownedFields.add(c);
+    }
+
+    return (ownedFields);
   }
 
   public int totalFieldTerrainCost(ArrayList<Coord> spots)
@@ -227,5 +268,15 @@ public class Bot {
     if (r.getPrice() >= priceAverage(inv))
       return (true);
     return (false);
+  }
+
+  public boolean structIsField(Structure structBlock)
+  {
+    return (structBlock instanceof Field && structBlock != null);
+  }
+
+  public boolean canHarvest(Field field)
+  {
+    return (field.hasSeedGrown());
   }
 }

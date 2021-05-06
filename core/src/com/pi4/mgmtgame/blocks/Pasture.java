@@ -24,13 +24,18 @@ import com.pi4.mgmtgame.screens.MainGameScreen;
 public class Pasture extends Structure{
 	private Animal residentAnimal;
 	private float growingState;
-	
+	private int constructionCost;
+	private int salvageBenefit;
+
 	public Pasture (int x, int y) {
 		super(x, y);
 		this.growingState = 1;
 		setSpriteName("");
+
+		constructionCost = 1000;
+		salvageBenefit = 330;
 	}
-	
+
 	@Override
 	public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
 		super.addViewController(manager, server, popupStage);
@@ -45,7 +50,7 @@ public class Pasture extends Structure{
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonBreed = new Button(manager.get("popupIcons/popup.json", Skin.class), "breed_icon");
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
-					
+
 					buttonBreed.addListener(new HoverListener() {
 						@Override
 						public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -58,7 +63,7 @@ public class Pasture extends Structure{
                             MainGameScreen.mouseLabelText = "Destroy this building and sell the ressources\nRefund: $"+getDestructionGain();
                         }
                     });
-					
+
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Enclot", buttonBreed, buttonDestroy);
 					if (!hasAnimal()) {
 						buttonBreed.getColor().a = (float)1;
@@ -71,12 +76,12 @@ public class Pasture extends Structure{
 								Inventory inv = server.getInventory();
 								if (inv.hasAnimal(0))
 									buttons[0] = breedCow;
-								
+
 								if (inv.hasAnimal(1))
 									buttons[1] = breedSheep;
-								
+
 								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1 ) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager, "Enclot", buttons);
-								
+
 								breedCow.addListener(new ClickListener() {
 									@Override
 									public void clicked(InputEvent event, float x, float y) {
@@ -85,7 +90,7 @@ public class Pasture extends Structure{
 										p.remove();
 									}
 								});
-								
+
 								breedSheep.addListener(new ClickListener() {
 									@Override
 									public void clicked(InputEvent event, float x, float y) {
@@ -98,10 +103,10 @@ public class Pasture extends Structure{
 						});
 					}
 				}
-			}		
+			}
 		});
 	}
-	
+
 	@Override
 	public void updateActors() {
 		super.updateActors();
@@ -119,34 +124,34 @@ public class Pasture extends Structure{
 			changeStyle(residentAnimal.getPastureSpriteName());
 		}
 	}
-	
+
 	@Override
 	public int getConstructionCost() {
-		return 1000;
+		return constructionCost;
 	}
 
 	@Override
 	public int getDestructionGain() {
-		return 330;
+		return salvageBenefit;
 	}
-	
+
 	public void breedAnimal(Animal animal) {
 		this.residentAnimal = animal;
 	}
-	
+
 	public boolean hasAnimal() {
 		return (this.residentAnimal != null);
 	}
-	
+
 	public boolean hasPopulationGrown() {
 		if (this.residentAnimal == null)
 			return false;
 		return (this.growingState >= this.residentAnimal.getGrowingMax());
 	}
-	
+
 	public void growPopulation(ServerInteraction server) {
 		Inventory inv = server.getInventory();
-		
+
 		if (residentAnimal != null) {
 			System.out.println("Population grew form Pasture in (" + super.getGridX() + "," + super.getGridY() + ")");
 			if (inv.getPlants()[0].getVolume() >= (int)(1+1*growingState/2)) {
@@ -156,17 +161,17 @@ public class Pasture extends Structure{
 			} else {
 				growingState--;
 			}
-			
+
 			if (growingState <= 0) {
 				residentAnimal = null;
 				changeStyle("pasture_empty");
 				return;
 			}
-			
+
 			if (hasPopulationGrown()) {
 				changeStyle(residentAnimal.getPastureSpriteName());
 			}
-			
+
 			inv.getProduct()[0].addVolume((int)(2+1*growingState/2));
 			if (residentAnimal instanceof Sheep) {
 				inv.getProduct()[2].addVolume((int)(1+1*growingState/2));
@@ -175,7 +180,7 @@ public class Pasture extends Structure{
 			}
 		}
 	}
-	
+
 	private void attemptToBreed(int i, ServerInteraction server) {
 		Inventory inv = server.getInventory();
 		//boolean res = server.requestBreedAnimal();
@@ -183,12 +188,12 @@ public class Pasture extends Structure{
 		System.out.println("Could breed animal of id " + i + " at " + getGridX() + ", " + getGridY() + ": "/* + res*/);
 		updateMap(manager, server);
 	}
-	
+
 	public void passTurn(ServerInteraction server) {
 		this.growPopulation(server);
 
 	}
-	
+
 	@Override
 	public boolean canBuild(Inventory inv) {
 		return true;
@@ -196,7 +201,7 @@ public class Pasture extends Structure{
 
 	@Override
 	public void doBuild(Inventory inv) {}
-	
+
 	@Override
 	public String toString() {
 		return "Pasture";
