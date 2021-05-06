@@ -61,9 +61,11 @@ public class Bot {
   {
     //start turn
     harvestFields();
-    sellResources();
+    sellPlants();
     buyTerrains();
     buildStructures();
+    buySeeds();
+    plantSeeds();
     //sabotage()
     //end
   }
@@ -86,17 +88,12 @@ public class Bot {
     }
   }
 
-  public void sellResources()
+  public void sellPlants()
   {
     for (Plant p : inv.getPlants())
     {
       if (priceIsHigherThanMarketAverage(p))
         server.sellPlant(p, p.getVolume());
-    }
-    for (Grain g : inv.getSeeds())
-    {
-      if (priceIsHigherThanMarketAverage(g))
-        server.sellGrain(g, g.getVolume());
     }
   }
 
@@ -113,11 +110,45 @@ public class Bot {
     }
   }
 
-  public void buildStructures() //This function will be modified when new structures are implemented.
+  public void buildStructures() //TODO: buildPastures()
   {
       buildFields();
   }
 
+  public void buySeeds() //TODO: optimize seed buying by using seed prices
+  {
+    int ownedFields = getOwnedFields().size();
+    int boughtGrains = 0;
+
+    for (Grain g : inv.getSeeds())
+    {
+      while(priceIsLowerThanMarketAverage(g) &&
+            boughtGrains < ownedFields ) //TODO: failsafe this so the bot doesn't bankrupt itself
+      {
+        server.buyGrain(g, 1);
+        ++boughtGrains;
+      }
+    }
+  }
+
+  public void plantSeeds()
+  {
+    ArrayList<Coord> ownedFields = getOwnedFields();
+    Field currField;
+
+    for (Coord c : ownedFields)
+    {
+      currField = (Field) map.getStructAt(c.x, c.y);
+      for (Grain g : inv.getSeeds())
+      {
+        if (!currField.hasSeed() && inv.hasGrain(g))
+        {
+          currField.plantSeed(g);
+          inv.removeGrain(g.getId(), 1);
+        }
+      }
+    }
+  }
 
   public void buildFields()
   {
@@ -264,6 +295,13 @@ public class Bot {
   }
 
   public boolean priceIsHigherThanMarketAverage(Resources r)
+  {
+    if (r.getPrice() >= priceAverage(inv))
+      return (true);
+    return (false);
+  }
+
+  public boolean priceIsLowerThanMarketAverage(Resources r)
   {
     if (r.getPrice() >= priceAverage(inv))
       return (true);
