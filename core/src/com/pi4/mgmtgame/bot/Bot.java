@@ -40,7 +40,7 @@ public class Bot {
   {
     map = m;
     inv = i;
-    id = botID;
+    botID = id;
     server = sv;
     goodFieldSpots = scanForPlainsNearLakes();
     ownedTerrains = new ArrayList<Coord>();

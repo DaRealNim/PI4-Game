@@ -67,7 +67,7 @@ public class Server {
 		this.idToColorMap = new HashMap<Integer, Color>();
 
 		this.bots = new Bot[10];
-		this.botID = 400;
+		this.botID = nbOfPlayers;
 		bots[0] = createBot();
 
 		for(int i=0; i<nbOfPlayers; i++) {
