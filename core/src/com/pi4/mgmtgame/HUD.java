@@ -93,7 +93,7 @@ public class HUD {
               itemsLabelText += item + ": " + item.getVolume() + " \n";
         }
 
-        moneyLabel.setText("DOLLA BILLZ: " + inv.getMoney());
+        moneyLabel.setText("$" + inv.getMoney());
         turnLabel.setText("Month : " + server.getTurn());
         seedLabel.setText(seedLabelText);
         grainLabel.setText(grainLabelText);
@@ -119,7 +119,7 @@ public class HUD {
       marketButton.setScale(2);
 
 
-      moneyLabel = new Label("DOLLA BILLZ: " + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      moneyLabel = new Label("$" + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
       turnLabel = new Label("Month : " + server.getTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
       seedLabelText = "";

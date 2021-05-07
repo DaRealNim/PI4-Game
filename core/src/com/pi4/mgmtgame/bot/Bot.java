@@ -8,6 +8,7 @@ import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Grain;
 import com.pi4.mgmtgame.blocks.*;
 import com.pi4.mgmtgame.blocks.Field;
+import com.pi4.mgmtgame.resources.TreeSeeds;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,21 @@ public class Bot {
     {
       this.x = x;
       this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "("+x+", "+y+")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Coord) {
+            Coord objCoord = (Coord)obj;
+            return (objCoord.x == this.x && objCoord.y == this.y);
+        } else {
+            return false;
+        }
     }
   }
 
@@ -53,17 +69,19 @@ public class Bot {
 
     Coord HQ = new Coord(HQx, HQy);
 
-    for (int x = -1; x < 1; x++)
+    for (int x = -1; x <= 1; x++)
     {
-      for (int y = -1; y < 1; y++)
+      for (int y = -1; y <= 1; y++)
       {
-        if (x != 0 && y != 0)
+        if (x != 0 || y != 0)
         {
-          ownedStructures.add(new Coord(HQ.x + x, HQ.y + y));
+          if (map.getStructAt(HQ.x + x, HQ.y + y) != null)
+            ownedStructures.add(new Coord(HQ.x + x, HQ.y + y));
           ownedTerrains.add(new Coord(HQ.x + x, HQ.y + y));
         }
       }
     }
+    System.out.println(ownedStructures);
   }
 
   public void play() //This is the most abstract function, so it is at the top
@@ -80,6 +98,10 @@ public class Bot {
     System.out.println("Bot end");
     //sabotage()
     //end
+  }
+
+  public Inventory getInventory() {
+      return inv;
   }
 
   private void harvestFields() //Second most abstract, so on.
@@ -147,7 +169,10 @@ public class Bot {
   private void buySeeds() //TODO: optimize seed buying by using seed prices
   {
     int ownedFields = getOwnedFields().size();
-    int boughtGrains = 0;
+    int boughtGrains = inv.getSeeds()[0].getVolume() + inv.getSeeds()[1].getVolume() + inv.getSeeds()[2].getVolume() + inv.getSeeds()[3].getVolume();
+
+    System.out.println("ownedFields:" + getOwnedFields());
+    System.out.println("ownedStructures:" + ownedStructures);
 
     for (Grain g : inv.getSeeds())
     {
@@ -171,6 +196,8 @@ public class Bot {
       currField = (Field) map.getStructAt(c.x, c.y);
       for (Grain g : inv.getSeeds())
       {
+        if (g instanceof TreeSeeds)
+            continue;
         if (!currField.hasSeed() && inv.hasGrain(g))
         {
           currField.plantSeed(g);
@@ -183,14 +210,12 @@ public class Bot {
   private void buildFields()
   {
     int initialFunds = inv.getMoney();
-
-    while (inv.getMoney() >= 900) //This condition will be changed to something more elegant when there are maintenance costs.
+    for (Coord c : ownedTerrains)
     {
-      System.out.println(inv.getMoney());
-      for (Coord c : ownedTerrains)
-      {
+        System.out.println("Money: " + inv.getMoney());
+        if (inv.getMoney() < 900)
+            break;
         buildFieldAt(c);
-      }
     }
   }
 
@@ -219,7 +244,7 @@ public class Bot {
     Field newField = new Field(c.x, c.y);
     int fieldCost = newField.getConstructionCost();
 
-    if (fieldCost < inv.getMoney()) //&& map.getStructAt(c.x, c.y) == null
+    if (!ownedStructures.contains(c) && fieldCost < inv.getMoney() && map.getStructAt(c.x, c.y) == null && !isLake(c)) //
     {
       inv.giveMoney(fieldCost);
       map.setStructAt(c.x, c.y, newField);
@@ -429,7 +454,8 @@ public class Bot {
 
   private boolean priceIsLowerThanMarketAverage(Resources r)
   {
-    if (r.getPrice() >= priceAverage(inv))
+    System.out.println(r.getPrice() + " < " + priceAverage(inv));
+    if (r.getPrice() < priceAverage(inv)*2)
       return (true);
     return (false);
   }

@@ -62,7 +62,7 @@ public class Inventory implements Serializable {
 		product[1] = new Leather();
 		product[2] = new Wool();
 
-		money = 2000;
+		money = 5000;
 
 
 		for(int i = 0; i < 4; i++)

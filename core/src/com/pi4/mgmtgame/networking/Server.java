@@ -472,14 +472,14 @@ public class Server {
 		if (players[internalTurn % nbOfPlayers] == null)
 			passTurn();
 		// System.out.println("Player "+internalTurn+" turn after while");
-		// à modifier
-		inv = invArray[internalTurn % nbOfPlayers];
-		currentPlayer = internalTurn % nbOfPlayers;
 		if (internalTurn == nbOfPlayers) {
 			for (Bot bot : bots)
 			{
-				if (bot != null)
+				if (bot != null) {
+					inv = bot.getInventory();
 					bot.play();
+					internalTurn++;
+				}
 			}
 			turn++;
 			internalTurn = 0;
@@ -495,6 +495,8 @@ public class Server {
 				}
 			}
 		}
+		inv = invArray[internalTurn % nbOfPlayers];
+		currentPlayer = internalTurn % nbOfPlayers;
 		// System.out.println(this.inv);
 		System.out.println("Turn "+turn+"\n=======================");
 	}
@@ -680,7 +682,7 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		Server gameServer = new Server(1, 10);
+		Server gameServer = new Server(2, 3);
 		gameServer.acceptConnections();
 	}
 }

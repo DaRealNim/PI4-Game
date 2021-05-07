@@ -76,7 +76,7 @@ public class Market extends Group {
 		});
 
 		close.setTransform(true);
-		close.setScale(3);
+		// close.setScale();
 		close.setX(bg.getWidth() - 64);
 		close.setY(bg.getHeight() - 64);
 
@@ -84,7 +84,7 @@ public class Market extends Group {
   			final Plant plant = p;
 			Button i = new Button(new TextureRegionDrawable(manager.get(p.getTexture(), Texture.class)));
 			i.setTransform(true);
-			i.setScale(2);
+			i.setScale(3);
 
 			Button buyButton = new Button(marketSkins, "buyButton");
   			Button sellButton = new Button(marketSkins, "sellButton");
@@ -93,13 +93,13 @@ public class Market extends Group {
 			String priceText = "" + p.getPrice();
 			Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			final Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-			priceLabel.setText(server.getPrice(plant));
+			priceLabel.setText("$" + server.getPrice(plant));
 
     		sellButton.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.sellPlant(plant, 1);
-								priceLabel.setText(server.getPrice(plant));
+								priceLabel.setText("$" + server.getPrice(plant));
             	}
     		});
 
@@ -107,16 +107,16 @@ public class Market extends Group {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.buyPlant(plant, 1);
-					priceLabel.setText(server.getPrice(plant));
+					priceLabel.setText("$" + server.getPrice(plant));
 	            }
 	    	});
 
 			plantTable.add(itemLabel).padLeft(110);
 			plantTable.row();
-	    	plantTable.add(i).padRight(25).padTop(25).padLeft(120);
+	    	plantTable.add(i).padRight(25).padTop(35).padLeft(120);
 			plantTable.row();
 			plantTable.row();
-			plantTable.add(priceLabel).padLeft(110).padBottom(-10);
+			plantTable.add(priceLabel).padLeft(110).padBottom(-20);
 			plantTable.row();
 	    	plantTable.add(buyButton);
 	    	plantTable.add(sellButton).padRight(10);
@@ -130,13 +130,13 @@ public class Market extends Group {
 
 			Button i = new Button(new TextureRegionDrawable(manager.get(g.getTexture(), Texture.class)));
 			i.setTransform(true);
-			i.setScale(2);
+			i.setScale(3);
 
 			String itemText = g.toString(); //haha g string
 			String priceText = "" + g.getPrice();
 			Label itemLabel = new Label(itemText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			final Label priceLabel = new Label(priceText, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-			priceLabel.setText(server.getPrice(grain));
+			priceLabel.setText("$" + server.getPrice(grain));
 
 	    	Button buyButton = new Button(marketSkins, "buyButton");
 	    	Button sellButton = new Button(marketSkins, "sellButton");
@@ -145,7 +145,7 @@ public class Market extends Group {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.sellGrain(grain, 1);
-								priceLabel.setText(server.getPrice(grain));
+								priceLabel.setText("$" + server.getPrice(grain));
 	            }
 	    	});
 
@@ -153,15 +153,15 @@ public class Market extends Group {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	          	  server.buyGrain(grain, 1);
-								priceLabel.setText(server.getPrice(grain));
+								priceLabel.setText("$" + server.getPrice(grain));
 	            }
 	    	});
 
 			grainTable.add(itemLabel).padLeft(150);
 			grainTable.row();
-	    	grainTable.add(i).padRight(15).padTop(25).padLeft(150);
+	    	grainTable.add(i).padRight(15).padTop(35).padLeft(150);
 			grainTable.row();
-			grainTable.add(priceLabel).padLeft(150).padBottom(-10);
+			grainTable.add(priceLabel).padLeft(150).padBottom(-20);
 			grainTable.row();
 	    	grainTable.add(buyButton).padLeft(30);
 	    	grainTable.add(sellButton);
