@@ -30,7 +30,7 @@ public class Pasture extends Structure{
 	public Pasture (int x, int y) {
 		super(x, y);
 		this.growingState = 1;
-		setSpriteName("");
+		setSpriteName("pasture_empty");
 
 		constructionCost = 1000;
 		salvageBenefit = 330;
@@ -40,7 +40,7 @@ public class Pasture extends Structure{
 	public void addViewController(final AssetManager manager, final ServerInteraction server, final Stage popupStage) {
 		super.addViewController(manager, server, popupStage);
 		this.manager = manager;
-		Button button = new Button(manager.get("blocks/Blocksjson", Skin.class), getSpriteName());
+		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
 		button.setX(getGridX() * ManagementGame.TILE_SIZE);
 		button.setY(getGridY() * ManagementGame.TILE_SIZE);
 		button.addListener(new ClickListener() {
@@ -48,13 +48,20 @@ public class Pasture extends Structure{
 			public void clicked(InputEvent event, float x, float y) {
 				System.out.println("Clicked Pasture !");
 				if (testOwner(server.getInternalTurn())) {
-					Button buttonBreed = new Button(manager.get("popupIcons/popup.json", Skin.class), "breed_icon");
+					Button breedCow = new Button(manager.get("popupIcons/popup.json", Skin.class), "breed_cow_icon");
+					Button breedSheep = new Button(manager.get("popupIcons/popup.json", Skin.class), "breed_sheep_icon");
 					Button buttonDestroy = new Button(manager.get("popupIcons/popup.json", Skin.class), "bomb_icon");
 
-					buttonBreed.addListener(new HoverListener() {
+					breedCow.addListener(new HoverListener() {
 						@Override
 						public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-							MainGameScreen.mouseLabelText = "Breed animals in pasture";
+							MainGameScreen.mouseLabelText = "Breed cows in pasture";
+						}
+					});
+					breedSheep.addListener(new HoverListener() {
+						@Override
+						public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+							MainGameScreen.mouseLabelText = "Breed sheeps in pasture";
 						}
 					});
 					buttonDestroy.addListener(new HoverListener() {
@@ -64,47 +71,37 @@ public class Pasture extends Structure{
                         }
                     });
 
-					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Enclot", buttonBreed, buttonDestroy);
-					if (!hasAnimal()) {
-						buttonBreed.getColor().a = (float)1;
-						buttonBreed.addListener(new ClickListener() {
+					Inventory inv = server.getInventory();
+					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Pasture", breedCow, breedSheep, buttonDestroy);
+
+					if (inv.hasAnimal(0) && !hasAnimal()) {
+						breedCow.addListener(new ClickListener() {
 							@Override
 							public void clicked(InputEvent event, float x, float y) {
-								Button[] buttons = new Button[5];
-								Button breedCow = new Button(manager.get("popupIcons/popup.json", Skin.class), "breed_icon");
-								Button breedSheep = new Button(manager.get("popupIcons/popup.json", Skin.class), "breed_icon");
-								Inventory inv = server.getInventory();
-								if (inv.hasAnimal(0))
-									buttons[0] = breedCow;
-
-								if (inv.hasAnimal(1))
-									buttons[1] = breedSheep;
-
-								final Popup d = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE - ManagementGame.TILE_SIZE/4, (getGridY() + 1 ) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/4, manager, "Enclot", buttons);
-
-								breedCow.addListener(new ClickListener() {
-									@Override
-									public void clicked(InputEvent event, float x, float y) {
-										attemptToBreed(0, server);
-										d.remove();
-										p.remove();
-									}
-								});
-
-								breedSheep.addListener(new ClickListener() {
-									@Override
-									public void clicked(InputEvent event, float x, float y) {
-										attemptToBreed(1, server);
-										d.remove();
-										p.remove();
-									}
-								});
+								attemptToBreed(0, server);
+								p.remove();
 							}
 						});
+					} else {
+						breedCow.getColor().a = (float)0.3;
 					}
+
+					if (inv.hasAnimal(1) && !hasAnimal()) {
+						breedSheep.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								attemptToBreed(1, server);
+								p.remove();
+							}
+						});
+					} else {
+						breedSheep.getColor().a = (float)0.3;
+					}
+					popupStage.addActor(p);
 				}
 			}
 		});
+		setButton(button);
 	}
 
 	@Override
@@ -116,10 +113,8 @@ public class Pasture extends Structure{
 		}
 		if (residentAnimal == null) {
 			changeStyle("pasture_empty");
-		} else if (growRatio >= 0.5 && growRatio < 1) {
+		} else if ( growRatio < 1) {
 			changeStyle(residentAnimal.getPastureMiddleSpriteName());
-		} else if (!hasPopulationGrown()) {
-			changeStyle("pasture_planted");
 		} else {
 			changeStyle(residentAnimal.getPastureSpriteName());
 		}
@@ -149,9 +144,7 @@ public class Pasture extends Structure{
 		return (this.growingState >= this.residentAnimal.getGrowingMax());
 	}
 
-	public void growPopulation(ServerInteraction server) {
-		Inventory inv = server.getInventory();
-
+	public void growPopulation(Inventory inv) {
 		if (residentAnimal != null) {
 			System.out.println("Population grew form Pasture in (" + super.getGridX() + "," + super.getGridY() + ")");
 			if (inv.getPlants()[0].getVolume() >= (int)(1+1*growingState/2)) {
@@ -182,16 +175,13 @@ public class Pasture extends Structure{
 	}
 
 	private void attemptToBreed(int i, ServerInteraction server) {
-		Inventory inv = server.getInventory();
-		//boolean res = server.requestBreedAnimal();
-		System.out.println(inv.getAnimals()[i].getId());
-		System.out.println("Could breed animal of id " + i + " at " + getGridX() + ", " + getGridY() + ": "/* + res*/);
+		boolean res = server.requestBreed(getGridX(), getGridY(), i);
 		updateMap(manager, server);
 	}
 
-	public void passTurn(ServerInteraction server) {
-		this.growPopulation(server);
-
+	@Override
+	public void passTurn(Inventory inv) {
+		this.growPopulation(inv);
 	}
 
 	@Override

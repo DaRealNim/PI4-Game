@@ -39,6 +39,41 @@ arbre_haut
   orig: 32, 32
   offset: 0, 0
   index: -1
+ENCLOS
+  rotate: false
+  xy: 137, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ENCLOS mouton 1
+  rotate: false
+  xy: 171, 53
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ENCLOS mouton 2
+  rotate: false
+  xy: 205, 87
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ENCLOS vache 1
+  rotate: false
+  xy: 171, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ENCLOS vache 2
+  rotate: false
+  xy: 205, 53
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 field_potatoes_grew
   rotate: false
   xy: 103, 53

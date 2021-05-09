@@ -52,6 +52,7 @@ public class ManagementGame extends Game {
 		manager.load("select.png", Texture.class);
 		manager.load("blocks/arbre_haut.png", Texture.class);
 		manager.load("blocks/QG-2.png", Texture.class);
+		manager.load("blocks/enclos_haut.png", Texture.class);
 		manager.finishLoading();
 
 		this.setScreen(new MainMenuScreen(this, manager));

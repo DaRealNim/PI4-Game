@@ -293,7 +293,7 @@ public class Field extends Structure {
 	}
 
 	@Override
-	public void passTurn() {
+	public void passTurn(Inventory inv) {
 		this.growSeed();
 
 		if(usedItem != null && usedItem.getId() == 0)

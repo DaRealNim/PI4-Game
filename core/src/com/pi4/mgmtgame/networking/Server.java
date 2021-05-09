@@ -26,6 +26,7 @@ import com.pi4.mgmtgame.blocks.TreeField;
 import com.pi4.mgmtgame.bot.Bot;
 import java.util.HashMap;
 import java.awt.Color;
+import com.pi4.mgmtgame.blocks.Pasture;
 
 public class Server {
 	private ServerSocket serverSocket;
@@ -42,6 +43,7 @@ public class Server {
 	private int nbOfPlayers;
 	private int nbOfBots;
 	private int playerID;
+	private int remainingPlayers;
 	private HashMap<Integer, Color> idToColorMap;
 	private volatile boolean gameCanStart = false;
 
@@ -56,6 +58,7 @@ public class Server {
 
 		this.map = new Map(50, 50, null, null);
 		this.nbOfPlayers = nbOfPlayers;
+		this.remainingPlayers = nbOfPlayers;
 		this.nbOfBots = nbOfBots;
 		this.invArray = new Inventory[nbOfPlayers];
 		for (int i = 0; i < nbOfPlayers; i++) {
@@ -168,6 +171,7 @@ public class Server {
 					Structure struct = null;
 					Grain grain = null;
 					Plant plant = null;
+					int animalID;
 					Item item = null;
 					int request = -1;
 					try {
@@ -175,6 +179,11 @@ public class Server {
 					} catch (SocketException | EOFException e) {
 						System.out.println("Player "+playerID+" disconnected");
 						players[playerID] = null;
+						remainingPlayers--;
+						if (remainingPlayers == 0) {
+							System.out.println("No player remaining, closing server...");
+							System.exit(0);
+						}
 						if (internalTurn == playerID)
 							passTurn();
 						break;
@@ -332,6 +341,18 @@ public class Server {
 						dataOut.writeInt(res.getPrice());
 						dataOut.flush();
 						break;
+					case 21:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						animalID = dataIn.readInt();
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
+							dataOut.flush();
+							break;
+						}
+						dataOut.writeBoolean(requestBreed(x, y, animalID));
+						dataOut.flush();
+						break;
 					case 256:
 						dataOut.writeBoolean(gameCanStart);
 						dataOut.flush();
@@ -357,7 +378,11 @@ public class Server {
 	}
 
 	public Inventory getInventory(int id) {
-		return invArray[id];
+		if (id >= 0 && id < invArray.length) {
+			return invArray[id];
+		} else {
+			return null;
+		}
 	}
 
 	public Inventory getInventory() {
@@ -487,11 +512,11 @@ public class Server {
 				for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) {
 					currBlock = map.getEnvironmentAt(heightIndex, widthIndex);
 					if (currBlock != null)
-						currBlock.passTurn();
+						currBlock.passTurn(getInventory(currBlock.getOwnerID()));
 
 					currBlock = map.getStructAt(heightIndex, widthIndex);
 					if (currBlock != null)
-						currBlock.passTurn();
+						currBlock.passTurn(getInventory(currBlock.getOwnerID()));
 				}
 			}
 		}
@@ -612,14 +637,23 @@ public class Server {
 		return false;
 	}
 
-	public boolean canBreed(int x, int y, Animal animal) {
+	public boolean canBreed(int x, int y, int animalID) {
 		//pour benj
-		return true;
+		Structure struct = map.getStructAt(x, y);
+		if (struct instanceof Pasture) {
+			return getInventory().hasAnimal(animalID) && !((Pasture)struct).hasAnimal() && struct.testOwner(currentPlayer);
+		}
+		return false;
 	}
 
-	public boolean requestBreed(int x, int y, Animal animal) {
+	public boolean requestBreed(int x, int y, int animalID) {
 		//pour benj
-		return true;
+		if (canBreed(x, y, animalID)) {
+			Pasture pasture = (Pasture)map.getStructAt(x, y);
+			pasture.breedAnimal(getInventory().getAnimals()[animalID]);
+			return true;
+		}
+		return false;
 	}
 
 	public void buyAnimal(Animal boughtAnimal, int q) {
@@ -682,7 +716,7 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		Server gameServer = new Server(2, 3);
+		Server gameServer = new Server(1, 3);
 		gameServer.acceptConnections();
 	}
 }

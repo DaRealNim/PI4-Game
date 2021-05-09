@@ -49,8 +49,10 @@ public abstract class Environment extends Block {
             public void clicked(InputEvent event, float x, float y) {
             	System.out.println("Clicked block at ("+getGridX()+", "+getGridY()+")");
 
+                final Skin popupSkin = manager.get("popupIcons/popup.json", Skin.class);
+
                 if(getOwnerID() == -1) {
-                    Button buttonBuyTerrain = new Button(manager.get("popupIcons/popup.json", Skin.class), "dollar_icon");
+                    Button buttonBuyTerrain = new Button(popupSkin, "dollar_icon");
                     buttonBuyTerrain.addListener(new HoverListener() {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -72,21 +74,30 @@ public abstract class Environment extends Block {
                     }
                     popupStage.addActor(p);
                 } else {
-
-                    Button buttonField = new Button(manager.get("popupIcons/popup.json", Skin.class), "hoe_icon");
-                    Button buttonTree = new Button(manager.get("popupIcons/popup.json", Skin.class), "tree_icon");
-                    Button buttonSprink = new Button(manager.get("popupIcons/popup.json", Skin.class), "sprinkler_icon");
-                    final Field f = new Field(getGridX(), getGridY());
-                    final TreeField g = new TreeField(getGridX(), getGridY());
-                    final Sprinkler h = new Sprinkler(getGridX(), getGridY());
-                    f.setOwnerID(server.getCurrentPlayer());
-                    g.setOwnerID(server.getCurrentPlayer());
-                    h.setOwnerID(server.getCurrentPlayer());
+                    Button buttonField = new Button(popupSkin, "hoe_icon");
+                    Button buttonPasture = new Button(popupSkin, "pasture_icon");
+                    Button buttonTree = new Button(popupSkin, "tree_icon");
+                    Button buttonSprink = new Button(popupSkin, "sprinkler_icon");
+                    final Field field = new Field(getGridX(), getGridY());
+                    final TreeField tree = new TreeField(getGridX(), getGridY());
+                    final Sprinkler sprinkler = new Sprinkler(getGridX(), getGridY());
+                    final Pasture pasture = new Pasture(getGridX(), getGridY());
+                    int id = server.getCurrentPlayer();
+                    field.setOwnerID(id);
+                    tree.setOwnerID(id);
+                    sprinkler.setOwnerID(id);
+                    pasture.setOwnerID(id);
 
                     buttonField.addListener(new HoverListener() {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                            MainGameScreen.mouseLabelText = "Build a field\nThe field allows you to grow multiple types of seeds.\nCost: $"+f.getConstructionCost();
+                            MainGameScreen.mouseLabelText = "Build a field\nThe field allows you to grow multiple types of seeds.\nCost: $"+field.getConstructionCost();
+                        }
+                    });
+                    buttonPasture.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Build a pasture\nBreed sheep and cows to get meat, wool and leather.\nCost: $"+pasture.getConstructionCost();
                         }
                     });
                     buttonTree.addListener(new HoverListener() {
@@ -98,18 +109,17 @@ public abstract class Environment extends Block {
                     buttonSprink.addListener(new HoverListener() {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                            MainGameScreen.mouseLabelText = "Build a sprinkler\nThe sprinkler gives a speed boost to all surrounding fields.\nCost: $"+h.getConstructionCost();
+                            MainGameScreen.mouseLabelText = "Build a sprinkler\nThe sprinkler gives a speed boost to all surrounding fields.\nCost: $"+sprinkler.getConstructionCost();
                         }
                     });
 
-                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, displayName, buttonField, buttonTree,buttonSprink);
+                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, displayName, buttonField, buttonPasture, buttonTree, buttonSprink);
 
-                    if (server.canBuildStructure(getGridX(), getGridY(), g)) {
+                    if (server.canBuildStructure(getGridX(), getGridY(), tree)) {
                         buttonTree.addListener(new ClickListener(){
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                boolean res = server.requestBuildStructure(getGridX(), getGridY(), g);
-                                System.out.println("Could build TreeF at "+getGridX()+", "+getGridY()+": "+res+"id :");
+                                boolean res = server.requestBuildStructure(getGridX(), getGridY(), tree);
                                 updateMap(manager, server);
                                 p.remove();
                             }
@@ -118,12 +128,11 @@ public abstract class Environment extends Block {
                         buttonTree.getColor().a = (float)0.3;
                     }
 
-                    if (server.canBuildStructure(getGridX(), getGridY(), h)) {
+                    if (server.canBuildStructure(getGridX(), getGridY(), sprinkler)) {
                     	buttonSprink.addListener(new ClickListener(){
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                boolean res = server.requestBuildStructure(getGridX(), getGridY(), h);
-                                System.out.println("Could build Sprink at "+getGridX()+", "+getGridY()+": "+res+"id :");
+                                boolean res = server.requestBuildStructure(getGridX(), getGridY(), sprinkler);
                                 updateMap(manager, server);
                                 p.remove();
                             }
@@ -133,12 +142,11 @@ public abstract class Environment extends Block {
                         buttonSprink.getColor().a = (float)0.3;
                     }
 
-                    if (server.canBuildStructure(getGridX(), getGridY(), f)) {
+                    if (server.canBuildStructure(getGridX(), getGridY(), field)) {
                         buttonField.addListener(new ClickListener(){
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                boolean res = server.requestBuildStructure(getGridX(), getGridY(), f);
-                                System.out.println("Could build structure at "+getGridX()+", "+getGridY()+": "+res+"id :");
+                                boolean res = server.requestBuildStructure(getGridX(), getGridY(), field);
                                 updateMap(manager, server);
                                 p.remove();
                             }
@@ -147,17 +155,25 @@ public abstract class Environment extends Block {
                         buttonField.getColor().a = (float)0.3;
                     }
 
+                    if (server.canBuildStructure(getGridX(), getGridY(), pasture)) {
+                        buttonPasture.addListener(new ClickListener(){
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                boolean res = server.requestBuildStructure(getGridX(), getGridY(), pasture);
+                                updateMap(manager, server);
+                                p.remove();
+                            }
+                        });
+                    } else {
+                        buttonPasture.getColor().a = (float)0.3;
+                    }
+
                     popupStage.addActor(p);
                 }
             }
         });
         setButton(button);
     }
-
-
-  @Override
-  public void passTurn() {
-	}
 
   public int getPrice() {
     return (terrainPrice);

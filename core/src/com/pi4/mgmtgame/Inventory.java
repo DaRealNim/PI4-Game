@@ -46,6 +46,9 @@ public class Inventory implements Serializable {
 		seeds[2] = new CarrotSeeds();
 		seeds[3] = new TreeSeeds();
 
+		for(int i = 0; i < 4; i++)
+			seeds[i].addVolume(2);
+
 		items = new Item[2];
 		items[0] = new Crickets();
 		items[1] = new Repulsive();
@@ -57,16 +60,15 @@ public class Inventory implements Serializable {
 		animal[0] = new Cow();
 		animal[1] = new Sheep();
 
+		animal[0].addVolume(2);
+		animal[1].addVolume(2);
+
 		product = new Product[3];
 		product[0] = new Meat();
 		product[1] = new Leather();
 		product[2] = new Wool();
 
 		money = 5000;
-
-
-		for(int i = 0; i < 4; i++)
-			seeds[i].addVolume(2);
 	}
 
 	public Inventory (Plant[] plantArray, Grain[] grainArray, Animal[] animalArray, Product[] productArray, int money) {

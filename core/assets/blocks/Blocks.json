@@ -129,5 +129,20 @@ ButtonStyle: {
 	QG-1: {
 		up: QG-1
 	}
+	pasture_empty: {
+		up: ENCLOS
+	}
+	pasture_cow_growing: {
+		up: ENCLOS vache 1
+	}
+	pasture_cow_full: {
+		up: ENCLOS vache 2
+	}
+	pasture_sheep_growing: {
+		up: ENCLOS mouton 1
+	}
+	pasture_sheep_full: {
+		up: ENCLOS mouton 2
+	}
 }
 }

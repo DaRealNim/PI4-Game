@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.pi4.mgmtgame.ServerInteraction;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pi4.mgmtgame.Map;
-
+import com.pi4.mgmtgame.Inventory;
 
 public class Block extends Group implements Serializable {
     private transient Button displayedButton;
@@ -79,7 +79,7 @@ public class Block extends Group implements Serializable {
 		this.y = y;
 	}
 
-	public void passTurn() {
+	public void passTurn(Inventory inv) {
 	}
 
 	public ArrayList<Structure> getAdjacentStruct() {

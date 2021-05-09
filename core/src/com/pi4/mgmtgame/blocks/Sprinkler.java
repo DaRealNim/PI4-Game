@@ -80,8 +80,4 @@ public class Sprinkler extends Structure{
 	public String toString() {
 		return "Sprinkler";
 	}
-
-	@Override
-    public void passTurn() {
-	}
 }

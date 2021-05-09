@@ -42,10 +42,6 @@ public class Lake extends Environment {
     }
 
     @Override
-    public void passTurn() {
-	}
-
-    @Override
 	public String toString() {
 		return "Lake";
 	}

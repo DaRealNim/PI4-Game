@@ -139,7 +139,7 @@ public class TreeField extends Field{
 	}
 
 	@Override
-	public void passTurn() {
+	public void passTurn(Inventory inv) {
 		this.growSeed();
 	}
 

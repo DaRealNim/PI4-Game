@@ -1,7 +1,7 @@
 {
 ButtonStyle: {
 	popup: {
-		up: popup
+		up: pannEAU
 	}
 	hoe_icon: {
 		up: hoe_icon
@@ -44,6 +44,15 @@ ButtonStyle: {
 	}
 	repellent_icon: {
 		up: repellent_icon
+	}
+	pasture_icon: {
+		up: build_pasture_icon
+	}
+	breed_sheep_icon: {
+		up: breed_sheep_icon
+	}
+	breed_cow_icon: {
+		up: breed_cow_icon
 	}
 }
 }

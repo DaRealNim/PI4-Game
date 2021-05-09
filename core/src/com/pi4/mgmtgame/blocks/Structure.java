@@ -19,8 +19,4 @@ public abstract class Structure extends Block implements Serializable {
 
 	abstract public boolean canBuild(Inventory inv);
 	abstract public void doBuild(Inventory inv);
-
-	@Override
-	public void passTurn() {
-	}
 }

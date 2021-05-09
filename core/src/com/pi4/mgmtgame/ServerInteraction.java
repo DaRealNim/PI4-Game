@@ -415,29 +415,44 @@ public class ServerInteraction {
 			}
 			return (-1);
 	}
-	
+
 	public synchronized boolean canBreed(int x, int y, Animal animal) {
 		return true;
 	}
-	
-	public synchronized boolean requestBreed(int x, int y, Animal animal) {
-		return true;
+
+	public synchronized boolean requestBreed(int x, int y, int animal) {
+		try {
+			clientSideConnection.dataOut.writeInt(21);
+			clientSideConnection.dataOut.flush();
+
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.dataOut.writeInt(animal);
+			clientSideConnection.dataOut.flush();
+
+			return (clientSideConnection.dataIn.readBoolean());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
-	
+
 	public synchronized void buyAnimal(Animal boughtAnimal, int q) {
-		
+
 	}
-	
+
 	public synchronized void sellAnimal(Animal soldAnimal, int q) {
-		
+
 	}
-	
+
 	public synchronized void buyProduct(Product boughtProduct, int q) {
-		
+
 	}
-	
+
 	public synchronized void sellProduct(Product soldProduct, int q) {
-		
+
 	}
 
 	public synchronized boolean canGameStart() {

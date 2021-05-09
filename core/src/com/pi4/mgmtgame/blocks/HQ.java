@@ -72,10 +72,6 @@ public class HQ extends Structure{
 	}
 
 	@Override
-    public void passTurn() {
-	}
-
-	@Override
 	public String toString() {
 		return "House";
 	}

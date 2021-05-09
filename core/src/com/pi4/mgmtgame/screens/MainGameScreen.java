@@ -49,6 +49,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.pi4.mgmtgame.blocks.HQ;
 import java.util.HashMap;
+import com.pi4.mgmtgame.blocks.Pasture;
 
 public class MainGameScreen implements Screen	{
 
@@ -327,6 +328,12 @@ public class MainGameScreen implements Screen	{
 						hqTop.setX(x*ManagementGame.TILE_SIZE);
 						hqTop.setY((y+1)*ManagementGame.TILE_SIZE);
 						decorationStage.addActor(hqTop);
+					}
+					if (struct instanceof Pasture) {
+						Image enclosTop = new Image(manager.get("blocks/enclos_haut.png", Texture.class));
+						enclosTop.setX(x*ManagementGame.TILE_SIZE);
+						enclosTop.setY((y+1)*ManagementGame.TILE_SIZE);
+						decorationStage.addActor(enclosTop);
 					}
 				}
 				if (env != null && !env.testOwner(-1)) {

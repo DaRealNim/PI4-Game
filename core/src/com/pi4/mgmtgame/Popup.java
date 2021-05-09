@@ -22,19 +22,31 @@ public class Popup extends Group {
         Skin skin = manager.get("popupIcons/popup.json", Skin.class);
         Button backgroundImage = new Button(skin, "popup");
         BitmapFont font = manager.get("PixelOperator40");
-        Label label = new Label(popupText, new Label.LabelStyle(font, Color.BLACK));
+        Label label = new Label(popupText, new Label.LabelStyle(font, Color.WHITE));
+        label.setY(155);
+        label.setX(45);
         Table table = new Table();
-        label.setY(130);
-        label.setX(15);
-        table.setY(60);
+        table.setY(95);
+        table.setX(40);
+
+        backgroundImage.setTransform(true);
+        backgroundImage.setScale(0.77f);
+
         setX(x);
         setY(y);
         setScale(0.40f);
+        int c = 0;
         for (Button button : buttons) {
-            table.add(button).padLeft(15).padBottom(19).fillY();
+            c++;
+            table.add(button).padLeft(10).padBottom(10).fillY();
+            if (c == 4) {
+                table.row();
+                table.setY(table.getY()-60);
+                c = 0;
+            }
         }
         Button closeButton = new Button(skin, "closeButton");
-        table.add(closeButton).padLeft(15).padBottom(19);
+        table.add(closeButton).padLeft(10).padBottom(10);
         closeButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
