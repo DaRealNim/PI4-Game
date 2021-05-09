@@ -41,6 +41,7 @@ public class ManagementGame extends Game {
 		manager.load("hudButtons/hudBackground.png", Texture.class);
 		manager.load("popupIcons/popup.json", Skin.class, new SkinLoader.SkinParameter("popupIcons/popup.atlas"));
 		manager.load("marketRes/bgMarket.png", Texture.class);
+		manager.load("marketRes/bgMarket2.png", Texture.class);
 		manager.load("marketRes/bill.png", Texture.class);
 		manager.load("marketRes/carrot.png", Texture.class);
 		manager.load("marketRes/potato.png", Texture.class);

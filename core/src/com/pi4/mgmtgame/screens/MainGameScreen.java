@@ -6,18 +6,35 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pi4.mgmtgame.HUD;
@@ -27,29 +44,13 @@ import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Market;
 import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.ServerInteraction;
-import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.blocks.Environment;
-import com.pi4.mgmtgame.blocks.TreeField;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.pi4.mgmtgame.blocks.HQ;
-import java.util.HashMap;
 import com.pi4.mgmtgame.blocks.Pasture;
+import com.pi4.mgmtgame.blocks.Structure;
+import com.pi4.mgmtgame.blocks.TreeField;
+
+import java.util.HashMap;
 
 public class MainGameScreen implements Screen	{
 
@@ -101,7 +102,14 @@ public class MainGameScreen implements Screen	{
 		camera.zoom = 2;
 		this.cameraSpeed = 4;
 
-		this.multiplexer = new InputMultiplexer() {
+		this.multiplexer = new InputMultiplexer();
+
+		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
+		viewport.apply();
+
+		camera.update();
+
+		stage = new Stage(viewport, batch) {
 			@Override
 			public boolean scrolled(float amountX, float amountY) {
 				if (amountY > 0) {
@@ -114,14 +122,6 @@ public class MainGameScreen implements Screen	{
 				return true;
 			}
 		};
-
-		viewport = new FitViewport(ManagementGame.WIDTH / 4, ManagementGame.HEIGHT / 4, camera);
-		viewport.apply();
-
-		// camera.position.set(server.getHqX()*ManagementGame.TILE_SIZE, server.getHqY()*ManagementGame.TILE_SIZE, 0);
-		camera.update();
-
-		stage = new Stage(viewport, batch);
 		selectionSquareStage = new Stage(viewport, batch);
 		decorationStage = new Stage(viewport, batch);
 		staticStage = new Stage(new FitViewport(ManagementGame.WIDTH / 2, ManagementGame.HEIGHT / 2, new OrthographicCamera()), batch);
@@ -198,7 +198,6 @@ public class MainGameScreen implements Screen	{
 		Thread t = new Thread(new MapHudUpdate());
 		t.start();
 
-		System.out.println(server.getHqX()*ManagementGame.TILE_SIZE + ", " + server.getHqY()*ManagementGame.TILE_SIZE);
 		camera.position.set(server.getHqX()*ManagementGame.TILE_SIZE, server.getHqY()*ManagementGame.TILE_SIZE, 0);
 	}
 
@@ -439,7 +438,6 @@ public class MainGameScreen implements Screen	{
 					Thread.sleep(500);
 					if(server.canGameStart()) {
 						gameCanStart = true;
-						// darkScreenBackground.setVisible(false);
 						bottomLeftLabelText = "";
 						break;
 					}
