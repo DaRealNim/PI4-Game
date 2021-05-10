@@ -73,15 +73,15 @@ public class Server {
 
 		this.bots = new Bot[nbOfBots];
 		this.botID = nbOfPlayers;
-		for(int i=0; i<nbOfBots; i++) {
+		for (int i = 0; i < nbOfBots; i++) {
 			this.bots[i] = createBot();
 		}
 
-		for(int i=0; i<nbOfPlayers+nbOfBots; i++) {
+		for (int i = 0; i < nbOfPlayers + nbOfBots; i++) {
 			// float r = Math.round(Math.random() * 100.0f) / 100.0f;
 			// float g = Math.round(Math.random() * 100.0f) / 100.0f;
 			// float b = Math.round(Math.random() * 100.0f) / 100.0f;
-			Color col = Color.getHSBColor(Map.rand_range(0, 255)/255.0f, Map.rand_range(50, 255)/255.0f, 1.0f);
+			Color col = Color.getHSBColor(Map.rand_range(0, 255) / 255.0f, Map.rand_range(50, 255) / 255.0f, 1.0f);
 			idToColorMap.put(i, col);
 		}
 	}
@@ -96,12 +96,11 @@ public class Server {
 
 				ServerSide serverSideConnection = new ServerSide(playerSocket, numPlayers);
 				this.players[numPlayers] = serverSideConnection;
-				
-				int [] hqcoords = placeHQ();
-				HQ hq = new HQ(hqcoords[0],hqcoords[1]);
-				hq.setOwnerID(numPlayers);
-				map.setStructAt(hqcoords[0],hqcoords[1],hq);
 
+				int[] hqcoords = placeHQ();
+				HQ hq = new HQ(hqcoords[0], hqcoords[1]);
+				hq.setOwnerID(numPlayers);
+				map.setStructAt(hqcoords[0], hqcoords[1], hq);
 
 				Thread t = new Thread(serverSideConnection);
 				t.start();
@@ -147,14 +146,14 @@ public class Server {
 				dataOut.flush();
 
 				int[] hqcoords = placeHQ();
-				HQ hq = new HQ(hqcoords[0],hqcoords[1]);
+				HQ hq = new HQ(hqcoords[0], hqcoords[1]);
 				hq.setOwnerID(playerID);
 				map.setStructAt(hqcoords[0], hqcoords[1], hq);
 
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
-						Environment env = map.getEnvironmentAt(hqcoords[0]+i, hqcoords[1]+j);
-						Structure struct = map.getStructAt(hqcoords[0]+i, hqcoords[1]+j);
+						Environment env = map.getEnvironmentAt(hqcoords[0] + i, hqcoords[1] + j);
+						Structure struct = map.getStructAt(hqcoords[0] + i, hqcoords[1] + j);
 						if (env != null)
 							env.setOwnerID(playerID);
 						if (struct != null)
@@ -183,7 +182,7 @@ public class Server {
 					try {
 						request = dataIn.readInt();
 					} catch (SocketException | EOFException e) {
-						System.out.println("Player "+playerID+" disconnected");
+						System.out.println("Player " + playerID + " disconnected");
 						players[playerID] = null;
 						remainingPlayers--;
 						if (remainingPlayers == 0) {
@@ -409,19 +408,19 @@ public class Server {
 				&& inv.getMoney() >= struct.getConstructionCost() && envBlock != null
 				&& envBlock.testOwner(internalTurn));
 	}
-	
+
 	public boolean canFish(int x, int y) {
-		inv.testRod();
-		return map.getEnvironmentAt(x,y).canFish()&&inv.hasItem(2);
+		testRod();
+		return map.getEnvironmentAt(x, y).canFish() && inv.hasItem(2);
 	}
-	
+
 	public void TryToFish(int x, int y) {
-		if(canFish(x,y)) {
+		if (canFish(x, y)) {
 			Random random = new Random();
-			int nb = random.nextInt(6)-3;
-			if(nb<0)
-				nb=0;
-			inv.useRod(nb);
+			int nb = random.nextInt(6) - 3;
+		   	if (nb < 0)
+				nb = 0;
+			useRod(nb);
 			inv.addProduct(3, nb);
 		}
 	}
@@ -461,7 +460,7 @@ public class Server {
 		// System.out.println("Item id: " + item.getId());
 		if (structBlock instanceof Field && inv.hasItem(item)) {
 			if ((!((Field) structBlock).hasItem() && item.getId() == 0)
-			   || ((Field) structBlock).hasItem() && item.getId() == 1) {
+					|| ((Field) structBlock).hasItem() && item.getId() == 1) {
 				((Field) structBlock).UseItem(item);
 				inv.removeItem(item.getId(), 1);
 				return (true);
@@ -520,8 +519,7 @@ public class Server {
 			passTurn();
 		// System.out.println("Player "+internalTurn+" turn after while");
 		if (internalTurn == nbOfPlayers) {
-			for (Bot bot : bots)
-			{
+			for (Bot bot : bots) {
 				if (bot != null) {
 					inv = bot.getInventory();
 					bot.play();
@@ -545,7 +543,7 @@ public class Server {
 		inv = invArray[internalTurn % nbOfPlayers];
 		currentPlayer = internalTurn % nbOfPlayers;
 		// System.out.println(this.inv);
-		System.out.println("Turn "+turn+"\n=======================");
+		System.out.println("Turn " + turn + "\n=======================");
 	}
 
 	public boolean userHasMoneyToBuy(int q, Resources r) {
@@ -568,7 +566,8 @@ public class Server {
 			userInv.giveMoney(grainPrice * q);
 			userInv.addGrain(boughtGrain.getId(), q);
 			boughtGrain.addPrice(1);
-			// System.out.println(boughtGrain.toString() + " price: " + boughtGrain.getPrice());
+			// System.out.println(boughtGrain.toString() + " price: " +
+			// boughtGrain.getPrice());
 		}
 	}
 
@@ -593,7 +592,8 @@ public class Server {
 			userInv.giveMoney(plantPrice * q);
 			userInv.addPlant(boughtPlant.getId(), q);
 			boughtPlant.addPrice(1);
-			// System.out.println(boughtPlant.toString() + " price: " + boughtPlant.getPrice());
+			// System.out.println(boughtPlant.toString() + " price: " +
+			// boughtPlant.getPrice());
 		}
 	}
 
@@ -617,10 +617,10 @@ public class Server {
 		int terrainPrice = terrainEnv.getPrice();
 		int availableMoney = userInv.getMoney();
 
-		Environment envLeft = map.getEnvironmentAt(x-1, y);
-		Environment envRight = map.getEnvironmentAt(x+1, y);
-		Environment envUp = map.getEnvironmentAt(x, y+1);
-		Environment envDown = map.getEnvironmentAt(x, y-1);
+		Environment envLeft = map.getEnvironmentAt(x - 1, y);
+		Environment envRight = map.getEnvironmentAt(x + 1, y);
+		Environment envUp = map.getEnvironmentAt(x, y + 1);
+		Environment envDown = map.getEnvironmentAt(x, y - 1);
 		boolean ownLeft = false;
 		boolean ownRight = false;
 		boolean ownUp = false;
@@ -635,8 +635,8 @@ public class Server {
 		if (envDown != null)
 			ownDown = envDown.testOwner(currentPlayer);
 
-
-		if (terrainEnv != null && terrainEnv.testOwner(-1) && availableMoney >= terrainPrice && (ownUp || ownDown || ownLeft || ownRight))
+		if (terrainEnv != null && terrainEnv.testOwner(-1) && availableMoney >= terrainPrice
+				&& (ownUp || ownDown || ownLeft || ownRight))
 			return true;
 		return false;
 	}
@@ -658,7 +658,7 @@ public class Server {
 
 		return false;
 	}
-	
+
 	public int[] placeHQ() {
 		int x;
 		int y;
@@ -669,34 +669,35 @@ public class Server {
 			boolean ok = true;
 			x = random.nextInt(width);
 			y = random.nextInt(height);
-			if(!(map.getEnvironmentAt(x,y) instanceof Plain))
-				ok = false; 
+			if (!(map.getEnvironmentAt(x, y) instanceof Plain))
+				ok = false;
 			for (int i = -5; i < 5; i++) {
 				for (int j = -5; j < 5; j++) {
-					if(map.getStructAt(x+i,y+j) instanceof HQ)
+					if (map.getStructAt(x + i, y + j) instanceof HQ)
 						ok = false;
 				}
 			}
 			if (ok)
 				break;
 		}
-		int[] v = {x,y};
+		int[] v = { x, y };
 		return v;
 	}
 
 	public boolean canBreed(int x, int y, int animalID) {
-		//pour benj
+		// pour benj
 		Structure struct = map.getStructAt(x, y);
 		if (struct instanceof Pasture) {
-			return getInventory().hasAnimal(animalID) && !((Pasture)struct).hasAnimal() && struct.testOwner(currentPlayer);
+			return getInventory().hasAnimal(animalID) && !((Pasture) struct).hasAnimal()
+					&& struct.testOwner(currentPlayer);
 		}
 		return false;
 	}
 
 	public boolean requestBreed(int x, int y, int animalID) {
-		//pour benj
+		// pour benj
 		if (canBreed(x, y, animalID)) {
-			Pasture pasture = (Pasture)map.getStructAt(x, y);
+			Pasture pasture = (Pasture) map.getStructAt(x, y);
 			pasture.breedAnimal(getInventory().getAnimals()[animalID]);
 			return true;
 		}
@@ -719,14 +720,13 @@ public class Server {
 
 	}
 
-	public Bot createBot()
-	{
+	public Bot createBot() {
 		int[] hq = placeHQ();
 		Bot newBot = new Bot(this.map, new Inventory(botID), botID, this, hq[0], hq[1]);
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				Environment env = map.getEnvironmentAt(hq[0]+i, hq[1]+j);
-				Structure struct = map.getStructAt(hq[0]+i, hq[1]+j);
+				Environment env = map.getEnvironmentAt(hq[0] + i, hq[1] + j);
+				Structure struct = map.getStructAt(hq[0] + i, hq[1] + j);
 				if (env != null)
 					env.setOwnerID(botID);
 				if (struct != null)
@@ -736,6 +736,26 @@ public class Server {
 		++botID;
 
 		return (newBot);
+	}
+
+	public boolean testRod() {
+		if (inv.hasItem(2))
+			if (inv.rodDurability > 0) {
+				return true;
+			}
+		return false;
+
+	}
+
+	public void useRod(int nb) {
+		inv.rodDurability -= nb;
+	}
+
+	public void fixRod() {
+		if (inv.hasPlant(3)) {
+			inv.removePlant(3, 5);
+			inv.rodDurability = 15;
+		}
 	}
 
 	public static void main(String[] args) {

@@ -12,6 +12,7 @@ import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.ServerInteraction;
 
 public class HQ extends Structure{
+private int researchStatus;
 
 	public HQ(int x, int y) {
 	        super(x, y);
@@ -30,26 +31,43 @@ public class HQ extends Structure{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (testOwner(server.getInternalTurn())) {
-					Button buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+					Button buttonResearch = new Button();
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "House", buttonResearch);
-					buttonResearch.addListener(new ClickListener() {
-						@Override
-						public void clicked(InputEvent event, float x, float y) {
-							Research();
-							updateMap(manager, server);
-							p.remove();
-						}
-					});
-
+					buttonResearch = getResearchButton(p,server);
 					popupStage.addActor(p);
+					updateMap(manager, server);
 				}
 			}
 		});
 		setButton(button);
     }
+	private Button getResearchButton(final Popup p,final ServerInteraction server) {
+		Button buttonResearch = new Button();
+		switch(this.researchStatus) {
+		  case 0:
+			  buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+			  buttonResearch.addListener(new ClickListener(){
+                  @Override
+                  public void clicked(InputEvent event, float x, float y) {
+                	  research(server);
+                      p.remove();
+                  }
+              });
+		    break;
+		}
+		return buttonResearch;
 
-	private void Research() {
-		//TBD
+	}
+	private void research(ServerInteraction server) {
+		switch(this.researchStatus) {
+		  case 0:
+			  server.getInventory().addItem(2,1);
+			  researchStatus++;
+		  case 1:
+			  if((!server.testRod())&&server.getInventory().hasPlant(3))
+					  server.fixRod();	  
+		break;
+		}
 	}
 
 	@Override

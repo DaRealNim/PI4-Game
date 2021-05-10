@@ -34,7 +34,7 @@ public class Inventory implements Serializable {
 	private Animal[] animal;
 	private Product[] product;
 	private int invID;
-	private int rodDurability=10;
+	public int rodDurability=10;
 	public Inventory (int x) {
 		invID = x;
 		plants = new Plant[4];
@@ -209,15 +209,6 @@ public class Inventory implements Serializable {
 		return ret;
 	}
 
-	public void testRod() {
-		if(hasItem(2))
-			if(this.rodDurability<=0) {
-				removeItem(2, 1);
-				rodDurability=10;
-			}
-	}
 
-	public void useRod(int nb) {
-		this.rodDurability-=nb;
-	}
+	
 }

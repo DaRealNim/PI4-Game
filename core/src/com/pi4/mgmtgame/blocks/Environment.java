@@ -126,6 +126,7 @@ public abstract class Environment extends Block {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
                                 server.tryToFish(getGridX(), getGridY());
+                                server.useRod();
                                 updateMap(manager, server);
                                 p.remove();
                             }

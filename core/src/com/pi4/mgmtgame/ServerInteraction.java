@@ -473,6 +473,41 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 	}
+	
+	public void fixRod() {
+		try {
+			clientSideConnection.dataOut.writeInt(24);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean testRod() {
+		boolean requestRodOk = false;
+		try {
+			clientSideConnection.dataOut.writeInt(25);
+			clientSideConnection.dataOut.flush();
+
+
+			requestRodOk  = clientSideConnection.dataIn.readBoolean();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// System.out.println("end requestBuildStructure()");
+		return (requestRodOk);
+	}
+	
+	public void useRod() {
+		try {
+			clientSideConnection.dataOut.writeInt(24);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
 		
 
 	public synchronized void buyAnimal(Animal boughtAnimal, int q) {
@@ -553,6 +588,15 @@ public class ServerInteraction {
 	public void connectToServer(String ip, int port) {
 		clientSideConnection = new ClientSide(ip, port);
 	}
+
+	
+
+	
+
+	
+
+
+	
 
 
 }
