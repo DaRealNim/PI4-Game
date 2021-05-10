@@ -23,6 +23,8 @@ import com.pi4.mgmtgame.resources.Wood;
 import com.pi4.mgmtgame.resources.Wool;
 import com.pi4.mgmtgame.resources.Repulsive;
 import com.pi4.mgmtgame.resources.Crickets;
+import com.pi4.mgmtgame.resources.Fish;
+import com.pi4.mgmtgame.resources.FishRod;
 
 public class Inventory implements Serializable {
 	private int money;
@@ -32,6 +34,7 @@ public class Inventory implements Serializable {
 	private Animal[] animal;
 	private Product[] product;
 	private int invID;
+	private int rodDurability=10;
 	public Inventory (int x) {
 		invID = x;
 		plants = new Plant[4];
@@ -49,9 +52,10 @@ public class Inventory implements Serializable {
 		for(int i = 0; i < 4; i++)
 			seeds[i].addVolume(2);
 
-		items = new Item[2];
+		items = new Item[3];
 		items[0] = new Crickets();
 		items[1] = new Repulsive();
+		items[2] = new FishRod();
 
 		items[0].addVolume(1);
 		items[1].addVolume(1);
@@ -63,10 +67,11 @@ public class Inventory implements Serializable {
 		animal[0].addVolume(2);
 		animal[1].addVolume(2);
 
-		product = new Product[3];
+		product = new Product[4];
 		product[0] = new Meat();
 		product[1] = new Leather();
 		product[2] = new Wool();
+		product[3] = new Fish();
 
 		money = 5000;
 	}
@@ -202,5 +207,17 @@ public class Inventory implements Serializable {
 			ret += product[i] + ": " + product[i].getVolume() + "\n";
 		}
 		return ret;
+	}
+
+	public void testRod() {
+		if(hasItem(2))
+			if(this.rodDurability<=0) {
+				removeItem(2, 1);
+				rodDurability=10;
+			}
+	}
+
+	public void useRod(int nb) {
+		this.rodDurability-=nb;
 	}
 }

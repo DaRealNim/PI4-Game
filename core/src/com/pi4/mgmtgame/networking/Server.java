@@ -409,6 +409,22 @@ public class Server {
 				&& inv.getMoney() >= struct.getConstructionCost() && envBlock != null
 				&& envBlock.testOwner(internalTurn));
 	}
+	
+	public boolean canFish(int x, int y) {
+		inv.testRod();
+		return map.getEnvironmentAt(x,y).canFish()&&inv.hasItem(2);
+	}
+	
+	public void TryToFish(int x, int y) {
+		if(canFish(x,y)) {
+			Random random = new Random();
+			int nb = random.nextInt(6)-3;
+			if(nb<0)
+				nb=0;
+			inv.useRod(nb);
+			inv.addProduct(3, nb);
+		}
+	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
 		if (canBuildStructure(x, y, struct)) {
@@ -701,30 +717,6 @@ public class Server {
 
 	public void sellProduct(Product soldProduct, int q) {
 
-	}
-
-	public int[] placeHQ() {
-		int x;
-		int y;
-		int height = map.getMapHeight();
-		int width = map.getMapWidth();
-		while (true) {
-			boolean ok = true;
-			x = Map.rand_range(1, height-2);
-			y = Map.rand_range(1, height-2);
-			if(!(map.getEnvironmentAt(x,y) instanceof Plain) || (map.getStructAt(x,y) instanceof TreeField))
-				ok = false;
-			for (int i = -5; i < 5; i++) {
-				for (int j = -5; j < 5; j++) {
-					if(map.getStructAt(x+i,y+j) instanceof HQ)
-						ok = false;
-				}
-			}
-			if (ok)
-				break;
-		}
-		int[] v = {x,y};
-		return v;
 	}
 
 	public Bot createBot()

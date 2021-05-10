@@ -40,6 +40,10 @@ public class Lake extends Environment {
     public boolean canBuild(Structure struct) {
         return false;
     }
+    
+    public boolean canFish() {
+    	return true;
+    }
 
     @Override
 	public String toString() {

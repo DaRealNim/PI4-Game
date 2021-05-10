@@ -45,4 +45,9 @@ public class Plain extends Environment {
 	public String toString() {
 		return "Plain";
 	}
+
+	@Override
+	public boolean canFish() {
+			return false;
+	}
 }

@@ -78,6 +78,7 @@ public abstract class Environment extends Block {
                     Button buttonPasture = new Button(popupSkin, "pasture_icon");
                     Button buttonTree = new Button(popupSkin, "tree_icon");
                     Button buttonSprink = new Button(popupSkin, "sprinkler_icon");
+                    Button buttonFish = new Button(popupSkin, "fishing_icon");
                     final Field field = new Field(getGridX(), getGridY());
                     final TreeField tree = new TreeField(getGridX(), getGridY());
                     final Sprinkler sprinkler = new Sprinkler(getGridX(), getGridY());
@@ -112,9 +113,24 @@ public abstract class Environment extends Block {
                             MainGameScreen.mouseLabelText = "Build a sprinkler\nThe sprinkler gives a speed boost to all surrounding fields.\nCost: $"+sprinkler.getConstructionCost();
                         }
                     });
-
-                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, displayName, buttonField, buttonPasture, buttonTree, buttonSprink);
-
+                    buttonFish.addListener(new HoverListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            MainGameScreen.mouseLabelText = "Attempt to fish";
+                        }
+                    });
+                    final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, displayName, buttonField, buttonPasture, buttonTree, buttonSprink,buttonFish);
+                  
+                    if (server.canFish(getGridX(), getGridY())) {
+                        buttonFish.addListener(new ClickListener(){
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                server.tryToFish(getGridX(), getGridY());
+                                updateMap(manager, server);
+                                p.remove();
+                            }
+                        });
+                    } 
                     if (server.canBuildStructure(getGridX(), getGridY(), tree)) {
                         buttonTree.addListener(new ClickListener(){
                             @Override
@@ -183,4 +199,6 @@ public abstract class Environment extends Block {
   public String toString() {
       return displayName;
   }
+  
+  public abstract boolean canFish();
 }

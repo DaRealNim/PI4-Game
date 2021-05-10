@@ -438,6 +438,42 @@ public class ServerInteraction {
 		}
 		return false;
 	}
+	
+	public boolean canFish(int x, int y) {
+		boolean requestFishOk = false;
+		try {
+			clientSideConnection.dataOut.writeInt(22);
+			clientSideConnection.dataOut.flush();
+
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
+
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+
+			requestFishOk  = clientSideConnection.dataIn.readBoolean();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// System.out.println("end requestBuildStructure()");
+		return (requestFishOk);
+	}
+	
+	
+
+	public void tryToFish(int x, int y) {
+		try {
+			clientSideConnection.dataOut.writeInt(23);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeInt(x);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(y);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+		
 
 	public synchronized void buyAnimal(Animal boughtAnimal, int q) {
 
@@ -517,4 +553,6 @@ public class ServerInteraction {
 	public void connectToServer(String ip, int port) {
 		clientSideConnection = new ClientSide(ip, port);
 	}
+
+
 }

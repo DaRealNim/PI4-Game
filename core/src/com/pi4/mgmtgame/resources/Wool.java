@@ -18,7 +18,7 @@ public class Wool extends Product{
 	}
 
 	public int getId() {
-		return 1;
+		return 2;
 	}
 
 	public String getTexture() {
