@@ -17,7 +17,7 @@ private int researchStatus=1;
 	public HQ(int x, int y) {
 	        super(x, y);
 	        setSpriteName("QG-1");
-	    }
+	    } 
 
 
 	@Override

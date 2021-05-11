@@ -453,7 +453,7 @@ public class ServerInteraction {
 
 			requestFishOk  = clientSideConnection.dataIn.readBoolean();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 		// System.out.println("end requestBuildStructure()");
 		return (requestFishOk);

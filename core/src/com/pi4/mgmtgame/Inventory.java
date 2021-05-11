@@ -42,7 +42,7 @@ public class Inventory implements Serializable {
 		plants[1] = new Potato();
 		plants[2] = new Carrot();
 		plants[3] = new Wood();
-
+ 
 		seeds = new Grain[4];
 		seeds[0] = new WheatSeeds();
 		seeds[1] = new PotatoSeeds();

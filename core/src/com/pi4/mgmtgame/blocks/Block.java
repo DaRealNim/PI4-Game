@@ -47,7 +47,7 @@ public class Block extends Group implements Serializable {
         addActor(this.displayedButton);
     }
 
-    public void changeStyle(String styleName) {
+    public void changeStyle(String styleName)  {
         this.spriteName = styleName;
         if (this.displayedButton != null) {
             getButton().setStyle(getButton().getSkin().get(styleName, Button.ButtonStyle.class));

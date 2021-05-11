@@ -351,7 +351,7 @@ public class Server {
 							break;
 						}
 						dataOut.writeBoolean(requestBreed(x, y, animalID));
-						dataOut.flush();
+						dataOut.flush(); 
 						break;
 					case 22:
 						x = dataIn.readInt();

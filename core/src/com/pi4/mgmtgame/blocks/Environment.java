@@ -111,7 +111,7 @@ public abstract class Environment extends Block {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                             MainGameScreen.mouseLabelText = "Build a sprinkler\nThe sprinkler gives a speed boost to all surrounding fields.\nCost: $"+sprinkler.getConstructionCost();
-                        }
+                        } 
                     });
                     buttonFish.addListener(new HoverListener() {
                         @Override
