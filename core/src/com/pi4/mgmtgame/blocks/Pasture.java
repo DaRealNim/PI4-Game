@@ -26,6 +26,7 @@ public class Pasture extends Structure{
 	private float growingState;
 	private int constructionCost;
 	private int salvageBenefit;
+	private int maintenanceCost;
 
 	public Pasture (int x, int y) {
 		super(x, y);
@@ -34,6 +35,7 @@ public class Pasture extends Structure{
 
 		constructionCost = 600;
 		salvageBenefit = 400;
+		maintenanceCost = 15;
 	}
 
 	@Override
@@ -130,6 +132,11 @@ public class Pasture extends Structure{
 		return salvageBenefit;
 	}
 
+	@Override
+	public int getMaintenanceCost() {
+		return maintenanceCost;
+	}
+
 	public void breedAnimal(Animal animal) {
 		this.residentAnimal = animal;
 	}
@@ -181,6 +188,7 @@ public class Pasture extends Structure{
 
 	@Override
 	public void passTurn(Inventory inv) {
+		super.passTurn(inv);
 		this.growPopulation(inv);
 	}
 

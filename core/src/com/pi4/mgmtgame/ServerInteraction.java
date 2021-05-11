@@ -591,6 +591,18 @@ public class ServerInteraction {
 		return false;
 	}
 
+	public synchronized boolean haveILost() {
+		try {
+			clientSideConnection.dataOut.writeInt(257);
+			clientSideConnection.dataOut.flush();
+
+			return (clientSideConnection.dataIn.readBoolean());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	public int getHqX() {
 		return hqX;
 	}

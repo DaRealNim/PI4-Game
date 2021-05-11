@@ -37,6 +37,7 @@ public class Server {
 	private int botID;
 	private Map map;
 	private Inventory[] invArray;
+	private boolean[] hasPlayerLost;
 	private Inventory inv;
 	private int turn;
 	private int internalTurn;
@@ -77,6 +78,8 @@ public class Server {
 		for (int i = 0; i < nbOfBots; i++) {
 			this.bots[i] = createBot();
 		}
+
+		this.hasPlayerLost = new boolean[nbOfPlayers+nbOfBots];
 
 		for (int i = 0; i < nbOfPlayers + nbOfBots; i++) {
 			// float r = Math.round(Math.random() * 100.0f) / 100.0f;
@@ -436,6 +439,10 @@ public class Server {
 						dataOut.writeBoolean(gameCanStart);
 						dataOut.flush();
 						break;
+					case 257:
+						dataOut.writeBoolean(hasPlayerLost[playerID]);
+						dataOut.flush();
+						break;
 					default:
 						System.out.println("wyd????  "+request+" ");
 						break;
@@ -590,21 +597,17 @@ public class Server {
 		int heightIndex;
 		Block currBlock;
 		internalTurn++;
-		// System.out.println("Player "+internalTurn+" turn");
-		if (players[internalTurn % nbOfPlayers] == null)
-			passTurn();
-		// System.out.println("Player "+internalTurn+" turn after while");
 		if (internalTurn == nbOfPlayers) {
 			for (Bot bot : bots) {
 				if (bot != null) {
-					inv = bot.getInventory();
-					bot.play();
-					internalTurn++;
+					if (!hasPlayerLost[bot.getBotID()]) {
+						inv = bot.getInventory();
+						bot.play();
+						internalTurn++;
+					}
 				}
 			}
 			turn++;
-
-
 
 			internalTurn = 0;
 			for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {
@@ -618,12 +621,36 @@ public class Server {
 						currBlock.passTurn(getInventory(currBlock.getOwnerID()));
 				}
 			}
+
+			for(int i=0; i<invArray.length; i++) {
+				if (!hasPlayerLost[i] && invArray[i].getMoney() < 0) {
+					hasPlayerLost[i] = true;
+					// remainingPlayers--;
+					// if (remainingPlayers == 0) {
+					// 	System.out.println("No player remaining, closing server in 5 seconds...");
+					// 	try {
+					// 		Thread.sleep(5000);
+					// 	} catch(InterruptedException e) {
+					// 	}
+					// 	System.exit(0);
+					// }
+				}
+			}
+			for(int i=0; i<bots.length; i++) {
+				if (bots[i].getInventory().getMoney() < 0) {
+					hasPlayerLost[bots[i].getBotID()] = true;
+				}
+			}
+			System.out.println(java.util.Arrays.toString(hasPlayerLost));
 		}
-		inv = invArray[internalTurn % nbOfPlayers];
 		currentPlayer = internalTurn % nbOfPlayers;
-		// System.out.println(this.inv);
+		if (players[currentPlayer] == null || (hasPlayerLost[currentPlayer] && nbOfPlayers > 1))
+			passTurn();
+		inv = invArray[internalTurn % nbOfPlayers];
 
 		System.out.println("Turn " + turn + "\n=======================");
+		System.out.println(internalTurn);
+		System.out.println(currentPlayer);
 	}
 
 	public boolean userHasMoneyToBuy(int q, Resources r) {
@@ -898,7 +925,7 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		Server gameServer = new Server(1, 3);
+		Server gameServer = new Server(2, 3);
 		gameServer.acceptConnections();
 	}
 }

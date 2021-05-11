@@ -17,7 +17,7 @@ private int researchStatus=1;
 	public HQ(int x, int y) {
 	        super(x, y);
 	        setSpriteName("QG-1");
-	    } 
+	    }
 
 
 	@Override
@@ -32,7 +32,7 @@ private int researchStatus=1;
 			public void clicked(InputEvent event, float x, float y) {
 				if (testOwner(server.getInternalTurn())) {
 					Button buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
-					  
+
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "House", buttonResearch);
 					buttonResearch.addListener(new ClickListener(){
 		                  @Override
@@ -52,7 +52,7 @@ private int researchStatus=1;
 		Button buttonResearch = new Button();
 		switch(this.researchStatus) {
 		  case 0:
-			  
+
 		    break;
 		}
 		return buttonResearch;
@@ -66,7 +66,7 @@ private int researchStatus=1;
 			  researchStatus++;
 		  case 1:
 			  if((!server.testRod())&&server.getInventory().hasPlant(3))
-					  server.fixRod();	  
+					  server.fixRod();
 		break;
 		}
 	}
@@ -78,6 +78,11 @@ private int researchStatus=1;
 
 	@Override
 	public int getDestructionGain() {
+		return 0;
+	}
+
+	@Override
+	public int getMaintenanceCost() {
 		return 0;
 	}
 

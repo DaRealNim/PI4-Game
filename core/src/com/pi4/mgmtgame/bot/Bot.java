@@ -104,6 +104,10 @@ public class Bot {
       return inv;
   }
 
+  public int getBotID() {
+      return botID;
+  }
+
   private void harvestFields() //Second most abstract, so on.
   {
     ArrayList<Coord> ownedFields = getOwnedFields();

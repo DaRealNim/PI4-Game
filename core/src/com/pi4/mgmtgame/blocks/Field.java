@@ -35,6 +35,7 @@ public class Field extends Structure {
 	private float growFactor;
 	private int constructionPrice;
 	private int salvageBenefit;
+	private int maintenanceCost;
 
 	public Field(int x, int y) {
     super(x, y);
@@ -44,6 +45,7 @@ public class Field extends Structure {
 
 		constructionPrice = 300;
 		salvageBenefit = 100;
+		maintenanceCost = 10;
 	}
 
 	@Override
@@ -294,6 +296,7 @@ public class Field extends Structure {
 
 	@Override
 	public void passTurn(Inventory inv) {
+		super.passTurn(inv);
 		this.growSeed();
 
 		if(usedItem != null && usedItem.getId() == 0)
@@ -339,7 +342,11 @@ public class Field extends Structure {
 				removeCrickets();
 				break;
 		}
+	}
 
+	@Override
+	public int getMaintenanceCost() {
+		return maintenanceCost;
 	}
 
 	private void addCrickets(Item crickets) {
@@ -356,6 +363,7 @@ public class Field extends Structure {
 		this.growFactor = 3;
 		//mettre qqc pour virer le sprite
 	}
+
 
 
 

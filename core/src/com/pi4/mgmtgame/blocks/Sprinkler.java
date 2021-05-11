@@ -69,6 +69,16 @@ public class Sprinkler extends Structure{
 	}
 
 	@Override
+	public int getMaintenanceCost() {
+		return 5;
+	}
+
+	@Override
+	public void passTurn(Inventory inv) {
+		super.passTurn(inv);
+	}
+
+	@Override
 	public boolean canBuild(Inventory inv) {
 		return true;
 	}

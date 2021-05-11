@@ -19,4 +19,12 @@ public abstract class Structure extends Block implements Serializable {
 
 	abstract public boolean canBuild(Inventory inv);
 	abstract public void doBuild(Inventory inv);
+
+	abstract public int getMaintenanceCost();
+
+	@Override
+	public void passTurn(Inventory inv) {
+		if (inv != null)
+			inv.giveMoney(getMaintenanceCost());
+	}
 }

@@ -128,6 +128,11 @@ public class TreeField extends Field{
 	}
 
 	@Override
+	public int getMaintenanceCost() {
+		return 0;
+	}
+
+	@Override
 	public void growSeed() {
 		if (plantedSeed != null && !hasSeedGrown()) {
 			System.out.println("Grew field for block (" + super.getGridX() + "," + super.getGridY() + ")");

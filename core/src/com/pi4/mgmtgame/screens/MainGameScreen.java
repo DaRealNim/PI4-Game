@@ -86,6 +86,7 @@ public class MainGameScreen implements Screen	{
 	public static String mouseLabelText = "";
 	private Table echapMenu;
 	private HashMap<Integer, java.awt.Color> idToColorMap;
+	private boolean lost;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -94,6 +95,7 @@ public class MainGameScreen implements Screen	{
 		this.batch = game.batch;
 		this.server = server;
 
+		this.lost = false;
 		this.selected = false;
 		this.selectedSquareX = -1;
 		this.selectedSquareY = -1;
@@ -247,6 +249,11 @@ public class MainGameScreen implements Screen	{
 		staticStage.draw();
 
 		ownerColoredSquares.setVisible(hud.shouldShowOwners());
+
+		if (lost) {
+			waitingOverlay.setVisible(true);
+			bottomLeftLabelText = "You lost!";
+		}
 	}
 
 	private void updateSelection() {
@@ -417,11 +424,13 @@ public class MainGameScreen implements Screen	{
 				}
 				// System.out.println(server.getID() + ", " + t);
 				if (server.getID() == server.getStoredInternalTurn()) {
-					waitingOverlay.setVisible(false);
+					if (!lost) {
+						bottomLeftLabelText = "";
+						waitingOverlay.setVisible(false);
+					}
 					hud.update();
 					map = getMapFromStage();
 					updateOverlay();
-					bottomLeftLabelText = "";
 				} else {
 					waitingOverlay.setVisible(true);
 					Map serverMap = server.getMap();
@@ -432,9 +441,10 @@ public class MainGameScreen implements Screen	{
 					updateOverlay();
 					hud.update();
 					server.getInternalTurn();
-					if (gameCanStart)
+					if (gameCanStart && !lost)
 						bottomLeftLabelText = "Player "+server.getStoredInternalTurn()+" is playing...";
 				}
+				lost = server.haveILost();
 
 			}
 		}
