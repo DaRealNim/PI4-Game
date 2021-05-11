@@ -3,7 +3,7 @@ package com.pi4.mgmtgame.resources;
 public class Meat extends Product{
 	static final int basePrice = 1;
 	static int meatPrice = 100;
-	
+
 	@Override
 	public int getPrice() {
 		return meatPrice;
@@ -22,7 +22,7 @@ public class Meat extends Product{
 	}
 
 	public String getTexture() {
-		return("marketRes/meat.png");
+		return("meat_icon");
 	}
 
 	public String toString() {

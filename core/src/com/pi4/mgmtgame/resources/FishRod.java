@@ -20,10 +20,10 @@ public class FishRod extends Item{
 	}
 
 	public String getTexture() {
-		return null;
+		return "fishing_icon";
 	}
 
 	public String toString() {
-		return ("allows you to fish in lakes");
+		return ("Fishing rod");
 	}
 }

@@ -4,15 +4,15 @@ public class Cow extends Animal{
 	static final int basePrice = 1;
 	static int cowPrice = 750;
 	static int wheatConsumed = 10;
-	
+
 	public Product getAnimalProduct() {
 		return new Leather();
 	}
-	
+
 	public float getGrowingMax() {
 		return 5;
 	}
-	
+
 	public int getWheatConsumed() {
 		return wheatConsumed;
 	}
@@ -24,7 +24,7 @@ public class Cow extends Animal{
 	public void subPrice(int p) {
 		cowPrice -= p;
 	}
-	
+
 	public int getPrice() {
 		return cowPrice;
 	}
@@ -34,9 +34,9 @@ public class Cow extends Animal{
 	}
 
 	public String getTexture() {
-		return("marketRes/cow.png");
+		return("cow_icon");
 	}
-	
+
 	public String getPastureSpriteName() {
 		return "pasture_cow_full";
 	}
@@ -46,6 +46,6 @@ public class Cow extends Animal{
 	}
 
 	public String toString() {
-		return ("cow");
-	}	
+		return ("Cow");
+	}
 }

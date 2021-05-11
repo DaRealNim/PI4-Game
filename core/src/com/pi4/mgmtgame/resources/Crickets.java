@@ -20,7 +20,7 @@ public class Crickets extends Item{
 	}
 
 	public String getTexture() {
-		return null;
+		return "grasshopper_icon";
 	}
 
 	public String toString() {

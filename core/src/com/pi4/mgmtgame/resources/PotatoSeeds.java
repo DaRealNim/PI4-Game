@@ -13,11 +13,11 @@ public class PotatoSeeds extends Grain {
 	public void addPrice(int p) {
 		potatoSeedPrice += p;
 	}
- 
+
 	public void subPrice(int p) {
 		potatoSeedPrice -= p;
 	}
-	
+
 	public int getPrice() {
 		return potatoSeedPrice;
 	}
@@ -27,7 +27,7 @@ public class PotatoSeeds extends Grain {
 	}
 
 	public String getTexture() {
-		return("marketRes/potato.png");
+		return("potatoseeds_icon");
 	}
 
 	public String getFieldSpriteName() {
@@ -39,6 +39,6 @@ public class PotatoSeeds extends Grain {
 	}
 
 	public String toString() {
-		return ("Potato Seeds");
+		return ("Potato seeds");
 	}
 }

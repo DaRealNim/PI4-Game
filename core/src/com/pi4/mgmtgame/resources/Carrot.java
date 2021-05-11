@@ -21,7 +21,7 @@ public class Carrot extends Plant{
 	}
 
 	public String getTexture() {
-		return("marketRes/carrot.png");
+		return("carrot_icon");
 	}
 
 	public String toString() {

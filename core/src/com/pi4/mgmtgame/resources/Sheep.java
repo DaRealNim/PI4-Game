@@ -4,15 +4,15 @@ public class Sheep extends Animal {
 	static final int basePrice = 1;
 	static int sheepPrice = 500;
 	static int wheatConsumed = 5;
-	
+
 	public Product getAnimalProduct() {
 		return new Wool();
 	}
-	
+
 	public float getGrowingMax() {
 		return 4;
 	}
-	
+
 	public int getWheatConsumed() {
 		return wheatConsumed;
 	}
@@ -24,7 +24,7 @@ public class Sheep extends Animal {
 	public void subPrice(int p) {
 		sheepPrice -= p;
 	}
-	
+
 	public int getPrice() {
 		return sheepPrice;
 	}
@@ -34,9 +34,9 @@ public class Sheep extends Animal {
 	}
 
 	public String getTexture() {
-		return("marketRes/sheep.png");
+		return("sheep_icon");
 	}
-	
+
 	public String getPastureSpriteName() {
 		return "pasture_sheep_full";
 	}
@@ -46,6 +46,6 @@ public class Sheep extends Animal {
 	}
 
 	public String toString() {
-		return ("sheep");
-	}	
+		return ("Sheep");
+	}
 }

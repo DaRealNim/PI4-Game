@@ -10,7 +10,7 @@ public class CarrotSeeds extends Grain {
 	public int getId() {
 		return 2;
 	}
- 
+
 	public float getGrowingTime() {
 		return 2*3;
 	}
@@ -26,7 +26,7 @@ public class CarrotSeeds extends Grain {
 	}
 
 	public String getTexture() {
-		return("marketRes/carrot.png");
+		return("carrotseeds_icon");
 	}
 
 	public String getFieldSpriteName() {
@@ -39,6 +39,6 @@ public class CarrotSeeds extends Grain {
 	}
 
 	public String toString() {
-		return ("Carrot Seeds");
+		return ("Carrot seeds");
 	}
 }

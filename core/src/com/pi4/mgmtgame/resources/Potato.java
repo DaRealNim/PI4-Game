@@ -21,7 +21,7 @@ public class Potato extends Plant {
 	}
 
 	public String getTexture() {
-		return("marketRes/potato.png");
+		return("potato_icon");
 	}
 
 	public String toString() {

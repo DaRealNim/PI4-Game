@@ -33,6 +33,7 @@ public class Inventory implements Serializable {
 	private Item[] items;
 	private Animal[] animal;
 	private Product[] product;
+	private Resources[] resArray;
 	private int invID;
 	public int rodDurability=10;
 	public Inventory (int x) {
@@ -57,21 +58,27 @@ public class Inventory implements Serializable {
 		items[1] = new Repulsive();
 		items[2] = new FishRod();
 
-		items[0].addVolume(1);
-		items[1].addVolume(1);
-
 		animal = new Animal[2];
 		animal[0] = new Cow();
 		animal[1] = new Sheep();
-
-		animal[0].addVolume(2);
-		animal[1].addVolume(2);
 
 		product = new Product[4];
 		product[0] = new Meat();
 		product[1] = new Leather();
 		product[2] = new Wool();
 		product[3] = new Fish();
+
+		resArray = new Resources[getPlants().length + getSeeds().length + getItems().length + getAnimals().length + getProduct().length];
+		int c = 0;
+		System.arraycopy(getPlants(), 0, resArray, c, getPlants().length);
+		c += getPlants().length;
+		System.arraycopy(getSeeds(), 0, resArray, c, getSeeds().length);
+		c += getSeeds().length;
+		System.arraycopy(getItems(), 0, resArray, c, getItems().length);
+		c += getItems().length;
+		System.arraycopy(getAnimals(), 0, resArray, c, getAnimals().length);
+		c += getAnimals().length;
+		System.arraycopy(getProduct(), 0, resArray, c, getProduct().length);
 
 		money = 5000;
 	}
@@ -183,6 +190,9 @@ public class Inventory implements Serializable {
 	public Product[] getProduct() {
 		return product;
 	}
+	public Resources[] getRessources() {
+		return resArray;
+	}
 	public int getinvID() {
 		return invID;
 	}
@@ -210,5 +220,5 @@ public class Inventory implements Serializable {
 	}
 
 
-	
+
 }

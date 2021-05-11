@@ -54,5 +54,38 @@ ButtonStyle: {
 	breed_cow_icon: {
 		up: breed_cow_icon
 	}
+	wheat_icon: {
+		up: wheat_icon
+	}
+	potato_icon: {
+		up: potato_icon
+	}
+	carrot_icon: {
+		up: carrot_icon
+	}
+	cow_icon: {
+		up: cow_icon
+	}
+	sheep_icon: {
+		up: sheep_icon
+	}
+	fish_icon: {
+		up: fish_icon
+	}
+	meat_icon: {
+		up: meat_icon
+	}
+	leather_icon: {
+		up: leather_icon
+	}
+	wood_icon: {
+		up: wood_icon
+	}
+	wool_icon: {
+		up: wool_icon
+	}
+	fishing_icon: {
+		up: fishing_icon
+	}
 }
 }

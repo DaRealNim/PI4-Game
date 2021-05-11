@@ -173,6 +173,8 @@ public class Server {
 					Plant plant = null;
 					int animalID;
 					Item item = null;
+					Animal animal = null;
+					Product product = null;
 					int request = -1;
 					try {
 						request = dataIn.readInt();
@@ -352,6 +354,48 @@ public class Server {
 						}
 						dataOut.writeBoolean(requestBreed(x, y, animalID));
 						dataOut.flush();
+						break;
+					case 27:
+						item = (Item) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						buyItem(item, quantity);
+						break;
+					case 28:
+						item = (Item) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						sellItem(item, quantity);
+						break;
+					case 29:
+						animal = (Animal) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						buyAnimal(animal, quantity);
+						break;
+					case 30:
+						animal = (Animal) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						sellAnimal(animal, quantity);
+						break;
+					case 31:
+						product = (Product) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						buyProduct(product, quantity);
+						break;
+					case 32:
+						product = (Product) objIn.readObject();
+						quantity = dataIn.readInt();
+						if (internalTurn != playerID)
+							break;
+						sellProduct(product, quantity);
 						break;
 					case 256:
 						dataOut.writeBoolean(gameCanStart);
@@ -553,6 +597,18 @@ public class Server {
 		return (getInventory().getSeeds()[g.getId()].getVolume() >= q);
 	}
 
+	public boolean userCanSellItem(int q, Item i) {
+		return (getInventory().getItems()[i.getId()].getVolume() >= q);
+	}
+
+	public boolean userCanSellAnimal(int q, Animal a) {
+		return (getInventory().getAnimals()[a.getId()].getVolume() >= q);
+	}
+
+	public boolean userCanSellProduct(int q, Product p) {
+		return (getInventory().getProduct()[p.getId()].getVolume() >= q);
+	}
+
 	public void buyGrain(Grain boughtGrain, int q) {
 		Inventory userInv = getInventory();
 		int grainPrice = boughtGrain.getPrice();
@@ -699,20 +755,73 @@ public class Server {
 		return false;
 	}
 
-	public void buyAnimal(Animal boughtAnimal, int q) {
+	public void buyItem(Item boughtItem, int q) {
+		Inventory userInv = getInventory();
+		int price = boughtItem.getPrice();
 
+		if (userHasMoneyToBuy(q, boughtItem)) {
+			userInv.giveMoney(price * q);
+			userInv.addItem(boughtItem.getId(), q);
+			boughtItem.addPrice(1);
+		}
+	}
+
+	public void sellItem(Item sellItem, int q) {
+		Inventory userInv = getInventory();
+		int price = sellItem.getPrice();
+
+		if (userCanSellItem(q, sellItem)) {
+			sellItem.subPrice(1);
+			price = sellItem.getPrice();
+			userInv.receiveMoney(price * q);
+			userInv.removeItem(sellItem.getId(), q);
+		}
+	}
+
+	public void buyAnimal(Animal boughtAnimal, int q) {
+		Inventory userInv = getInventory();
+		int price = boughtAnimal.getPrice();
+
+		if (userHasMoneyToBuy(q, boughtAnimal)) {
+			userInv.giveMoney(price * q);
+			userInv.addAnimal(boughtAnimal.getId(), q);
+			boughtAnimal.addPrice(1);
+		}
 	}
 
 	public void sellAnimal(Animal soldAnimal, int q) {
+		Inventory userInv = getInventory();
+		int price = soldAnimal.getPrice();
 
+		if (userCanSellAnimal(q, soldAnimal)) {
+			soldAnimal.subPrice(1);
+			price = soldAnimal.getPrice();
+			userInv.receiveMoney(price * q);
+			userInv.removeAnimal(soldAnimal.getId(), q);
+		}
 	}
 
 	public void buyProduct(Product boughtProduct, int q) {
+		Inventory userInv = getInventory();
+		int price = boughtProduct.getPrice();
 
+		if (userHasMoneyToBuy(q, boughtProduct)) {
+			userInv.giveMoney(price * q);
+			userInv.addProduct(boughtProduct.getId(), q);
+			boughtProduct.addPrice(1);
+		}
 	}
 
 	public void sellProduct(Product soldProduct, int q) {
+		Inventory userInv = getInventory();
+		int price = soldProduct.getPrice();
 
+		if (userCanSellProduct(q, soldProduct)) {
+			soldProduct.subPrice(1);
+			price = soldProduct.getPrice();
+			userInv.receiveMoney(price * q);
+			userInv.removeProduct(soldProduct.getId(), q);
+		}
 	}
 
 	public Bot createBot() {

@@ -438,7 +438,7 @@ public class ServerInteraction {
 		}
 		return false;
 	}
-	
+
 	public boolean canFish(int x, int y) {
 		boolean requestFishOk = false;
 		try {
@@ -458,8 +458,8 @@ public class ServerInteraction {
 		// System.out.println("end requestBuildStructure()");
 		return (requestFishOk);
 	}
-	
-	
+
+
 
 	public void tryToFish(int x, int y) {
 		try {
@@ -473,7 +473,7 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void fixRod() {
 		try {
 			clientSideConnection.dataOut.writeInt(24);
@@ -482,7 +482,7 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean testRod() {
 		boolean requestRodOk = false;
 		try {
@@ -497,7 +497,7 @@ public class ServerInteraction {
 		// System.out.println("end requestBuildStructure()");
 		return (requestRodOk);
 	}
-	
+
 	public void useRod() {
 		try {
 			clientSideConnection.dataOut.writeInt(24);
@@ -506,24 +506,83 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 	}
-	
 
-		
+	public synchronized void buyItem(Item boughtItem, int q) {
+		try {
+			clientSideConnection.dataOut.writeInt(27);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(boughtItem);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void sellItem(Item sellItem, int q) {
+		try {
+			clientSideConnection.dataOut.writeInt(28);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(sellItem);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public synchronized void buyAnimal(Animal boughtAnimal, int q) {
-
+		try {
+			clientSideConnection.dataOut.writeInt(29);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(boughtAnimal);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public synchronized void sellAnimal(Animal soldAnimal, int q) {
-
+		try {
+			clientSideConnection.dataOut.writeInt(30);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(soldAnimal);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public synchronized void buyProduct(Product boughtProduct, int q) {
-
+		try {
+			clientSideConnection.dataOut.writeInt(31);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(boughtProduct);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public synchronized void sellProduct(Product soldProduct, int q) {
-
+		try {
+			clientSideConnection.dataOut.writeInt(32);
+			clientSideConnection.dataOut.flush();
+			clientSideConnection.objOut.writeObject(soldProduct);
+			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(q);
+			clientSideConnection.dataOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public synchronized boolean canGameStart() {
@@ -589,14 +648,14 @@ public class ServerInteraction {
 		clientSideConnection = new ClientSide(ip, port);
 	}
 
-	
-
-	
-
-	
 
 
-	
+
+
+
+
+
+
 
 
 }

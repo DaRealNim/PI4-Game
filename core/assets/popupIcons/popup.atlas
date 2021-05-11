@@ -1,146 +1,209 @@
 
 popup.png
-size: 1024,1024
+size: 512,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 breed_cow_icon
   rotate: false
-  xy: 441, 425
+  xy: 1, 157
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 breed_sheep_icon
   rotate: false
-  xy: 493, 477
+  xy: 441, 451
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 build_pasture_icon
   rotate: false
-  xy: 545, 529
+  xy: 1, 105
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 axe_icon
   rotate: false
-  xy: 441, 581
+  xy: 157, 157
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 bulldozer_icon
   rotate: false
-  xy: 1, 105
+  xy: 441, 295
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+carrot_icon
+  rotate: false
+  xy: 53, 157
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 carrotseeds_icon
   rotate: false
-  xy: 343, 287
+  xy: 53, 1
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 close_icon
   rotate: false
-  xy: 441, 529
+  xy: 105, 53
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+cow_icon
+  rotate: false
+  xy: 441, 399
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 dollar_icon
   rotate: false
-  xy: 493, 581
+  xy: 157, 105
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
-fishing_icon
+fish_icon
   rotate: false
   xy: 1, 53
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
+fishing_icon
+  rotate: false
+  xy: 209, 157
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
 grasshopper_icon
   rotate: false
-  xy: 53, 105
+  xy: 441, 243
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 hoe_icon
   rotate: false
-  xy: 343, 235
+  xy: 105, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+leather_icon
+  rotate: false
+  xy: 53, 105
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+meat_icon
+  rotate: false
+  xy: 105, 157
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 pannEAU
   rotate: false
-  xy: 1, 339
+  xy: 1, 209
   size: 438, 292
   orig: 438, 292
   offset: 0, 0
   index: -1
+potato_icon
+  rotate: false
+  xy: 441, 347
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
 potatoseeds_icon
   rotate: false
-  xy: 441, 477
+  xy: 157, 53
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 repellent_icon
   rotate: false
-  xy: 493, 529
+  xy: 209, 105
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
-shovel_icon
-  rotate: false
-  xy: 545, 581
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-sickle_icon
+sheep_icon
   rotate: false
   xy: 1, 1
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
+shovel_icon
+  rotate: false
+  xy: 261, 157
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+sickle_icon
+  rotate: false
+  xy: 157, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
 sprinkler_icon
   rotate: false
-  xy: 53, 53
+  xy: 209, 53
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 tree_icon
   rotate: false
-  xy: 105, 105
+  xy: 261, 105
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+wheat_icon
+  rotate: false
+  xy: 313, 157
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 wheatseeds_icon
   rotate: false
-  xy: 343, 183
+  xy: 209, 1
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
-popup
+wood_icon
   rotate: false
-  xy: 1, 157
-  size: 340, 180
-  orig: 340, 180
+  xy: 53, 53
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+wool_icon
+  rotate: false
+  xy: 105, 105
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1

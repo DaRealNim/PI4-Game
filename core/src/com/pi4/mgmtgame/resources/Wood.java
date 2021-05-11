@@ -23,7 +23,7 @@ public class Wood extends Plant {
 	}
 
 	public String getTexture() {
-		return("marketRes/wood.png");
+		return("wood_icon");
 	}
 
 	public String toString() {

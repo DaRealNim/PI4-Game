@@ -1,32 +1,29 @@
 package com.pi4.mgmtgame;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.pi4.mgmtgame.resources.Grain;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.pi4.mgmtgame.resources.Plant;
-import com.pi4.mgmtgame.resources.Resources;
-import com.pi4.mgmtgame.resources.Wood;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.pi4.mgmtgame.resources.*;
 import com.pi4.mgmtgame.screens.MainGameScreen;
 
 public class Market extends Group {
@@ -50,24 +47,12 @@ public class Market extends Group {
 		Texture bgTexture = manager.get("marketRes/bgMarket2.png", Texture.class);
 		Image bg = new Image(bgTexture);
 
-		Texture woodTxt = manager.get("marketRes/wood.png", Texture.class);
-		Texture carrotTxt = manager.get("marketRes/carrot.png", Texture.class);
-		Texture potatoTxt = manager.get("marketRes/potato.png", Texture.class);
-		Texture wheatTxt = manager.get("marketRes/wheat.png", Texture.class);
-		Texture billTxt = manager.get("marketRes/bill.png", Texture.class);
-
-		Image wood = new Image(woodTxt);
-		Image carrot = new Image(carrotTxt);
-		Image potato = new Image(potatoTxt);
-		Image wheat = new Image(wheatTxt);
-		Image bill = new Image(billTxt);
-
-		Image[] marketRes = {wood, carrot, potato, wheat, bill};
+		Skin iconsSkin = manager.get("popupIcons/popup.json", Skin.class);
 
 		Table products = new Table();
 		final ScrollPane scrollpane = new ScrollPane(products, manager.get("menuButtons/uiskin.json", Skin.class));
 		scrollpane.setSize(bg.getWidth()-60, bg.getHeight()-60);
-		scrollpane.setX(30);
+		scrollpane.setX(15);
 		scrollpane.setY(30);
 		scrollpane.setFadeScrollBars(false);
 		Button close = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
@@ -108,11 +93,13 @@ public class Market extends Group {
 		close.setX(bg.getWidth() - 64);
 		close.setY(bg.getHeight() - 64);
 
-		for (Plant p : server.getInventory().getPlants())  {
-			final Plant plant = p;
-			Button i = new Button(new TextureRegionDrawable(manager.get(p.getTexture(), Texture.class)));
+		Inventory inv = server.getInventory();
+
+		for (Resources res : inv.getRessources())  {
+			final Resources ressource = res;
+			Button i = new Button(iconsSkin, res.getTexture());
 			i.setTransform(true);
-			i.setScale(5);
+			i.setScale(2);
 
 			Button buyButton = new Button(marketSkins, "buyButton");
 			buyButton.setTransform(true);
@@ -121,81 +108,60 @@ public class Market extends Group {
 			sellButton.setTransform(true);
 			sellButton.setScale(1.5f);
 
-			String itemText = p.toString();
-			String priceText = "" + p.getPrice();
+			String itemText = res.toString();
+			String priceText = "" + res.getPrice();
 			Label itemLabel = new Label(itemText, new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
 			final Label priceLabel = new Label(priceText, new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
-			priceLabel.setText("$" + server.getPrice(plant));
+			priceLabel.setText("$" + server.getPrice(res));
 
 			sellButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					server.sellPlant(plant, 1);
-					priceLabel.setText("$" + server.getPrice(plant));
+					if (ressource instanceof Plant)
+						server.sellPlant((Plant)ressource, 1);
+					else if (ressource instanceof Grain)
+						server.sellGrain((Grain)ressource, 1);
+					else if (ressource instanceof Item)
+						server.sellItem((Item)ressource, 1);
+					else if (ressource instanceof Animal)
+						server.sellAnimal((Animal)ressource, 1);
+					else if (ressource instanceof Product)
+						server.sellProduct((Product)ressource, 1);
+					priceLabel.setText("$" + server.getPrice(ressource));
 				}
 			});
 
 			buyButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					server.buyPlant(plant, 1);
-					priceLabel.setText("$" + server.getPrice(plant));
+					if (ressource instanceof Plant)
+						server.buyPlant((Plant)ressource, 1);
+					else if (ressource instanceof Grain)
+						server.buyGrain((Grain)ressource, 1);
+					else if (ressource instanceof Item)
+						server.buyItem((Item)ressource, 1);
+					else if (ressource instanceof Animal)
+						server.buyAnimal((Animal)ressource, 1);
+					else if (ressource instanceof Product)
+						server.buyProduct((Product)ressource, 1);
+					priceLabel.setText("$" + server.getPrice(ressource));
 				}
 			});
 
-			products.add(i);
-			products.add(itemLabel).padLeft(70).padBottom(100);
-			products.add(priceLabel).padLeft(-50);
-			products.add(buyButton).padRight(30);
-			products.add(sellButton);
+			Table infoTable = new Table();
+			infoTable.add(itemLabel);
+			infoTable.row();
+			infoTable.add(priceLabel);
+			infoTable.row();
+			Table buttonCell = new Table();
+			buttonCell.add(buyButton).padRight(30);
+			buttonCell.add(sellButton);
+			infoTable.add(buttonCell);
+
+			products.add(i).padRight(50);
+			products.add(infoTable).padBottom(30);
 			products.row();
 
-		}
-
-
-		for (Grain g : server.getInventory().getSeeds()) {
-			final Grain grain = g;
-			System.out.println(g.getTexture());
-
-			Button i = new Button(new TextureRegionDrawable(manager.get(grain.getTexture(), Texture.class)));
-			i.setTransform(true);
-			i.setScale(5);
-
-			Button buyButton = new Button(marketSkins, "buyButton");
-			buyButton.setTransform(true);
-			buyButton.setScale(1.5f);
-			Button sellButton = new Button(marketSkins, "sellButton");
-			sellButton.setTransform(true);
-			sellButton.setScale(1.5f);
-
-			String itemText = grain.toString();
-			String priceText = "" + grain.getPrice();
-			Label itemLabel = new Label(itemText, new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
-			final Label priceLabel = new Label(priceText, new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
-			priceLabel.setText("$" + server.getPrice(grain));
-
-			sellButton.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					server.sellGrain(grain, 1);
-					priceLabel.setText("$" + server.getPrice(grain));
-				}
-			});
-
-			buyButton.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					server.buyGrain(grain, 1);
-					priceLabel.setText("$" + server.getPrice(grain));
-				}
-			});
-
-			products.add(i);
-			products.add(itemLabel).padLeft(70).padBottom(100);
-			products.add(priceLabel).padLeft(-50);
-			products.add(buyButton).padRight(30);
-			products.add(sellButton);
-			products.row();
 		}
 
 		addActor(bg);

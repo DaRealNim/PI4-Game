@@ -20,7 +20,7 @@ static int repulsivePrice = 10;
 	}
 
 	public String getTexture() {
-		return null;
+		return "repellent_icon";
 	}
 
 	public String toString() {
