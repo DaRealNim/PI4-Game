@@ -453,7 +453,7 @@ public class ServerInteraction {
 
 			requestFishOk  = clientSideConnection.dataIn.readBoolean();
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 		}
 		// System.out.println("end requestBuildStructure()");
 		return (requestFishOk);
@@ -499,19 +499,7 @@ public class ServerInteraction {
 		// System.out.println("end requestBuildStructure()");
 		return (requestRodOk);
 	}
-<<<<<<< HEAD
 
-	public void useRod() {
-		try {
-			clientSideConnection.dataOut.writeInt(24);
-			clientSideConnection.dataOut.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-=======
-	
->>>>>>> 6e4c98d62d4cccc1044e2ca2db038c2c4f102fec
 
 	public synchronized void buyItem(Item boughtItem, int q) {
 		try {
