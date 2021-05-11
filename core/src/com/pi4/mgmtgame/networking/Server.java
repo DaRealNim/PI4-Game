@@ -97,11 +97,6 @@ public class Server {
 				ServerSide serverSideConnection = new ServerSide(playerSocket, numPlayers);
 				this.players[numPlayers] = serverSideConnection;
 
-				int[] hqcoords = placeHQ();
-				HQ hq = new HQ(hqcoords[0], hqcoords[1]);
-				hq.setOwnerID(numPlayers);
-				map.setStructAt(hqcoords[0], hqcoords[1], hq);
-
 				Thread t = new Thread(serverSideConnection);
 				t.start();
 				++numPlayers;
