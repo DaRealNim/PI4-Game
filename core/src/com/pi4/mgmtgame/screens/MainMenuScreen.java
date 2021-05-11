@@ -26,15 +26,16 @@ import com.pi4.mgmtgame.ServerInteraction;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.Group;
-
+import java.net.ConnectException;
 
 public class MainMenuScreen implements Screen {
 
 	private SpriteBatch batch;
 	protected Stage stage;
 	private Viewport viewport;
-  private OrthographicCamera camera;
+    private OrthographicCamera camera;
 	private AssetManager manager;
+	private Label errorLabel;
 	ManagementGame game;
 	private int nbOfPlayers=3;
 
@@ -43,15 +44,17 @@ public class MainMenuScreen implements Screen {
 		this.batch = game.batch;
 		this.manager = manager;
 
-	  camera = new OrthographicCamera();
+		camera = new OrthographicCamera();
 
-	  viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
-	  viewport.apply();
+		viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, camera);
+		viewport.apply();
 
-	  camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-	  camera.update();
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
 
-	  stage = new Stage(viewport, batch);
+		stage = new Stage(viewport, batch);
+
+		errorLabel = new Label("", new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.RED));
 	}
 
 	@Override
@@ -68,7 +71,6 @@ public class MainMenuScreen implements Screen {
 
 		final Button quitButton = new Button(buttonSkins, "quit");
 		final Button newGameButton = new Button(buttonSkins, "default");
-		final Button loadButton = new Button(buttonSkins, "load");
 
 		final Label ipLabel = new Label(  "Server IP   : " , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		final Label portLabel = new Label("Server port : " , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -85,11 +87,27 @@ public class MainMenuScreen implements Screen {
 		newGameButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+				int port;
+				try {
+					port = Integer.valueOf(portField.getText());
+					if (port < 0 || port > 65535)
+						throw new Exception();
+				} catch (Exception e) {
+					errorLabel.setText("Invalid port number: must be a number between 0 and 65535.");
+					return;
+				}
+
+				ServerInteraction server = null;;
+				try {
+					server = new ServerInteraction(ipField.getText(), portField.getText());
+				} catch (ConnectException e) {
+					errorLabel.setText("Connexion refused: server is offline or is not accepting anymore players.");
+					return;
+				}
+
             	mainTable.clear();
             	stage.clear();
             	stage.dispose();
-
-            	ServerInteraction server = new ServerInteraction(ipField.getText(), portField.getText());
 
             	game.setScreen(new MainGameScreen(game, manager, server));
             }
@@ -109,7 +127,7 @@ public class MainMenuScreen implements Screen {
 		mainTable.add(newGameButton).size(300, 100).padBottom(50);
 		mainTable.row();
 
-		mainTable.add(loadButton).size(300, 100);
+		mainTable.add(errorLabel);
 		mainTable.row();
 
 		mainTable.add(quitButton).size(300, 100).padTop(50);;

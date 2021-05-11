@@ -16,6 +16,7 @@ import com.pi4.mgmtgame.resources.Product;
 import com.pi4.mgmtgame.resources.Item;
 import com.pi4.mgmtgame.resources.Resources;
 import java.util.HashMap;
+import java.net.ConnectException;
 
 public class ServerInteraction {
 	private ClientSide clientSideConnection;
@@ -26,7 +27,7 @@ public class ServerInteraction {
 	private int hqY;
 	private HashMap<Integer, java.awt.Color> idToColorMap;
 
-	public ServerInteraction(String ip, String port) {
+	public ServerInteraction(String ip, String port) throws ConnectException {
 		int portInt = Integer.parseInt(port);
 		connectToServer(ip, portInt);
 	}
@@ -610,7 +611,7 @@ public class ServerInteraction {
 		protected ObjectInputStream objIn;
 		protected ObjectOutputStream objOut;
 
-		public ClientSide(String ip, int port) {
+		public ClientSide(String ip, int port) throws ConnectException {
 			System.out.println("----Client----");
 			try {
 				clientSocket = new Socket(ip, port);
@@ -629,15 +630,16 @@ public class ServerInteraction {
 				System.out.println("\nConnection to " + clientSocket.getInetAddress() + " on port: " + clientSocket.getPort() + " successful.");
 				System.out.println("Connected as player " + playerID);
 				System.out.println("Waiting for game to start...");
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e + "\nexception on ClientSide constructor");
+			} catch (IOException | ClassNotFoundException e) {
+				if (e instanceof ConnectException)
+					throw new ConnectException();
+				else
+					e.printStackTrace();
 			}
 		}
 	}
 
-	public void connectToServer(String ip, int port) {
+	public void connectToServer(String ip, int port) throws ConnectException {
 		clientSideConnection = new ClientSide(ip, port);
 	}
 
