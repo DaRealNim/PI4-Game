@@ -444,7 +444,7 @@ public class ServerInteraction {
 		try {
 			clientSideConnection.dataOut.writeInt(22);
 			clientSideConnection.dataOut.flush();
-
+			System.out.println("canfish");
 			clientSideConnection.dataOut.writeInt(x);
 			clientSideConnection.dataOut.flush();
 
@@ -453,7 +453,7 @@ public class ServerInteraction {
 
 			requestFishOk  = clientSideConnection.dataIn.readBoolean();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 		// System.out.println("end requestBuildStructure()");
 		return (requestFishOk);
@@ -463,6 +463,8 @@ public class ServerInteraction {
 
 	public void tryToFish(int x, int y) {
 		try {
+			System.out.println("TTfish");
+
 			clientSideConnection.dataOut.writeInt(23);
 			clientSideConnection.dataOut.flush();
 			clientSideConnection.objOut.writeInt(x);
@@ -497,6 +499,7 @@ public class ServerInteraction {
 		// System.out.println("end requestBuildStructure()");
 		return (requestRodOk);
 	}
+<<<<<<< HEAD
 
 	public void useRod() {
 		try {
@@ -506,6 +509,9 @@ public class ServerInteraction {
 			e.printStackTrace();
 		}
 	}
+=======
+	
+>>>>>>> 6e4c98d62d4cccc1044e2ca2db038c2c4f102fec
 
 	public synchronized void buyItem(Item boughtItem, int q) {
 		try {

@@ -78,7 +78,7 @@ public abstract class Environment extends Block {
                     Button buttonPasture = new Button(popupSkin, "pasture_icon");
                     Button buttonTree = new Button(popupSkin, "tree_icon");
                     Button buttonSprink = new Button(popupSkin, "sprinkler_icon");
-                    Button buttonFish = new Button(popupSkin, "fishing_icon");
+                    Button buttonFish = new Button(popupSkin, "sprinkler_icon");
                     final Field field = new Field(getGridX(), getGridY());
                     final TreeField tree = new TreeField(getGridX(), getGridY());
                     final Sprinkler sprinkler = new Sprinkler(getGridX(), getGridY());
@@ -111,7 +111,7 @@ public abstract class Environment extends Block {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                             MainGameScreen.mouseLabelText = "Build a sprinkler\nThe sprinkler gives a speed boost to all surrounding fields.\nCost: $"+sprinkler.getConstructionCost();
-                        }
+                        } 
                     });
                     buttonFish.addListener(new HoverListener() {
                         @Override
@@ -126,12 +126,11 @@ public abstract class Environment extends Block {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
                                 server.tryToFish(getGridX(), getGridY());
-                                server.useRod();
-                                updateMap(manager, server);
                                 p.remove();
                             }
                         });
-                    } 
+                    } else 
+                    	 buttonFish.getColor().a = (float)0.3;
                     if (server.canBuildStructure(getGridX(), getGridY(), tree)) {
                         buttonTree.addListener(new ClickListener(){
                             @Override

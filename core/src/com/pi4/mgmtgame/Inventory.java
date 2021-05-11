@@ -43,7 +43,7 @@ public class Inventory implements Serializable {
 		plants[1] = new Potato();
 		plants[2] = new Carrot();
 		plants[3] = new Wood();
-
+ 
 		seeds = new Grain[4];
 		seeds[0] = new WheatSeeds();
 		seeds[1] = new PotatoSeeds();
@@ -57,7 +57,15 @@ public class Inventory implements Serializable {
 		items[0] = new Crickets();
 		items[1] = new Repulsive();
 		items[2] = new FishRod();
+		
 
+<<<<<<< HEAD
+=======
+		items[0].addVolume(1);
+		items[1].addVolume(1);
+		items[2].addVolume(1);
+
+>>>>>>> 6e4c98d62d4cccc1044e2ca2db038c2c4f102fec
 		animal = new Animal[2];
 		animal[0] = new Cow();
 		animal[1] = new Sheep();
@@ -196,7 +204,9 @@ public class Inventory implements Serializable {
 	public int getinvID() {
 		return invID;
 	}
-
+	public void useRod(int nb) {
+		rodDurability -= nb;
+	}
 
 	@Override
 	public String toString() {
