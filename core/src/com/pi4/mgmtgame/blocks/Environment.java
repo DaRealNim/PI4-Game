@@ -21,6 +21,7 @@ public abstract class Environment extends Block {
 
     private int terrainPrice;
     private String displayName;
+    public boolean fished;
 
     public Environment(int x, int y, String displayName) {
         super(x, y);
@@ -126,6 +127,7 @@ public abstract class Environment extends Block {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
                                 server.tryToFish(getGridX(), getGridY());
+                                fished=true;
                                 p.remove();
                             }
                         });

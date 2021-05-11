@@ -57,7 +57,7 @@ public class Inventory implements Serializable {
 		items[0] = new Crickets();
 		items[1] = new Repulsive();
 		items[2] = new FishRod();
-
+		addItem(2,1);
 
 		animal = new Animal[2];
 		animal[0] = new Cow();

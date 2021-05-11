@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import com.pi4.mgmtgame.resources.Grain;
+import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.blocks.Field;
@@ -15,7 +16,7 @@ import com.pi4.mgmtgame.ServerInteraction;
 
 
 public class Lake extends Environment {
-
+	
     public Lake(int x, int y) {
         super(x, y, "Lake");
         setSpriteName("lake");
@@ -30,7 +31,10 @@ public class Lake extends Environment {
     public int getGrowingPenalty() {
         return 0;
     }
-
+    @Override
+    public void passTurn(Inventory inv) {
+    	fished=false;
+    }
     @Override
     public boolean canSeedGrow(Grain seed) {
         return false;

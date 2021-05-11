@@ -11,6 +11,7 @@ import com.pi4.mgmtgame.blocks.Block;
 import com.pi4.mgmtgame.blocks.Environment;
 import com.pi4.mgmtgame.blocks.Field;
 import com.pi4.mgmtgame.blocks.HQ;
+import com.pi4.mgmtgame.blocks.Lake;
 import com.pi4.mgmtgame.blocks.Plain;
 import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.resources.Resources;
@@ -483,20 +484,21 @@ public class Server {
 	}
 
 	public boolean canFish(int x, int y) {
-		if(testRod())
+		if(testRod()&&!getMap().getEnvironmentAt(x, y).fished&&getMap().getEnvironmentAt(x, y)instanceof Lake) {
+			getMap().getEnvironmentAt(x, y).fished=true;
 			return  inv.hasItem(2);
-		return false;
+		}
+		return false; 
 	}
 
 	public void tryToFish(int x, int y) {
-		if (canFish(x, y)) {
 			Random random = new Random();
 			int nb = random.nextInt(6) - 3;
 		   	if (nb < 0)
 				nb = 0;
 			inv.useRod(nb);
 			inv.addProduct(3, nb);
-		}
+		
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
@@ -601,6 +603,9 @@ public class Server {
 				}
 			}
 			turn++;
+			
+				
+			
 			internalTurn = 0;
 			for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {
 				for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) {
@@ -617,6 +622,7 @@ public class Server {
 		inv = invArray[internalTurn % nbOfPlayers];
 		currentPlayer = internalTurn % nbOfPlayers;
 		// System.out.println(this.inv);
+		
 		System.out.println("Turn " + turn + "\n=======================");
 	}
 

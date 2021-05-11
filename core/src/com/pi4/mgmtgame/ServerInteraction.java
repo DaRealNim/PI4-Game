@@ -444,7 +444,7 @@ public class ServerInteraction {
 		try {
 			clientSideConnection.dataOut.writeInt(22);
 			clientSideConnection.dataOut.flush();
-			System.out.println("canfish");
+
 			clientSideConnection.dataOut.writeInt(x);
 			clientSideConnection.dataOut.flush();
 
@@ -463,12 +463,11 @@ public class ServerInteraction {
 
 	public void tryToFish(int x, int y) {
 		try {
-			System.out.println("TTfish");
 
 			clientSideConnection.dataOut.writeInt(23);
 			clientSideConnection.dataOut.flush();
-			clientSideConnection.objOut.writeInt(x);
-			clientSideConnection.objOut.flush();
+			clientSideConnection.dataOut.writeInt(x);
+			clientSideConnection.dataOut.flush();
 			clientSideConnection.dataOut.writeInt(y);
 			clientSideConnection.dataOut.flush();
 		} catch (IOException e) {
