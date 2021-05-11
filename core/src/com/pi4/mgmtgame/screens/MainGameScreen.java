@@ -67,7 +67,7 @@ public class MainGameScreen implements Screen	{
 	private Viewport viewport;
 	private final OrthographicCamera camera;
 	private SpriteBatch batch;
-	private HUD hud;
+	private final HUD hud;
 	private InputMultiplexer multiplexer;
 	protected Stage stage, selectionSquareStage, decorationStage, ownerStage, staticStage, popupStage;
 	private ServerInteraction server;
@@ -109,19 +109,6 @@ public class MainGameScreen implements Screen	{
 
 		camera.update();
 
-		stage = new Stage(viewport, batch) {
-			@Override
-			public boolean scrolled(float amountX, float amountY) {
-				if (amountY > 0) {
-					camera.zoom = Math.min(10, camera.zoom+.2f);
-				}
-				if (amountY < 0) {
-					camera.zoom = Math.max(0.2f, camera.zoom-.2f);
-				}
-				cameraSpeed = 4*camera.zoom;
-				return true;
-			}
-		};
 		selectionSquareStage = new Stage(viewport, batch);
 		decorationStage = new Stage(viewport, batch);
 		staticStage = new Stage(new FitViewport(ManagementGame.WIDTH / 2, ManagementGame.HEIGHT / 2, new OrthographicCamera()), batch);
@@ -142,6 +129,22 @@ public class MainGameScreen implements Screen	{
 
 		hud = new HUD(manager, server);
 		server.passHUD(hud);
+
+		stage = new Stage(viewport, batch) {
+			@Override
+			public boolean scrolled(float amountX, float amountY) {
+				if (hud.stage.getScrollFocus() == null) {
+					if (amountY > 0) {
+						camera.zoom = Math.min(10, camera.zoom+.2f);
+					}
+					if (amountY < 0) {
+						camera.zoom = Math.max(0.2f, camera.zoom-.2f);
+					}
+					cameraSpeed = 4*camera.zoom;
+				}
+				return true;
+			}
+		};
 
 		final Label volumeLabel = new Label("Music volume", new  Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
 		final Slider slider = new Slider(0, 1, 0.05f, false, manager.get("menuButtons/uiskin.json", Skin.class));

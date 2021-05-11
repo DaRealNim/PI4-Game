@@ -25,6 +25,13 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.Gdx;
 import com.pi4.mgmtgame.resources.Item;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.pi4.mgmtgame.resources.Resources;
+import com.pi4.mgmtgame.screens.MainGameScreen;
+import com.pi4.mgmtgame.HoverListener;
 
 public class HUD {
     public Stage stage;
@@ -33,13 +40,14 @@ public class HUD {
     private Button marketButton;
     private AssetManager manager;
     private ServerInteraction server;
-    private Label moneyLabel, grainLabel, seedLabel, itemsLabel, turnLabel;
+    private Label moneyLabel, turnLabel;
+    private Label[] resourceVolumeLabels;
     private Inventory inv;
     private int internalTurn;
-    private String seedLabelText, grainLabelText, itemsLabelText;
   	private Sound gameMusic;
     private long gameMusicId;
     private CheckBox showOwnersCheckBox;
+    private Market market;
 
     public HUD (AssetManager man, ServerInteraction server) {
       this.manager = man;
@@ -72,36 +80,20 @@ public class HUD {
 
     public void updateLabels() {
         this.inv = server.getInventory();
-        seedLabelText = "";
-        grainLabelText = "";
-        itemsLabelText = "";
 
-        for (Grain seed : inv.getSeeds())
-        {
-      	  if (seed != null)
-      	   seedLabelText += seed + ": " + seed.getVolume() + "  \n";
-        }
-
-        for (Plant plant : inv.getPlants())
-        {
-      	  if (plant != null)
-      	   grainLabelText += plant + ": " + plant.getVolume() + "  \n";
-        }
-
-        for (Item item : inv.getItems()) {
-            if (item != null)
-              itemsLabelText += item + ": " + item.getVolume() + " \n";
+        int counter = 0;
+        for (Resources ressource : inv.getRessources()) {
+            resourceVolumeLabels[counter].setText(ressource.getVolume());
+            counter++;
         }
 
         moneyLabel.setText("$" + inv.getMoney());
         turnLabel.setText("Month : " + server.getTurn());
-        seedLabel.setText(seedLabelText);
-        grainLabel.setText(grainLabelText);
-        itemsLabel.setText(itemsLabelText);
     }
 
     public void show() {
       Skin buttonSkins = manager.get("hudButtons/hudButton.json", Skin.class);
+      Skin iconsSkin = manager.get("popupIcons/popup.json", Skin.class);
 
       Texture backgroundTexture = manager.get("hudButtons/hudBackground.png", Texture.class);
       Image background = new Image(backgroundTexture);
@@ -119,47 +111,66 @@ public class HUD {
       marketButton.setScale(2);
 
 
-      moneyLabel = new Label("$" + inv.getMoney(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-      turnLabel = new Label("Month : " + server.getTurn(),  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+      moneyLabel = new Label("$" + inv.getMoney(),  new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
+      turnLabel = new Label("Month : " + server.getTurn(),  new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
 
-      seedLabelText = "";
-      grainLabelText = "";
-      itemsLabelText = "";
+      Table inventoryTable = new Table();
+      final ScrollPane scrollpane = new ScrollPane(inventoryTable, manager.get("menuButtons/uiskin.json", Skin.class));
+      scrollpane.setSize(scrollpane.getPrefWidth()-200, scrollpane.getPrefHeight()+30);
+      final InputListener listener = new InputListener() {
+          public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+              stage.setScrollFocus(scrollpane);
+          }
 
-      for (Grain seed : inv.getSeeds())
-      {
-    	  if (seed != null)
-    	     seedLabelText += seed + ": " + seed.getVolume() + "  \n";
+          public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+              stage.setScrollFocus(null);
+          }
+      };
+      scrollpane.addListener(listener);
+      scrollpane.setScrollingDisabled(false, true);
+      scrollpane.setFadeScrollBars(false);
+      inv = server.getInventory();
+      resourceVolumeLabels = new Label[inv.getRessources().length];
+
+      int counter = 0;
+      for (Resources ressource : inv.getRessources()) {
+          final Resources res = ressource;
+          Button image = new Button(iconsSkin, ressource.getTexture());
+          image.setTransform(true);
+          image.setScale(1);
+
+          image.addListener(new HoverListener() {
+              @Override
+              public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                  MainGameScreen.mouseLabelText = res.toString();
+              }
+          });
+
+          Label volume = new Label(Integer.toString(ressource.getVolume()), new Label.LabelStyle(manager.get("PixelOperator20", BitmapFont.class), Color.WHITE));
+          resourceVolumeLabels[counter] = volume;
+          counter++;
+
+          inventoryTable.add(image).padRight(10).padBottom(15).padTop(15);
+          inventoryTable.add(volume).padRight(50).padBottom(15).padTop(15);
+
       }
-
-      for (Plant plant : inv.getPlants())
-      {
-    	  if (plant != null)
-    	     grainLabelText += plant + ": " + plant.getVolume() + "  \n";
-      }
-
-      for (Item item : inv.getItems()) {
-          if (item != null)
-            itemsLabelText += item + ": " + item.getVolume() + " \n";
-      }
-
-      grainLabel = new Label(grainLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-      seedLabel = new Label(seedLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-      itemsLabel = new Label(itemsLabelText ,  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 
       passTurnButton.addListener(new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
+                  if (market != null) {
+                    market.marketOpen = false;
+                    market.remove();
+                  }
             	  server.passTurn();
-                  System.out.println("Passed a turn!");
               }
           });
 
       marketButton.addListener(new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-        	  Market market = new Market(manager, server);
+        	  market = new Market(manager, server);
         	  stage.addActor(market);
           }
       });
@@ -173,14 +184,13 @@ public class HUD {
       background.setY(ManagementGame.HEIGHT - background.getHeight());
 
       table.add(marketButton).center().expandX().padTop(40);
-      table.add(passTurnButton).center().expandX().padTop(40);
+      table.add(passTurnButton).center().expandX().padTop(40).padRight(30);
       table.add(moneyLabel).center().expandX();
-      table.add(showOwnersCheckBox).center().expandX();
       table.add(turnLabel).center().expandX();
-      table.add(grainLabel).left().expandX();
-      table.add(seedLabel).left().expandX();
-      table.add(itemsLabel).right().expandX().padRight(40);
+      table.add(showOwnersCheckBox).center().expandX();
+      table.add(scrollpane).width(600).height(70).padRight(30).padTop(-10);
 
+      table.pack();
       stage.addActor(background);
       stage.addActor(table);
     }

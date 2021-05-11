@@ -30,7 +30,7 @@ public class Sheep extends Animal {
 	}
 
 	public int getId() {
-		return 0;
+		return 1;
 	}
 
 	public String getTexture() {

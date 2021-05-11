@@ -30,14 +30,19 @@ public class Market extends Group {
 
 	ServerInteraction server;
     private AssetManager manager;
+	public static boolean marketOpen = false;
 
 
 	public Market(AssetManager man, ServerInteraction server) {
 		this.server = server;
 		this.manager = man;
 	    this.server = server;
-
-	    this.show();
+		if (!marketOpen) {
+			marketOpen = true;
+	    	show();
+		} else {
+			remove();
+		}
 	}
 
 	public void show()
@@ -59,32 +64,22 @@ public class Market extends Group {
 
 		final Market market = this;
 		final InputListener listener = new InputListener() {
-			@Override
-		    public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
-		        if (amountY > 0) {
-		            scrollpane.fling(0.5f, 0, -1000);
-		        }
-		        if (amountY < 0) {
-		            scrollpane.fling(0.5f, 0, 1000);
-		        }
-		        return true;
-		    }
-
 			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                getStage().setScrollFocus(market);
+                getStage().setScrollFocus(scrollpane);
             }
 
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 getStage().setScrollFocus(null);
             }
-
 		};
+
 		addListener(listener);
 
 		close.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				removeListener(listener);
+				marketOpen = false;
 				remove();
 			}
 		});
