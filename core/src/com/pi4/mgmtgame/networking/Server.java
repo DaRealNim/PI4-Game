@@ -791,6 +791,7 @@ public class Server {
 		if (canBreed(x, y, animalID)) {
 			Pasture pasture = (Pasture) map.getStructAt(x, y);
 			pasture.breedAnimal(getInventory().getAnimals()[animalID]);
+			getInventory().removeAnimal(animalID, 1);
 			return true;
 		}
 		return false;

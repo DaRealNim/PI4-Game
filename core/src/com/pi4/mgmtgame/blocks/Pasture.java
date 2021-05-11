@@ -32,8 +32,8 @@ public class Pasture extends Structure{
 		this.growingState = 1;
 		setSpriteName("pasture_empty");
 
-		constructionCost = 1000;
-		salvageBenefit = 330;
+		constructionCost = 600;
+		salvageBenefit = 400;
 	}
 
 	@Override
@@ -186,11 +186,13 @@ public class Pasture extends Structure{
 
 	@Override
 	public boolean canBuild(Inventory inv) {
-		return true;
+		return (inv.getPlants()[3].getVolume() >= 4);
 	}
 
 	@Override
-	public void doBuild(Inventory inv) {}
+	public void doBuild(Inventory inv) {
+		inv.removePlant(3, 4);
+	}
 
 	@Override
 	public String toString() {

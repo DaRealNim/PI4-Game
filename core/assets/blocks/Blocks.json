@@ -3,12 +3,6 @@ ButtonStyle: {
 	field_empty: {
 		up: field_empty
 	}
-	treefarm: {
-		up: treefarm
-	}
-	treefarm_grew: {
-		up: arbre_bas
-	}
 	lake: {
 		up: lake
 	}
@@ -114,9 +108,6 @@ ButtonStyle: {
 	field_potato_grew: {
 		up: field_potatoes_grew
 	}
-	treefarm_grew_2: {
-		up: arbre_haut
-	}
 	field_wheat_middle: {
 		up: field_wheat_middle
 	}
@@ -143,6 +134,12 @@ ButtonStyle: {
 	}
 	pasture_sheep_full: {
 		up: ENCLOS mouton 2
+	}
+	treefarm: {
+		up: PETIT ARBRE BAS
+	}
+	treefarm_grew: {
+		up: arbre_bas
 	}
 }
 }

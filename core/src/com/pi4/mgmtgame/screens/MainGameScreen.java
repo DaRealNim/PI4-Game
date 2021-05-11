@@ -252,6 +252,8 @@ public class MainGameScreen implements Screen	{
 	private void updateSelection() {
 		Vector3 vec = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
 		stage.getCamera().unproject(vec);
+		if (map == null)
+			return;
 		if(vec.x / ManagementGame.TILE_SIZE < map.getMapWidth() && vec.x > 0 && vec.y / ManagementGame.TILE_SIZE < map.getMapHeight() && vec.y > 0) {
 			this.selectSquare.setVisible(true);
 			this.selectSquare.setX((int)(vec.x / ManagementGame.TILE_SIZE)*ManagementGame.TILE_SIZE);
@@ -314,13 +316,19 @@ public class MainGameScreen implements Screen	{
 	private synchronized void updateOverlay() {
 		decorationStage.clear();
 		ownerColoredSquares.clear();
+		if (map == null)
+			return;
 		for(int x=0; x<map.getMapWidth(); x++) {
 			for(int y=0; y<map.getMapHeight(); y++) {
 				Structure struct = map.getStructAt(x, y);
 				Environment env = map.getEnvironmentAt(x, y);
 				if (struct != null) {
-					if (struct instanceof TreeField && ((TreeField)struct).hasSeedGrown()) {
-						Image treeTop = new Image(manager.get("blocks/arbre_haut.png", Texture.class));
+					if (struct instanceof TreeField) {
+						Image treeTop;
+						if (((TreeField)struct).hasSeedGrown())
+							treeTop = new Image(manager.get("blocks/arbre_haut.png", Texture.class));
+						else
+							treeTop = new Image(manager.get("blocks/petit_arbre_haut.png", Texture.class));
 						treeTop.setX(x*ManagementGame.TILE_SIZE);
 						treeTop.setY((y+1)*ManagementGame.TILE_SIZE);
 						decorationStage.addActor(treeTop);

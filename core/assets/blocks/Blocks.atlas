@@ -4,352 +4,345 @@ size: 256,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+PETIT ARBRE BAS
+  rotate: false
+  xy: 205, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 QG-1
   rotate: false
-  xy: 171, 87
+  xy: 171, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 QG-2
   rotate: false
-  xy: 205, 121
+  xy: 205, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Sprinkler
   rotate: false
-  xy: 137, 53
+  xy: 137, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 arbre_bas
   rotate: false
-  xy: 137, 87
+  xy: 137, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 arbre_haut
   rotate: false
-  xy: 171, 121
+  xy: 171, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ENCLOS
   rotate: false
-  xy: 137, 19
+  xy: 137, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ENCLOS mouton 1
   rotate: false
-  xy: 171, 53
+  xy: 171, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ENCLOS mouton 2
   rotate: false
-  xy: 205, 87
+  xy: 205, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ENCLOS vache 1
   rotate: false
-  xy: 171, 19
+  xy: 171, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ENCLOS vache 2
   rotate: false
-  xy: 205, 53
+  xy: 205, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_potatoes_grew
   rotate: false
-  xy: 103, 53
+  xy: 103, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_potatoes_middle
   rotate: false
-  xy: 69, 19
+  xy: 69, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_wheat_grew
   rotate: false
-  xy: 103, 19
+  xy: 103, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_wheat_middle
   rotate: false
-  xy: 205, 155
+  xy: 205, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake
   rotate: false
-  xy: 35, 189
+  xy: 35, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_bottom_left
   rotate: false
-  xy: 69, 223
+  xy: 69, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_bottom_right
   rotate: false
-  xy: 1, 121
+  xy: 1, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_corner_bottom_left
   rotate: false
-  xy: 35, 155
+  xy: 35, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_corner_bottom_right
   rotate: false
-  xy: 69, 189
+  xy: 69, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_corner_top_left
   rotate: false
-  xy: 103, 223
+  xy: 103, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_corner_top_right
   rotate: false
-  xy: 1, 87
+  xy: 1, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_down_1
   rotate: false
-  xy: 35, 121
+  xy: 35, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_down_2
   rotate: false
-  xy: 69, 155
+  xy: 69, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_left_1
   rotate: false
-  xy: 103, 189
+  xy: 103, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_left_2
   rotate: false
-  xy: 137, 223
+  xy: 137, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_left_3
   rotate: false
-  xy: 1, 53
+  xy: 1, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_left_4
   rotate: false
-  xy: 35, 87
+  xy: 35, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_right_1
   rotate: false
-  xy: 69, 121
+  xy: 69, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_right_2
   rotate: false
-  xy: 103, 155
+  xy: 103, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_right_3
   rotate: false
-  xy: 137, 189
+  xy: 137, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_top_left
   rotate: false
-  xy: 171, 223
+  xy: 171, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_top_right
   rotate: false
-  xy: 1, 19
+  xy: 1, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_up_1
   rotate: false
-  xy: 35, 53
+  xy: 35, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_up_2
   rotate: false
-  xy: 69, 87
+  xy: 69, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_up_3
   rotate: false
-  xy: 103, 121
+  xy: 103, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_up_4
   rotate: false
-  xy: 137, 155
+  xy: 137, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_up_5
   rotate: false
-  xy: 171, 189
+  xy: 171, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_up_6
   rotate: false
-  xy: 205, 223
+  xy: 205, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 lake_up_7
   rotate: false
-  xy: 35, 19
+  xy: 35, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_carrots
   rotate: false
-  xy: 1, 223
+  xy: 1, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_empty
   rotate: false
-  xy: 1, 189
+  xy: 1, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_grow
   rotate: false
-  xy: 35, 223
+  xy: 35, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 field_planted
   rotate: false
-  xy: 1, 155
+  xy: 1, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 plaine1
   rotate: false
-  xy: 69, 53
+  xy: 69, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 plaine2
   rotate: false
-  xy: 103, 87
+  xy: 103, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 plaine3
   rotate: false
-  xy: 137, 121
+  xy: 137, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 plaine4
   rotate: false
-  xy: 171, 155
+  xy: 171, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 plaine5
   rotate: false
-  xy: 205, 189
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-treefarm
-  rotate: false
-  xy: 1, 1
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-treefarm_grew
-  rotate: false
-  xy: 239, 239
+  xy: 205, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

@@ -99,7 +99,7 @@ public abstract class Environment extends Block {
                     buttonPasture.addListener(new HoverListener() {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                            MainGameScreen.mouseLabelText = "Build a pasture\nBreed sheep and cows to get meat, wool and leather.\nCost: $"+pasture.getConstructionCost();
+                            MainGameScreen.mouseLabelText = "Build a pasture\nBreed sheep and cows to get meat, wool and leather.\nCost: $"+pasture.getConstructionCost()+", 4 woods";
                         }
                     });
                     buttonTree.addListener(new HoverListener() {
