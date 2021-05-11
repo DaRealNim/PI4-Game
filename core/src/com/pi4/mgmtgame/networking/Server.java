@@ -353,15 +353,49 @@ public class Server {
 						dataOut.writeBoolean(requestBreed(x, y, animalID));
 						dataOut.flush();
 						break;
+					case 22:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
+							dataOut.flush();
+							break;
+						}
+						dataOut.writeBoolean(canFish(x, y));
+						dataOut.flush();
+						break;
+					case 23:
+						x = dataIn.readInt();
+						y = dataIn.readInt();
+						if (internalTurn != playerID) {
+							break;
+						}
+						tryToFish(x, y);
+						break;
+					case 24: 
+						if (internalTurn != playerID) {
+							break;
+						}
+						fixRod();
+						break;
+					case 25:
+						if (internalTurn != playerID) {
+							dataOut.writeBoolean(false);
+							dataOut.flush();
+							break;
+						}
+						dataOut.writeBoolean(testRod());
+						dataOut.flush();
+						break;
 					case 256:
 						dataOut.writeBoolean(gameCanStart);
 						dataOut.flush();
 						break;
 					default:
-						System.out.println("wyd????");
+						System.out.println("wyd????  "+request+" ");
 						break;
 					}
-				}
+				} 
 			} catch (Exception e) {
 				System.out.println(e + "\nexception on ServerSide runnable");
 				e.printStackTrace();
@@ -405,17 +439,18 @@ public class Server {
 	}
 
 	public boolean canFish(int x, int y) {
-		testRod();
-		return map.getEnvironmentAt(x, y).canFish() && inv.hasItem(2);
+		if(testRod())
+			return  inv.hasItem(2);
+		return false;
 	}
 
-	public void TryToFish(int x, int y) {
+	public void tryToFish(int x, int y) {
 		if (canFish(x, y)) {
 			Random random = new Random();
 			int nb = random.nextInt(6) - 3;
 		   	if (nb < 0)
 				nb = 0;
-			useRod(nb);
+			inv.useRod(nb);
 			inv.addProduct(3, nb);
 		}
 	}
@@ -742,9 +777,7 @@ public class Server {
 
 	}
 
-	public void useRod(int nb) {
-		inv.rodDurability -= nb;
-	}
+	
 
 	public void fixRod() {
 		if (inv.hasPlant(3)) {

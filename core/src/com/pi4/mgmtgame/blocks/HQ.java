@@ -12,7 +12,7 @@ import com.pi4.mgmtgame.Popup;
 import com.pi4.mgmtgame.ServerInteraction;
 
 public class HQ extends Structure{
-private int researchStatus;
+private int researchStatus=1;
 
 	public HQ(int x, int y) {
 	        super(x, y);
@@ -31,9 +31,16 @@ private int researchStatus;
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (testOwner(server.getInternalTurn())) {
-					Button buttonResearch = new Button();
+					Button buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+					  
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "House", buttonResearch);
-					buttonResearch = getResearchButton(p,server);
+					buttonResearch.addListener(new ClickListener(){
+		                  @Override
+		                  public void clicked(InputEvent event, float x, float y) {
+		                	  research(server);
+		                      p.remove();
+		                  }
+		              });
 					popupStage.addActor(p);
 					updateMap(manager, server);
 				}
@@ -45,14 +52,7 @@ private int researchStatus;
 		Button buttonResearch = new Button();
 		switch(this.researchStatus) {
 		  case 0:
-			  buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
-			  buttonResearch.addListener(new ClickListener(){
-                  @Override
-                  public void clicked(InputEvent event, float x, float y) {
-                	  research(server);
-                      p.remove();
-                  }
-              });
+			  
 		    break;
 		}
 		return buttonResearch;
@@ -61,6 +61,7 @@ private int researchStatus;
 	private void research(ServerInteraction server) {
 		switch(this.researchStatus) {
 		  case 0:
+			  System.out.println("case 0");
 			  server.getInventory().addItem(2,1);
 			  researchStatus++;
 		  case 1:

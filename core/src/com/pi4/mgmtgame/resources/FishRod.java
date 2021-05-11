@@ -24,6 +24,6 @@ public class FishRod extends Item{
 	}
 
 	public String toString() {
-		return ("allows you to fish in lakes");
+		return ("Fishing rod");
 	}
 }

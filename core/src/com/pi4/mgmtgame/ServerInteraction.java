@@ -444,7 +444,7 @@ public class ServerInteraction {
 		try {
 			clientSideConnection.dataOut.writeInt(22);
 			clientSideConnection.dataOut.flush();
-
+			System.out.println("canfish");
 			clientSideConnection.dataOut.writeInt(x);
 			clientSideConnection.dataOut.flush();
 
@@ -463,6 +463,8 @@ public class ServerInteraction {
 
 	public void tryToFish(int x, int y) {
 		try {
+			System.out.println("TTfish");
+
 			clientSideConnection.dataOut.writeInt(23);
 			clientSideConnection.dataOut.flush();
 			clientSideConnection.objOut.writeInt(x);
@@ -496,15 +498,6 @@ public class ServerInteraction {
 		}
 		// System.out.println("end requestBuildStructure()");
 		return (requestRodOk);
-	}
-	
-	public void useRod() {
-		try {
-			clientSideConnection.dataOut.writeInt(24);
-			clientSideConnection.dataOut.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 
