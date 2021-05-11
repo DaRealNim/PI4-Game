@@ -354,7 +354,7 @@ public class Server {
 							break;
 						}
 						dataOut.writeBoolean(requestBreed(x, y, animalID));
-						dataOut.flush(); 
+						dataOut.flush();
 						break;
 					case 22:
 						x = dataIn.readInt();
@@ -375,7 +375,7 @@ public class Server {
 						}
 						tryToFish(x, y);
 						break;
-					case 24: 
+					case 24:
 						if (internalTurn != playerID) {
 							break;
 						}
@@ -440,7 +440,7 @@ public class Server {
 						System.out.println("wyd????  "+request+" ");
 						break;
 					}
-				} 
+				}
 			} catch (Exception e) {
 				System.out.println(e + "\nexception on ServerSide runnable");
 				e.printStackTrace();
@@ -484,21 +484,21 @@ public class Server {
 	}
 
 	public boolean canFish(int x, int y) {
-		if(testRod()&&!getMap().getEnvironmentAt(x, y).fished&&getMap().getEnvironmentAt(x, y)instanceof Lake) {
-			getMap().getEnvironmentAt(x, y).fished=true;
-			return  inv.hasItem(2);
-		}
-		return false; 
+		Environment env = getMap().getEnvironmentAt(x, y);
+		return (env != null && testRod() && env instanceof Lake && ((Lake)env).canFish());
 	}
 
 	public void tryToFish(int x, int y) {
+		Environment env = getMap().getEnvironmentAt(x, y);
+		if (canFish(x, y)) {
 			Random random = new Random();
 			int nb = random.nextInt(6) - 3;
 		   	if (nb < 0)
 				nb = 0;
 			inv.useRod(nb);
 			inv.addProduct(3, nb);
-		
+			((Lake)env).fish();
+		}
 	}
 
 	public boolean requestBuildStructure(int x, int y, Structure struct) {
@@ -603,9 +603,9 @@ public class Server {
 				}
 			}
 			turn++;
-			
-				
-			
+
+
+
 			internalTurn = 0;
 			for (heightIndex = 0; heightIndex < mapHeight; heightIndex++) {
 				for (widthIndex = 0; widthIndex < mapWidth; widthIndex++) {
@@ -622,7 +622,7 @@ public class Server {
 		inv = invArray[internalTurn % nbOfPlayers];
 		currentPlayer = internalTurn % nbOfPlayers;
 		// System.out.println(this.inv);
-		
+
 		System.out.println("Turn " + turn + "\n=======================");
 	}
 
@@ -759,8 +759,8 @@ public class Server {
 		int width = map.getMapWidth();
 		while (true) {
 			boolean ok = true;
-			x = random.nextInt(width);
-			y = random.nextInt(height);
+			x = Map.rand_range(1, width-2);
+			y = Map.rand_range(1, width-2);
 			if (!(map.getEnvironmentAt(x, y) instanceof Plain))
 				ok = false;
 			for (int i = -5; i < 5; i++) {
@@ -884,15 +884,10 @@ public class Server {
 	}
 
 	public boolean testRod() {
-		if (inv.hasItem(2))
-			if (inv.rodDurability > 0) {
-				return true;
-			}
-		return false;
-
+		return (inv.hasItem(2) && inv.rodDurability > 0);
 	}
 
-	
+
 
 	public void fixRod() {
 		if (inv.hasPlant(3)) {

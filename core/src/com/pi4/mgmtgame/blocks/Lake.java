@@ -16,7 +16,7 @@ import com.pi4.mgmtgame.ServerInteraction;
 
 
 public class Lake extends Environment {
-	
+
     public Lake(int x, int y) {
         super(x, y, "Lake");
         setSpriteName("lake");
@@ -44,10 +44,14 @@ public class Lake extends Environment {
     public boolean canBuild(Structure struct) {
         return false;
     }
-    
+
     public boolean canFish() {
-    	return true;
+    	return !fished;
     }
+
+	public void fish() {
+		fished = true;
+	}
 
     @Override
 	public String toString() {
