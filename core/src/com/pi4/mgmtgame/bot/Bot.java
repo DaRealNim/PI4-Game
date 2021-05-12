@@ -166,21 +166,20 @@ public class Bot {
     ArrayList<Coord> buyablePlains = getBuyablePlains();
     ArrayList<Coord> buyableLakes = getBuyableLakes();
 
-    while (inv.getMoney() > initialFunds / 3 && inv.getMoney() >= 1100) //This condition will be changed to something more elegant when there are maintenance costs.
+    for (Coord c : buyableLakes)
     {
-      for (Coord c : buyableLakes)
-      {
-        buyTerrainAt(c);
-      }
+      System.out.println(c.y + " " + c.x + " is buyable Lake" );
+      buyTerrainAt(c);
+    }
 
-      for (Coord c : buyablePlains)
-      {
-        buyTerrainAt(c);
-      }
+    for (Coord c : buyablePlains)
+    {
+      System.out.println(c.y + " " + c.x + " is buyable Field" );
+      buyTerrainAt(c);
     }
   }
 
-  private void buildStructures() //TODO: buildPastures()
+  private void buildStructures()
   {
       buildFields();
       buildPastures();
@@ -280,10 +279,7 @@ public class Bot {
     Field newField = new Field(c.x, c.y);
     int fieldCost = newField.getConstructionCost();
 
-    if (!ownedStructures.contains(c)
-        && fieldCost < inv.getMoney()
-        && map.getStructAt(c.x, c.y) == null
-        && !isLake(c))
+    if (canBuildFieldAt(c, fieldCost))
     {
       inv.giveMoney(fieldCost);
       map.setStructAt(c.x, c.y, newField);
@@ -294,16 +290,15 @@ public class Bot {
     }
   }
 
+
+
   private void buildPastureAt(Coord c)
   {
     Environment terrain = map.getEnvironmentAt(c.x, c.y);
     Pasture newPasture = new Pasture(c.x, c.y);
     int pastureCost = newPasture.getConstructionCost();
 
-    if (!ownedStructures.contains(c)
-        && pastureCost < inv.getMoney()
-        && map.getStructAt(c.x, c.y) == null
-        && !isLake(c))
+    if (canBuildPastureAt(c, pastureCost, newPasture))
     {
       inv.giveMoney(pastureCost);
       map.setStructAt(c.x, c.y, newPasture);
@@ -347,7 +342,9 @@ public class Bot {
 
           if (botOwnsAllTerrainAround(nextBlock))
             break;
-          else if (!botOwnsTerrain(nextBlock) && isPlain(nextBlock))
+          else if (!botOwnsTerrain(nextBlock)
+          && isPlain(nextBlock)
+          && !ownedTerrains.contains(nextBlock))
             buyablePlains.add(c);
         }
       }
@@ -450,14 +447,14 @@ public class Bot {
   //I know this function also exists in Server but it's only for players since the server's invArray doesn't account for the inventory of bots.
   private boolean canBuyTerrainAt(Coord c)
   {
+    ArrayList<Coord> buyablePlains = getBuyablePlains();
+    ArrayList<Coord> buyableLakes = getBuyableLakes();
     Structure currBlockStruct = map.getStructAt(c.x, c.y);
     Environment currBlockEnv = map.getEnvironmentAt(c.x, c.y);
     int terrainPrice = currBlockEnv.getPrice();
     int availableMoney = inv.getMoney();
 
-    if (currBlockStruct != null && availableMoney >= terrainPrice)
-      return (true);
-    else if (currBlockEnv.testOwner(-1) && availableMoney >= terrainPrice)
+    if ((buyablePlains.contains(c) || buyableLakes.contains(c)) && availableMoney >= terrainPrice)
       return (true);
 
     return (false);
@@ -474,7 +471,9 @@ public class Bot {
         if (terrainCheck != null)
         {
           if (!terrainCheck.testOwner(botID))
+          {
             return (false);
+          }
         }
       }
     }
@@ -498,10 +497,35 @@ public class Bot {
   {
     for (Coord c : ownedTerrains)
     {
+
       if (map.getStructAt(c.x, c.y) == null)
+      {
+        System.out.println("Struct at: " + c.x + "," + c.y + " null");
         return (false);
+      }
+
+      System.out.println("Struct at: " + c.x + "," + c.y + " " + map.getStructAt(c.x, c.y).toString());
     }
+    System.out.println("All terrains are used so you'll buy more!");
     return (true);
+  }
+
+  public boolean canBuildFieldAt(Coord c, int cost)
+  {
+    return (!ownedStructures.contains(c)
+        && cost < inv.getMoney()
+        && map.getStructAt(c.x, c.y) == null
+        && !isLake(c));
+  }
+
+  public boolean canBuildPastureAt(Coord c, int cost, Pasture p)
+  {
+    return (!ownedStructures.contains(c)
+        && cost < inv.getMoney()
+        && map.getStructAt(c.x, c.y) == null
+        && !isLake(c)
+        && inv.getPlants()[3].getVolume() > 4
+        && p.canBuild(inv));
   }
 
   private boolean priceIsHigherThanMarketAverage(Resources r)
