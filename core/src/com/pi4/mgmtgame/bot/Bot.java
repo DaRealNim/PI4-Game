@@ -11,12 +11,14 @@ import com.pi4.mgmtgame.blocks.Field;
 import com.pi4.mgmtgame.resources.TreeSeeds;
 
 import java.util.ArrayList;
+import java.lang.Math;
+import java.util.Random;
 
 public class Bot {
 
   class Coord {
-    final int x;
-    final int y;
+    int x;
+    int y;
 
     Coord(int x, int y)
     {
@@ -90,9 +92,12 @@ public class Bot {
     System.out.println("Bot start");
     harvestFields();
     sellPlants();
+
     if (allTerrainsUsed())
-      buyTerrains();
-    buildStructures();
+      buyTerrain();
+    else
+      buildStructures();
+
     buySeeds();
     plantSeeds();
     printState();
@@ -160,32 +165,53 @@ public class Bot {
     }
   }
 
-  private void buyTerrains()
+  private void buyTerrain()
   {
-    int initialFunds = inv.getMoney();
-    ArrayList<Coord> buyablePlains = getBuyablePlains();
-    ArrayList<Coord> buyableLakes = getBuyableLakes();
+    Random rg = new Random();
 
-    for (Coord c : buyableLakes)
-    {
-      System.out.println(c.y + " " + c.x + " is buyable Lake" );
-      buyTerrainAt(c);
-    }
+    int xOrYAxis = rg.nextInt(2) + 1;
+    int diff = 0;
+    while (diff == 0)
+      diff = (Math.random() <= 0.5) ? 1 : -1;
 
-    for (Coord c : buyablePlains)
+    int newTerrainIndex = rg.nextInt(ownedTerrains.size());
+
+    Coord newTerrain = ownedTerrains.get(newTerrainIndex);
+
+    if (xOrYAxis == 1)
     {
-      System.out.println(c.y + " " + c.x + " is buyable Field" );
-      buyTerrainAt(c);
+      if (map.getEnvironmentAt(newTerrain.x, newTerrain.y) == null)
+      {
+        diff *= -1;
+        newTerrain.x += diff;
+      }
+      while (!map.getEnvironmentAt(newTerrain.x, newTerrain.y).testOwner(-1))
+        newTerrain.x += diff;
     }
+    else
+    {
+      if (map.getEnvironmentAt(newTerrain.x, newTerrain.y) == null)
+      {
+        diff *= -1;
+        newTerrain.y += diff;
+      }
+      while (!map.getEnvironmentAt(newTerrain.x, newTerrain.y).testOwner(-1))
+        newTerrain.y += diff;
+    }
+    buyTerrainAt(newTerrain);
   }
 
   private void buildStructures()
   {
-      buildFields();
-      buildPastures();
+      int which = (Math.random() <= 0.5) ? 1 : 2;
+
+      if (which == 1)
+        buildFields();
+      else
+        buildPastures();
   }
 
-  private void buySeeds() //TODO: optimize seed buying by using seed prices
+  private void buySeeds()
   {
     int ownedFields = getOwnedFields().size();
     int boughtGrains = inv.getSeeds()[0].getVolume() + inv.getSeeds()[1].getVolume() + inv.getSeeds()[2].getVolume() + inv.getSeeds()[3].getVolume();
@@ -196,7 +222,7 @@ public class Bot {
     for (Grain g : inv.getSeeds())
     {
       while(priceIsLowerThanMarketAverage(g) &&
-            boughtGrains < ownedFields ) //TODO: failsafe this so the bot doesn't bankrupt itself
+            boughtGrains < ownedFields )
       {
         System.out.println("Bot " + botID + " bought " + g.toString() + " at " + g.getPrice());
         server.buyGrain(g, 1);
@@ -232,7 +258,7 @@ public class Bot {
     for (Coord c : ownedTerrains)
     {
         System.out.println("Money: " + inv.getMoney());
-        if (inv.getMoney() < 2500)
+        if (inv.getMoney() < 500)
             break;
         buildFieldAt(c);
     }
@@ -290,8 +316,6 @@ public class Bot {
     }
   }
 
-
-
   private void buildPastureAt(Coord c)
   {
     Environment terrain = map.getEnvironmentAt(c.x, c.y);
@@ -328,52 +352,6 @@ public class Bot {
     return (goodFieldSpots);
   }
 
-  private ArrayList<Coord> getBuyablePlains()
-  {
-    ArrayList<Coord> buyablePlains = new ArrayList<Coord>();
-
-    for (Coord c : ownedTerrains)
-    {
-      for (int x = -1; x < 1; x++)
-      {
-        for (int y = -1; y < 1; y++)
-        {
-          Coord nextBlock = new Coord(c.x + x, c.y + y);
-
-          if (botOwnsAllTerrainAround(nextBlock))
-            break;
-          else if (!botOwnsTerrain(nextBlock)
-          && isPlain(nextBlock)
-          && !ownedTerrains.contains(nextBlock))
-            buyablePlains.add(c);
-        }
-      }
-    }
-    return (buyablePlains);
-  }
-
-  private ArrayList<Coord> getBuyableLakes()
-  {
-    ArrayList<Coord> buyableLakes = new ArrayList<Coord>();
-
-    for (Coord c : ownedTerrains)
-    {
-      for (int x = -1; x < 1; x++)
-      {
-        for (int y = -1; y < 1; y++)
-        {
-          Coord nextBlock = new Coord(c.x + x, c.y + y);
-
-          if (botOwnsAllTerrainAround(nextBlock))
-            break;
-          else if (!botOwnsTerrain(nextBlock) && isLake(nextBlock))
-            buyableLakes.add(c);
-        }
-      }
-    }
-    return (buyableLakes);
-  }
-
   private ArrayList<Coord> getOwnedFields()
   {
     ArrayList<Coord> ownedFields = new ArrayList();
@@ -403,11 +381,6 @@ public class Bot {
 
     return (totalCost);
   }
-
-  /*public int totalMaintenanceCost(ArrayList<Coord> owned) //for future use.
-  {
-    return (0)
-  }*/
 
   private int priceAverage(Inventory inv)
   {
@@ -444,43 +417,6 @@ public class Bot {
     return (false);
   }
 
-  //I know this function also exists in Server but it's only for players since the server's invArray doesn't account for the inventory of bots.
-  private boolean canBuyTerrainAt(Coord c)
-  {
-    ArrayList<Coord> buyablePlains = getBuyablePlains();
-    ArrayList<Coord> buyableLakes = getBuyableLakes();
-    Structure currBlockStruct = map.getStructAt(c.x, c.y);
-    Environment currBlockEnv = map.getEnvironmentAt(c.x, c.y);
-    int terrainPrice = currBlockEnv.getPrice();
-    int availableMoney = inv.getMoney();
-
-    if ((buyablePlains.contains(c) || buyableLakes.contains(c)) && availableMoney >= terrainPrice)
-      return (true);
-
-    return (false);
-  }
-
-  private boolean botOwnsAllTerrainAround(Coord c)
-  {
-    Environment terrainCheck;
-    for (int hor = -1; hor <= 1; hor++)
-    {
-      for (int vert = -1; vert <= 1; vert++)
-      {
-        terrainCheck = map.getEnvironmentAt(c.x + hor, c.y + vert);
-        if (terrainCheck != null)
-        {
-          if (!terrainCheck.testOwner(botID))
-          {
-            return (false);
-          }
-        }
-      }
-    }
-
-    return (true);
-  }
-
   private boolean botOwnsTerrain(Coord c)
   {
     Environment terrainCheck = map.getEnvironmentAt(c.x, c.y);
@@ -492,6 +428,15 @@ public class Bot {
     return (false);
   }
 
+  private boolean canBuyTerrainAt(Coord c)
+  {
+   Structure currBlockStruct = map.getStructAt(c.x, c.y);
+   Environment currBlockEnv = map.getEnvironmentAt(c.x, c.y);
+   int terrainPrice = currBlockEnv.getPrice();
+   int availableMoney = inv.getMoney();
+
+  return (terrainPrice <= availableMoney && currBlockEnv.testOwner(-1));
+  }
 
   private boolean allTerrainsUsed()
   {
