@@ -95,9 +95,19 @@ public class Bot {
     buildStructures();
     buySeeds();
     plantSeeds();
+    printState();
     System.out.println("Bot end");
     //sabotage()
     //end
+  }
+
+  public void printState()
+  {
+    for (Resources x : inv.getRessources())
+    {
+      System.out.println(x.toString() + ": " + x.getVolume());
+    }
+    System.out.println(botID + " has " + inv.getMoney() + "$");
   }
 
   public Inventory getInventory() {
@@ -117,13 +127,16 @@ public class Bot {
         Plant harvested;
         Field currField = (Field) map.getStructAt(c.x, c.y);
 
-        if (canHarvest(currField))
+        if (canHarvest(currField) || currField instanceof TreeField)
         {
-
           harvested = currField.harvest();
           harvested.addVolume(4);
+
           if (currField instanceof TreeField)
+          {
             map.setStructAt(c.x, c.y, null);
+            ownedStructures.remove(c); // could've spent my life trying to find this
+          }
 
           inv.addPlant(harvested.getId(), harvested.getVolume());
           System.out.println("Bot " + botID + " harvested " + harvested.toString() + " at " + c.x + ", " + c.y);
@@ -137,7 +150,9 @@ public class Bot {
     {
       int numberOfPlants = p.getVolume();
 
-      if (priceIsHigherThanMarketAverage(p) && numberOfPlants > 0 && p.getPrice() > 0)
+      if (priceIsHigherThanMarketAverage(p)
+      && numberOfPlants > 0
+      && p.getPrice() > 0)
       {
         System.out.println("Bot " + botID + " sold " + p.toString() + " at " + p.getPrice());
         server.sellPlant(p, p.getVolume());
@@ -168,6 +183,7 @@ public class Bot {
   private void buildStructures() //TODO: buildPastures()
   {
       buildFields();
+      buildPastures();
   }
 
   private void buySeeds() //TODO: optimize seed buying by using seed prices
@@ -217,9 +233,25 @@ public class Bot {
     for (Coord c : ownedTerrains)
     {
         System.out.println("Money: " + inv.getMoney());
-        if (inv.getMoney() < 900)
+        if (inv.getMoney() < 2500)
             break;
         buildFieldAt(c);
+    }
+  }
+
+  private void buildPastures()
+  {
+    int initialFunds = inv.getMoney();
+
+    for (Coord c : ownedTerrains)
+    {
+        System.out.println("Money: " + inv.getMoney());
+
+        if (inv.getMoney() < 1200)
+            break;
+
+        if(!thereIsLakeNear(c.x, c.y))
+          buildPastureAt(c);
     }
   }
 
@@ -248,7 +280,10 @@ public class Bot {
     Field newField = new Field(c.x, c.y);
     int fieldCost = newField.getConstructionCost();
 
-    if (!ownedStructures.contains(c) && fieldCost < inv.getMoney() && map.getStructAt(c.x, c.y) == null && !isLake(c)) //
+    if (!ownedStructures.contains(c)
+        && fieldCost < inv.getMoney()
+        && map.getStructAt(c.x, c.y) == null
+        && !isLake(c))
     {
       inv.giveMoney(fieldCost);
       map.setStructAt(c.x, c.y, newField);
@@ -256,6 +291,26 @@ public class Bot {
       ownedStructures.add(c);
 
       System.out.println("Bot " + botID + " built field at " + c.x + ", " + c.y);
+    }
+  }
+
+  private void buildPastureAt(Coord c)
+  {
+    Environment terrain = map.getEnvironmentAt(c.x, c.y);
+    Pasture newPasture = new Pasture(c.x, c.y);
+    int pastureCost = newPasture.getConstructionCost();
+
+    if (!ownedStructures.contains(c)
+        && pastureCost < inv.getMoney()
+        && map.getStructAt(c.x, c.y) == null
+        && !isLake(c))
+    {
+      inv.giveMoney(pastureCost);
+      map.setStructAt(c.x, c.y, newPasture);
+      newPasture.setOwnerID(botID);
+      ownedStructures.add(c);
+
+      System.out.println("Bot " + botID + " built pasture at " + c.x + ", " + c.y);
     }
   }
 
