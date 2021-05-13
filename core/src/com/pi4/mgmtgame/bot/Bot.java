@@ -3,6 +3,7 @@ package com.pi4.mgmtgame.bot;
 import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.Map;
 import com.pi4.mgmtgame.networking.Server;
+import com.pi4.mgmtgame.resources.*;
 import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.resources.Plant;
 import com.pi4.mgmtgame.resources.Grain;
@@ -52,9 +53,6 @@ public class Bot {
   private HQ botHQ;
   private Server server;
 
-//Respect clean code rules and indentation I'm tired of the code looking like a slum
-//if I see another "if" tree I'm going insane.
-
   public Bot(Map m, Inventory i, int id, Server sv, int HQx, int HQy)
   {
     map = m;
@@ -86,7 +84,7 @@ public class Bot {
     System.out.println(ownedStructures);
   }
 
-  public void play() //This is the most abstract function, so it is at the top
+  public void play()
   {
     //start turn
     System.out.println("Bot start");
@@ -123,7 +121,7 @@ public class Bot {
       return botID;
   }
 
-  private void harvestFields() //Second most abstract, so on.
+  private void harvestFields()
   {
     ArrayList<Coord> ownedFields = getOwnedFields();
 
@@ -157,7 +155,8 @@ public class Bot {
 
       if (priceIsHigherThanMarketAverage(p)
       && numberOfPlants > 0
-      && p.getPrice() > 0)
+      && p.getPrice() > 0
+      && !(p instanceof Wood))
       {
         System.out.println("Bot " + botID + " sold " + p.toString() + " at " + p.getPrice());
         server.sellPlant(p, p.getVolume());
@@ -168,14 +167,10 @@ public class Bot {
   private void buyTerrain()
   {
     Random rg = new Random();
-
     int xOrYAxis = rg.nextInt(2) + 1;
-    int diff = 0;
-    while (diff == 0)
-      diff = (Math.random() <= 0.5) ? 1 : -1;
+    int diff = (Math.random() <= 0.5) ? 1 : -1;
 
     int newTerrainIndex = rg.nextInt(ownedTerrains.size());
-
     Coord newTerrain = ownedTerrains.get(newTerrainIndex);
 
     if (xOrYAxis == 1)
@@ -204,11 +199,8 @@ public class Bot {
   private void buildStructures()
   {
       int which = (Math.random() <= 0.5) ? 1 : 2;
-
-      if (which == 1)
-        buildFields();
-      else
-        buildPastures();
+      buildFields();
+      buildPastures();
   }
 
   private void buySeeds()
@@ -442,14 +434,11 @@ public class Bot {
   {
     for (Coord c : ownedTerrains)
     {
-
-      if (map.getStructAt(c.x, c.y) == null)
+      if (map.getStructAt(c.x, c.y) == null && !(map.getEnvironmentAt(c.x, c.y) instanceof Lake))
       {
         System.out.println("Struct at: " + c.x + "," + c.y + " null");
         return (false);
       }
-
-      System.out.println("Struct at: " + c.x + "," + c.y + " " + map.getStructAt(c.x, c.y).toString());
     }
     System.out.println("All terrains are used so you'll buy more!");
     return (true);
@@ -469,7 +458,6 @@ public class Bot {
         && cost < inv.getMoney()
         && map.getStructAt(c.x, c.y) == null
         && !isLake(c)
-        && inv.getPlants()[3].getVolume() > 4
         && p.canBuild(inv));
   }
 
