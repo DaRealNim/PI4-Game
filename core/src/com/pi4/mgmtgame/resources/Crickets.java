@@ -1,7 +1,7 @@
 package com.pi4.mgmtgame.resources;
 
 public class Crickets extends Item{
-	static int cricketsPrice = 10;
+	static int cricketsPrice = 1500;
 
 	public int getPrice() {
 		return cricketsPrice;

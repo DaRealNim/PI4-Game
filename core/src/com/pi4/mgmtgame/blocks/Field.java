@@ -55,6 +55,14 @@ public class Field extends Structure {
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
 		button.setX(getGridX() * ManagementGame.TILE_SIZE);
 		button.setY(getGridY() * ManagementGame.TILE_SIZE);
+		button.addListener(new HoverListener() {
+			@Override
+			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				if (isInfected()) {
+					MainGameScreen.mouseLabelText = "This field is infected by grasshoppers! Use a repellent quickly!";
+				}
+			}
+		});
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -316,7 +324,7 @@ public class Field extends Structure {
 	private void cricketSpread() {
 		Random rand = new Random();
 		Structure temp = getAdjacentStruct().get(rand.nextInt(getAdjacentStruct().size()));
-		if(temp instanceof Field)
+		if(temp instanceof Field && !(temp instanceof TreeField))
 			((Field) temp).addCrickets(this.usedItem);
 	}
 
@@ -342,6 +350,10 @@ public class Field extends Structure {
 				removeCrickets();
 				break;
 		}
+	}
+
+	public boolean isInfected() {
+		return (usedItem instanceof Crickets);
 	}
 
 	@Override

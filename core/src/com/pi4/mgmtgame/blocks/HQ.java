@@ -27,49 +27,49 @@ private int researchStatus=1;
 		Button button = new Button(manager.get("blocks/Blocks.json", Skin.class), getSpriteName());
 		button.setX(getGridX() * ManagementGame.TILE_SIZE);
 		button.setY(getGridY() * ManagementGame.TILE_SIZE);
-		button.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				if (testOwner(server.getInternalTurn())) {
-					Button buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
-
-					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "House", buttonResearch);
-					buttonResearch.addListener(new ClickListener(){
-		                  @Override
-		                  public void clicked(InputEvent event, float x, float y) {
-		                	  research(server);
-		                      p.remove();
-		                  }
-		              });
-					popupStage.addActor(p);
-					updateMap(manager, server);
-				}
-			}
-		});
+		// button.addListener(new ClickListener() {
+		// 	@Override
+		// 	public void clicked(InputEvent event, float x, float y) {
+		// 		if (testOwner(server.getInternalTurn())) {
+		// 			Button buttonResearch = new Button(manager.get("popupIcons/popup.json", Skin.class), "closeButton");
+		//
+		// 			final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "House", buttonResearch);
+		// 			buttonResearch.addListener(new ClickListener(){
+		//                   @Override
+		//                   public void clicked(InputEvent event, float x, float y) {
+		//                 	  research(server);
+		//                       p.remove();
+		//                   }
+		//               });
+		// 			popupStage.addActor(p);
+		// 			updateMap(manager, server);
+		// 		}
+		// 	}
+		// });
 		setButton(button);
     }
-	private Button getResearchButton(final Popup p,final ServerInteraction server) {
-		Button buttonResearch = new Button();
-		switch(this.researchStatus) {
-		  case 0:
-
-		    break;
-		}
-		return buttonResearch;
-
-	}
-	private void research(ServerInteraction server) {
-		switch(this.researchStatus) {
-		  case 0:
-			  System.out.println("case 0");
-			  server.getInventory().addItem(2,1);
-			  researchStatus++;
-		  case 1:
-			  if((!server.testRod())&&server.getInventory().hasPlant(3))
-					  server.fixRod();
-		break;
-		}
-	}
+	// private Button getResearchButton(final Popup p,final ServerInteraction server) {
+	// 	Button buttonResearch = new Button();
+	// 	switch(this.researchStatus) {
+	// 	  case 0:
+	// 
+	// 	    break;
+	// 	}
+	// 	return buttonResearch;
+	//
+	// }
+	// private void research(ServerInteraction server) {
+	// 	switch(this.researchStatus) {
+	// 	  case 0:
+	// 		  System.out.println("case 0");
+	// 		  server.getInventory().addItem(2,1);
+	// 		  researchStatus++;
+	// 	  case 1:
+	// 		  if((!server.testRod())&&server.getInventory().hasPlant(3))
+	// 				  server.fixRod();
+	// 	break;
+	// 	}
+	// }
 
 	@Override
 	public int getConstructionCost() {

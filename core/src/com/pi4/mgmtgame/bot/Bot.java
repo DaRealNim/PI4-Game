@@ -62,6 +62,7 @@ public class Bot {
     goodFieldSpots = scanForPlainsNearLakes();
     ownedTerrains = new ArrayList<Coord>();
     ownedStructures = new ArrayList<Coord>();
+    ownedLakes = new ArrayList<Coord>();
 
     botHQ = new HQ(HQx, HQy);
     botHQ.setOwnerID(botID);
@@ -180,7 +181,7 @@ public class Bot {
         diff *= -1;
         newTerrain.x += diff;
       }
-      while (!map.getEnvironmentAt(newTerrain.x, newTerrain.y).testOwner(-1))
+      while (map.getEnvironmentAt(newTerrain.x, newTerrain.y) != null && !map.getEnvironmentAt(newTerrain.x, newTerrain.y).testOwner(-1))
         newTerrain.x += diff;
     }
     else
@@ -190,7 +191,7 @@ public class Bot {
         diff *= -1;
         newTerrain.y += diff;
       }
-      while (!map.getEnvironmentAt(newTerrain.x, newTerrain.y).testOwner(-1))
+      while (map.getEnvironmentAt(newTerrain.x, newTerrain.y) != null && !map.getEnvironmentAt(newTerrain.x, newTerrain.y).testOwner(-1))
         newTerrain.y += diff;
     }
     buyTerrainAt(newTerrain);

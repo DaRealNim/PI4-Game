@@ -89,7 +89,7 @@ public class Block extends Group implements Serializable {
         int y = getGridY();
 		for(int i=-1;i<2;i++) {
 			for(int j=-1;j<2;j++)	{
-				if(i!=0 && j!=0 && x+i>=0 && x+i<map.getMapWidth() && y+j>=0 && y+j<map.getMapHeight())
+				if(!(i==0 && j==0) && x+i>=0 && x+i<map.getMapWidth() && y+j>=0 && y+j<map.getMapHeight())
 				structs.add(map.getStructAt(x+i,y+j));
 			}
 		}
@@ -103,7 +103,7 @@ public class Block extends Group implements Serializable {
     int y = getGridY();
 	for(int i=-1;i<2;i++) {
 		for(int j=-1;j<2;j++)	{
-			if(i!=0 && j!=0 && x+i>=0 && x+i<map.getMapWidth() && y+j>=0 && y+j<map.getMapHeight())
+			if(!(i==0 && j==0) && x+i>=0 && x+i<map.getMapWidth() && y+j>=0 && y+j<map.getMapHeight())
 			envs.add(map.getEnvironmentAt(x+i,y+j));
 		}
 	}

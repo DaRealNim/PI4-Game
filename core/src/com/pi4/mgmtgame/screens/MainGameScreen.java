@@ -51,6 +51,7 @@ import com.pi4.mgmtgame.blocks.Structure;
 import com.pi4.mgmtgame.blocks.TreeField;
 
 import java.util.HashMap;
+import com.pi4.mgmtgame.blocks.Field;
 
 public class MainGameScreen implements Screen	{
 
@@ -351,6 +352,12 @@ public class MainGameScreen implements Screen	{
 						enclosTop.setX(x*ManagementGame.TILE_SIZE);
 						enclosTop.setY((y+1)*ManagementGame.TILE_SIZE);
 						decorationStage.addActor(enclosTop);
+					}
+					if (struct instanceof Field && ((Field)struct).isInfected()) {
+						Image insect = new Image(manager.get("blocks/insect.png", Texture.class));
+						insect.setX(x*ManagementGame.TILE_SIZE);
+						insect.setY((y)*ManagementGame.TILE_SIZE);
+						decorationStage.addActor(insect);
 					}
 				}
 				if (env != null && !env.testOwner(-1)) {

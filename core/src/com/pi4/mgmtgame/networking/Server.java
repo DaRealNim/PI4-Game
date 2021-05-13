@@ -622,6 +622,15 @@ public class Server {
 				}
 			}
 
+			for(Plant p : getInventory().getPlants()) {
+				if (p.getPrice() < 400)
+					p.addPrice(Map.rand_range(3,8));
+			}
+			for(Product p : getInventory().getProduct()) {
+				if (p.getPrice() < 700)
+					p.addPrice(Map.rand_range(5,10));
+			}
+
 			for(int i=0; i<invArray.length; i++) {
 				if (!hasPlayerLost[i] && invArray[i].getMoney() < 0) {
 					hasPlayerLost[i] = true;
@@ -684,7 +693,8 @@ public class Server {
 		if (userHasMoneyToBuy(q, boughtGrain)) {
 			userInv.giveMoney(grainPrice * q);
 			userInv.addGrain(boughtGrain.getId(), q);
-			boughtGrain.addPrice(1);
+			if (boughtGrain.getPrice() < 400)
+				boughtGrain.addPrice(Map.rand_range(1, 3));
 			// System.out.println(boughtGrain.toString() + " price: " +
 			// boughtGrain.getPrice());
 		}
@@ -695,7 +705,7 @@ public class Server {
 		int grainPrice = soldGrain.getPrice();
 
 		if (userCanSellGrain(q, soldGrain)) {
-			soldGrain.subPrice(1);
+			soldGrain.subPrice(Map.rand_range(1, 3));
 			grainPrice = soldGrain.getPrice();
 			userInv.receiveMoney(grainPrice * q);
 			userInv.removeGrain(soldGrain.getId(), q);
@@ -710,7 +720,7 @@ public class Server {
 		if (userHasMoneyToBuy(q, boughtPlant)) {
 			userInv.giveMoney(plantPrice * q);
 			userInv.addPlant(boughtPlant.getId(), q);
-			boughtPlant.addPrice(1);
+			boughtPlant.addPrice(Map.rand_range(1, 3));
 			// System.out.println(boughtPlant.toString() + " price: " +
 			// boughtPlant.getPrice());
 		}
@@ -721,7 +731,7 @@ public class Server {
 		int plantPrice = soldPlant.getPrice();
 
 		if (userCanSellPlant(q, soldPlant)) {
-			soldPlant.subPrice(1);
+			soldPlant.subPrice(Map.rand_range(1, 5));
 			plantPrice = soldPlant.getPrice();
 			userInv.receiveMoney(plantPrice * q);
 			userInv.removePlant(soldPlant.getId(), q);
@@ -854,7 +864,7 @@ public class Server {
 		if (userHasMoneyToBuy(q, boughtAnimal)) {
 			userInv.giveMoney(price * q);
 			userInv.addAnimal(boughtAnimal.getId(), q);
-			boughtAnimal.addPrice(1);
+			boughtAnimal.addPrice(Map.rand_range(5, 10));
 		}
 	}
 
@@ -863,7 +873,7 @@ public class Server {
 		int price = soldAnimal.getPrice();
 
 		if (userCanSellAnimal(q, soldAnimal)) {
-			soldAnimal.subPrice(1);
+			soldAnimal.subPrice(Map.rand_range(5, 10));
 			price = soldAnimal.getPrice();
 			userInv.receiveMoney(price * q);
 			userInv.removeAnimal(soldAnimal.getId(), q);
@@ -877,7 +887,7 @@ public class Server {
 		if (userHasMoneyToBuy(q, boughtProduct)) {
 			userInv.giveMoney(price * q);
 			userInv.addProduct(boughtProduct.getId(), q);
-			boughtProduct.addPrice(1);
+			boughtProduct.addPrice(Map.rand_range(1, 3));
 		}
 	}
 
@@ -886,7 +896,7 @@ public class Server {
 		int price = soldProduct.getPrice();
 
 		if (userCanSellProduct(q, soldProduct)) {
-			soldProduct.subPrice(1);
+			soldProduct.subPrice(Map.rand_range(1, 3));
 			price = soldProduct.getPrice();
 			userInv.receiveMoney(price * q);
 			userInv.removeProduct(soldProduct.getId(), q);

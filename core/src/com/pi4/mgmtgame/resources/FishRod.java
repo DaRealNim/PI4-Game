@@ -1,7 +1,7 @@
 package com.pi4.mgmtgame.resources;
 
 public class FishRod extends Item{
-	static int fishRodPrice = 10;
+	static int fishRodPrice = 450;
 
 	public int getPrice() {
 		return fishRodPrice;
