@@ -69,6 +69,7 @@ public class Bot {
     map.setStructAt(HQx, HQy, botHQ);
 
     Coord HQ = new Coord(HQx, HQy);
+    Coord currCoord;
 
     for (int x = -1; x <= 1; x++)
     {
@@ -76,9 +77,15 @@ public class Bot {
       {
         if (x != 0 || y != 0)
         {
+          currCoord = new Coord(HQ.x + x, HQ.y + y);
+
           if (map.getStructAt(HQ.x + x, HQ.y + y) != null)
-            ownedStructures.add(new Coord(HQ.x + x, HQ.y + y));
-          ownedTerrains.add(new Coord(HQ.x + x, HQ.y + y));
+            ownedStructures.add(currCoord);
+
+          if (isLake(currCoord))
+            ownedLakes.add(currCoord);
+
+          ownedTerrains.add(currCoord);
         }
       }
     }
@@ -92,14 +99,18 @@ public class Bot {
     harvestFields();
     sellPlants();
 
-    if (allTerrainsUsed())
+    if (allTerrainsUsed() && inv.getMoney() > 2500)
       buyTerrain();
     else
       buildStructures();
 
+    fish();
+    sellResources();
+
     buySeeds();
     plantSeeds();
     printState();
+
     System.out.println("Bot end");
     //sabotage()
     //end
@@ -114,13 +125,6 @@ public class Bot {
     System.out.println(botID + " has " + inv.getMoney() + "$");
   }
 
-  public Inventory getInventory() {
-      return inv;
-  }
-
-  public int getBotID() {
-      return botID;
-  }
 
   private void harvestFields()
   {
@@ -148,6 +152,17 @@ public class Bot {
     }
   }
 
+  private void fish()
+  {
+    if(!botHasFishingRod())
+      buyFishingRod();
+    for (Coord c : ownedLakes)
+    {
+      server.tryToFish(c.x, c.y);
+      System.out.println("Bot " + botID + " tried to fish at " + c.x + ", " + c.y);
+    }
+  }
+
   private void sellPlants()
   {
     for (Plant p : inv.getPlants())
@@ -155,12 +170,26 @@ public class Bot {
       int numberOfPlants = p.getVolume();
 
       if (priceIsHigherThanMarketAverage(p)
-      && numberOfPlants > 0
-      && p.getPrice() > 0
-      && !(p instanceof Wood))
+          && numberOfPlants > 0
+          && p.getPrice() > 0
+          && !(p instanceof Wood))
       {
-        System.out.println("Bot " + botID + " sold " + p.toString() + " at " + p.getPrice());
+        System.out.println("Bot " + botID + " sold " + numberOfPlants + " " + p.toString() + " at " + p.getPrice());
         server.sellPlant(p, p.getVolume());
+      }
+    }
+  }
+
+  private void sellResources()
+  {
+    for (Product p : inv.getProduct())
+    {
+      int numberOfProducts = p.getVolume();
+
+      if (numberOfProducts > 0 && p.getPrice() > 0)
+      {
+        System.out.println("Bot " + botID + " sold " + numberOfProducts + " " + p.toString() + " at " + p.getPrice());
+        server.sellProduct(p, numberOfProducts);
       }
     }
   }
@@ -194,7 +223,8 @@ public class Bot {
       while (map.getEnvironmentAt(newTerrain.x, newTerrain.y) != null && !map.getEnvironmentAt(newTerrain.x, newTerrain.y).testOwner(-1))
         newTerrain.y += diff;
     }
-    buyTerrainAt(newTerrain);
+    if (newTerrain != null)
+      buyTerrainAt(newTerrain);
   }
 
   private void buildStructures()
@@ -326,6 +356,18 @@ public class Bot {
     }
   }
 
+  private void buyFishingRod()
+  {
+    Item fishingRod = inv.getItems()[2];
+    int fishingRodCost = fishingRod.getPrice();
+
+    if (inv.getMoney() > fishingRodCost)
+    {
+        inv.giveMoney(fishingRodCost);
+        inv.getItems()[2].addVolume(1);
+    }
+  }
+
   //This function will be modified when trade routes are implemented
   private ArrayList<Coord> scanForPlainsNearLakes()
   {
@@ -375,7 +417,7 @@ public class Bot {
     return (totalCost);
   }
 
-  private int priceAverage(Inventory inv)
+  private int priceAverage(Inventory inv) //TODO: separate these two
   {
     int sumOfPrices = 0;
     int resCount = 0;
@@ -447,8 +489,7 @@ public class Bot {
 
   public boolean canBuildFieldAt(Coord c, int cost)
   {
-    return (!ownedStructures.contains(c)
-        && cost < inv.getMoney()
+    return (cost < inv.getMoney()
         && map.getStructAt(c.x, c.y) == null
         && !isLake(c));
   }
@@ -462,7 +503,7 @@ public class Bot {
         && p.canBuild(inv));
   }
 
-  private boolean priceIsHigherThanMarketAverage(Resources r)
+  private boolean priceIsHigherThanMarketAverage(Resources r) //TODO: plants AND seeds
   {
     if (r.getPrice() >= priceAverage(inv))
       return (true);
@@ -484,7 +525,7 @@ public class Bot {
 
   private boolean canHarvest(Field field)
   {
-    return (field.hasSeedGrown());
+    return (field != null && field.hasSeedGrown());
   }
 
   private boolean isLake(Coord c)
@@ -497,5 +538,17 @@ public class Bot {
     return (map.getEnvironmentAt(c.x, c.y) instanceof Plain);
   }
 
+  private boolean botHasFishingRod()
+  {
+    Item[] itemArray = inv.getItems();
+    return (itemArray[2].getVolume() > 0);
+  }
 
+  public Inventory getInventory() {
+      return inv;
+  }
+
+  public int getBotID() {
+      return botID;
+  }
 }
