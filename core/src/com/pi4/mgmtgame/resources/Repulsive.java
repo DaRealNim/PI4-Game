@@ -13,6 +13,8 @@ static int repulsivePrice = 1000;
 
 	public void subPrice(int p) {
 		repulsivePrice -= p;
+		if (repulsivePrice < 0)
+			repulsivePrice = 0;
 	}
 
 	public int getId() {

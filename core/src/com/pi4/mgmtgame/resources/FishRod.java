@@ -13,6 +13,8 @@ public class FishRod extends Item{
 
 	public void subPrice(int p) {
 		fishRodPrice -= p;
+		if (fishRodPrice < 0)
+			fishRodPrice = 0;
 	}
 
 	public int getId() {

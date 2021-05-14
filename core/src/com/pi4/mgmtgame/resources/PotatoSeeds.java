@@ -16,6 +16,8 @@ public class PotatoSeeds extends Grain {
 
 	public void subPrice(int p) {
 		potatoSeedPrice -= p;
+		if (potatoSeedPrice < 0)
+			potatoSeedPrice = 0;
 	}
 
 	public int getPrice() {

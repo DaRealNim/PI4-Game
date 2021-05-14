@@ -15,6 +15,8 @@ public class Fish extends Product{
 
 	public void subPrice(int p) {
 		fishPrice -= p;
+		if (fishPrice < 0)
+			fishPrice = 0;
 	}
 
 	public int getId() {

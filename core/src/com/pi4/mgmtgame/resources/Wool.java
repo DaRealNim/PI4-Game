@@ -15,6 +15,8 @@ public class Wool extends Product{
 
 	public void subPrice(int p) {
 		woolPrice -= p;
+		if (woolPrice < 0)
+			woolPrice = 0;
 	}
 
 	public int getId() {

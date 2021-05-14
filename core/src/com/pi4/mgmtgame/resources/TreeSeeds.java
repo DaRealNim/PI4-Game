@@ -17,6 +17,8 @@ public class TreeSeeds extends Grain {
 
 	public void subPrice(int p) {
 		treeSeedPrice -= p;
+		if (treeSeedPrice < 0)
+			treeSeedPrice = 0;
 	}
 	public int getPrice() {
 		return treeSeedPrice;

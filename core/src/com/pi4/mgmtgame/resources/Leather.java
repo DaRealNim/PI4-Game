@@ -15,6 +15,8 @@ public class Leather extends Product{
 
 	public void subPrice(int p) {
 		leatherPrice -= p;
+		if (leatherPrice < 0)
+			leatherPrice = 0;
 	}
 
 	public int getId() {

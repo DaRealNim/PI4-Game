@@ -88,6 +88,7 @@ public class MainGameScreen implements Screen	{
 	private Table echapMenu;
 	private HashMap<Integer, java.awt.Color> idToColorMap;
 	private boolean lost;
+	private boolean shouldUpdateMap;
 
 	public MainGameScreen (ManagementGame game, AssetManager manager, ServerInteraction server) {
 		this.map = server.getMap();
@@ -97,6 +98,7 @@ public class MainGameScreen implements Screen	{
 		this.server = server;
 
 		this.lost = false;
+		this.shouldUpdateMap = false;
 		this.selected = false;
 		this.selectedSquareX = -1;
 		this.selectedSquareY = -1;
@@ -401,6 +403,14 @@ public class MainGameScreen implements Screen	{
 	    return labelStyle;
 	}
 
+	private void updateMap() {
+		Map serverMap = server.getMap();
+		serverMap.updateActors(manager, server, popupStage);
+		stage.addActor(serverMap);
+		map.remove();
+		map = serverMap;
+	}
+
 	private Drawable createBackground() {
 	    Pixmap labelColor = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 	    Color color = new Color(Color.BLACK);
@@ -435,19 +445,20 @@ public class MainGameScreen implements Screen	{
 						bottomLeftLabelText = "";
 						waitingOverlay.setVisible(false);
 					}
+					if (shouldUpdateMap) {
+						shouldUpdateMap = false;
+						updateMap();
+					}
 					hud.update();
 					map = getMapFromStage();
 					updateOverlay();
 				} else {
 					waitingOverlay.setVisible(true);
-					Map serverMap = server.getMap();
-					serverMap.updateActors(manager, server, popupStage);
-					stage.addActor(serverMap);
-					map.remove();
-					map = serverMap;
+					updateMap();
 					updateOverlay();
 					hud.update();
 					server.getInternalTurn();
+					shouldUpdateMap = true;
 					if (gameCanStart && !lost)
 						bottomLeftLabelText = "Player "+server.getStoredInternalTurn()+" is playing...";
 				}

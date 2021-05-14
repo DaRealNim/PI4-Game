@@ -32,6 +32,8 @@ public class WheatSeeds extends Grain {
 
 	public void subPrice(int p) {
 		wheatSeedPrice -= p;
+		if (wheatSeedPrice < 0)
+			wheatSeedPrice = 0;
 	}
 
 	public String getFieldSpriteName() {

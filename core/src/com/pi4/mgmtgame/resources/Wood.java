@@ -16,6 +16,8 @@ public class Wood extends Plant {
 
 	public void subPrice(int p) {
 		woodPrice -= p;
+		if (woodPrice < 0)
+			woodPrice = 0;
 	}
 
 	public int getId() {

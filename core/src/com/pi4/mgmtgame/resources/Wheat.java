@@ -14,6 +14,8 @@ public class Wheat extends Plant {
 
 	public void subPrice(int p) {
 		wheatPrice -= p;
+		if (wheatPrice < 0)
+			wheatPrice = 0;
 	}
 
 	public int getId() {

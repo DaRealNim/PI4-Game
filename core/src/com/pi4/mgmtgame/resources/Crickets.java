@@ -13,6 +13,8 @@ public class Crickets extends Item{
 
 	public void subPrice(int p) {
 		cricketsPrice -= p;
+		if (cricketsPrice < 0)
+			cricketsPrice = 0;
 	}
 
 	public int getId() {

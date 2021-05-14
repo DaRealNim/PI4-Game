@@ -76,6 +76,15 @@ public class Pasture extends Structure{
 					Inventory inv = server.getInventory();
 					final Popup p = new Popup((getGridX() - 2) * ManagementGame.TILE_SIZE + ManagementGame.TILE_SIZE/2, (getGridY() + 1) * ManagementGame.TILE_SIZE, manager, "Pasture", breedCow, breedSheep, buttonDestroy);
 
+					buttonDestroy.addListener(new ClickListener() {
+						@Override
+						public void clicked(InputEvent event, float x, float y) {
+							server.requestDestroyStructure(getGridX(), getGridY());
+							updateMap(manager, server);
+							p.remove();
+						}
+					});
+
 					if (inv.hasAnimal(0) && !hasAnimal()) {
 						breedCow.addListener(new ClickListener() {
 							@Override

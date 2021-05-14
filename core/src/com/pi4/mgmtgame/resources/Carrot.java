@@ -14,6 +14,8 @@ public class Carrot extends Plant{
 
 	public void subPrice(int p) {
 		carrotPrice -= p;
+		if (carrotPrice < 0)
+			carrotPrice = 0;
 	}
 
 	public int getId() {

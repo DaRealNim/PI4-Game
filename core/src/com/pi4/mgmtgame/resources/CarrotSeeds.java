@@ -20,6 +20,8 @@ public class CarrotSeeds extends Grain {
 
 	public void subPrice(int p) {
 		carrotSeedPrice -= p;
+		if (carrotSeedPrice < 0)
+			carrotSeedPrice = 0;
 	}
 	public int getPrice() {
 		return carrotSeedPrice;

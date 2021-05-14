@@ -23,6 +23,8 @@ public class Sheep extends Animal {
 
 	public void subPrice(int p) {
 		sheepPrice -= p;
+		if (sheepPrice < 0)
+			sheepPrice = 0;
 	}
 
 	public int getPrice() {
