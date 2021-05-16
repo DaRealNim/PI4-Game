@@ -30,7 +30,7 @@ Le **but du jeu** est d'être le **dernier joueur avec un solde positif**, pour 
 
 ### **Serveur**
 
-``./gradlew server [port] [nbOfPlayers] [nbOfBots]`` Pour instancier un serveur
+``./gradlew server:run [port] [nbOfPlayers] [nbOfBots]`` Pour instancier un serveur
 
 Le jeu commencera une fois que tous les joueurs se connectent.
 
@@ -69,6 +69,8 @@ Il est aussi possible de commencer un jeu solo avec des bots en lançant un serv
 - **Sabotage** des autres joueurs
 
 - Différents types de **Structures** qui donnent des bonus: construire ses champs à côté de sources d'eau leur procure un bonus de pousse. Voilà pourquoi, en plus de la pêche, s'étendre près de lacs est une bonne initiative! Malheureusement, tout le monde n'a pas cette chance. Voilà pourquoi le joueur peut également construire un arroseur automatique qui va simuler la présence d'un lac et donner aux champs voisins un boost!
+
+- Des conditions de **défaite**: attention de ne pas faire faillite! Des coûts de maintenance s'appliquent aux bâtiments tout les mois. Si le joueur gère mal son budget et sa balance devient négative à la fin d'un tour, il perd, et le jeu continue sans lui!
 
 
 
