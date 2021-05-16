@@ -222,7 +222,7 @@ Il est aussi possible de commencer un jeu solo avec des bots en lançant un serv
 
 ---
 
-Le jeu a été réalisé avec **LibGDX**, une librairie graphique spécialisée en jeux vidéos. Cette dernière nous permet de faciliter l'affichage des sprites du jeu en considérant chaque objet comme des **acteurs** dans une **scène**. On peut modifier leur position sur la scène, leurs propriétés graphiques, capturer les inputs de l'utilisateur (touches du clavier, clics de souris, scroll de la molette...). On peut utiliser des acteurs préfaits de libGDX comme des boutons, des checkbox, des barres de défilement... Elle nous permet également de jouer de la musique.
+Le jeu a été réalisé avec **LibGDX**, une librairie graphique spécialisée en jeux vidéos. Cette dernière nous permet de faciliter l'affichage des sprites du jeu en considérant chaque objet comme des **acteurs** dans une **scène**. On peut modifier leur position sur la scène, leurs propriétés graphique, capturer les inputs de l'utilisateur (touches du clavier, clics de souris, scroll de la molette...). On peut utiliser des acteurs préfaits de libGDX comme des boutons, des checkbox, des barres de défilement... Elle nous permet également de jouer de la musique.
 
 La classe **ManagementGame** est la classe principale du jeu. Elle est instanciée par **DesktopLauncher**, et c'est cette classe qui charge les ressources du jeu grâce à **MyAssetManager**. Elle charge ensuite **MainMenuScreen**, écran sur lequel l'utilisateur peut rentrer une IP et un port pour se connecter à un serveur, ou quitter le jeu.
 
@@ -239,13 +239,14 @@ Voici l'arbre d'hérédité pour les blocks:
 - Block
     - Structure
         - Field
+            - TreeField
         - HQ
         - Pasture
         - Sprinkler
-        - TreeField
     - Environment
         - Plain
         - Lake
+
 Et pour les ressources:
 - Resources
     - Animal
@@ -273,15 +274,16 @@ Et pour les ressources:
 Ceci permet une flexibilité raisonnable: si on veut ajouter un objet, il suffit d'ajouter une classe qui étend Item, et de faire quelques modifications mineures comme l'ajouter dans l'inventaire.
 **Map** est sérialisable, comme tout les blocks et toutes les ressources. C'est ça qui permet au serveur de transférer facilement au client la carte, son inventaire, etc.
 
-**com.warmwaffes.noise.prime.PerlinNoise** est une librairie ajouté au projet pour nous permettre de générer du bruit de perlin pour la génération procédurale de la carte, afin d'avoir des lacs et des forêts aléatoires, mais avec moins de chaos qu'une vraie fonction de bruit aléatoire.
+**com.warmwaffles.noise.prime.PerlinNoise** est une librairie ajouté au projet pour nous permettre de générer du bruit de perlin pour la génération procédurale de la carte, afin d'avoir des lacs et des forêts aléatoires, mais avec moins de chaos qu'une fonction de bruit totalement aléatoire.
 
 
 ## Difficultés et problèmes non résolus
 
 ---
+- Les threads et leur concurrence n'ont pas été bien gérés. Des problèmes liés au threading ont été résolus en utilisant des raccourcis probablement peu recommandés.
 
-Malgré la résolution de multiples bugs de concurrence des threads, il exite toujours dans le jeu un bug lié à la sérialisation de l'inventaire qui provoque un *StreamCorruptedException* et provoque un crash du jeu. Ce bug n'est pas fréquent, et semble arriver de manière totalement arbitraire et aléatoire, ce qui le rend très difficile à traquer.
+- Malgré la résolution de multiples bugs de concurrence des threads, il exite toujours dans le jeu un bug lié à la sérialisation de l'inventaire qui provoque un *StreamCorruptedException* et provoque un crash du jeu. Ce bug n'est pas fréquent, et semble arriver de manière totalement arbitraire et aléatoire, ce qui le rend très difficile à traquer.
 
-Nous avons également eu une instance d'un bug lié a la librairie **LibGDX** elle même et qui n'a jamais pu être reproduit.
+- Nous avons également eu une instance d'un bug lié a la librairie **LibGDX** elle même et qui n'a jamais pu être reproduit.
 
 ---
