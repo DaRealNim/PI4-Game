@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pi4.mgmtgame.resources.Resources;
 import com.pi4.mgmtgame.screens.MainGameScreen;
 import com.pi4.mgmtgame.HoverListener;
+import com.pi4.mgmtgame.blocks.Structure;
 
 public class HUD {
     public Stage stage;
@@ -48,11 +49,14 @@ public class HUD {
     private long gameMusicId;
     private CheckBox showOwnersCheckBox;
     private Market market;
+    private int nextMaintenanceCost;
+    private Map map;
 
     public HUD (AssetManager man, ServerInteraction server) {
       this.manager = man;
       this.server = server;
       this.inv = server.getInventory();
+      this.nextMaintenanceCost = 0;
 
       viewport = new FitViewport(ManagementGame.WIDTH, ManagementGame.HEIGHT, new OrthographicCamera());
       stage = new Stage(viewport);
@@ -106,6 +110,12 @@ public class HUD {
 
       passTurnButton.setTransform(true);
       passTurnButton.setScale(2);
+      passTurnButton.addListener(new HoverListener() {
+          @Override
+          public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+              MainGameScreen.mouseLabelText = "Next maintenance costs: $"+nextMaintenanceCost;
+          }
+      });
 
       marketButton.setTransform(true);
       marketButton.setScale(2);
@@ -195,8 +205,25 @@ public class HUD {
       stage.addActor(table);
     }
 
+    public void passMap(Map map) {
+        this.map = map;
+    }
+
+    private void updateMaintenanceCost() {
+        this.nextMaintenanceCost = 0;
+        for(int x=0; x<map.getMapWidth(); x++) {
+            for(int y=0; y<map.getMapHeight(); y++) {
+                Structure struct = map.getStructAt(x, y);
+                if (struct != null && struct.testOwner(server.getID())) {
+                    this.nextMaintenanceCost += struct.getMaintenanceCost();
+                }
+            }
+        }
+    }
+
     public void update() {
         updateLabels();
+        updateMaintenanceCost();
     }
 
     public boolean shouldShowOwners() {

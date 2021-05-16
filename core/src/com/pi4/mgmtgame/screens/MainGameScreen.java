@@ -133,6 +133,7 @@ public class MainGameScreen implements Screen	{
 		darkScreenBackground.setVisible(false);
 
 		hud = new HUD(manager, server);
+		hud.passMap(this.map);
 		server.passHUD(hud);
 
 		stage = new Stage(viewport, batch) {
@@ -449,8 +450,9 @@ public class MainGameScreen implements Screen	{
 						shouldUpdateMap = false;
 						updateMap();
 					}
-					hud.update();
 					map = getMapFromStage();
+					hud.passMap(map);
+					hud.update();
 					updateOverlay();
 				} else {
 					waitingOverlay.setVisible(true);

@@ -7,19 +7,8 @@ import java.util.Random;
 import com.badlogic.gdx.assets.AssetManager;
 import com.pi4.mgmtgame.Inventory;
 import com.pi4.mgmtgame.Map;
-import com.pi4.mgmtgame.blocks.Block;
-import com.pi4.mgmtgame.blocks.Environment;
-import com.pi4.mgmtgame.blocks.Field;
-import com.pi4.mgmtgame.blocks.HQ;
-import com.pi4.mgmtgame.blocks.Lake;
-import com.pi4.mgmtgame.blocks.Plain;
-import com.pi4.mgmtgame.blocks.Structure;
-import com.pi4.mgmtgame.resources.Resources;
-import com.pi4.mgmtgame.resources.Animal;
-import com.pi4.mgmtgame.resources.Grain;
-import com.pi4.mgmtgame.resources.Item;
-import com.pi4.mgmtgame.resources.Plant;
-import com.pi4.mgmtgame.resources.Product;
+import com.pi4.mgmtgame.blocks.*;
+import com.pi4.mgmtgame.resources.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,7 +16,6 @@ import com.pi4.mgmtgame.blocks.TreeField;
 import com.pi4.mgmtgame.bot.Bot;
 import java.util.HashMap;
 import java.awt.Color;
-import com.pi4.mgmtgame.blocks.Pasture;
 
 public class Server {
 	private ServerSocket serverSocket;
@@ -837,6 +825,9 @@ public class Server {
 		if (userHasMoneyToBuy(q, boughtItem)) {
 			userInv.giveMoney(price * q);
 			userInv.addItem(boughtItem.getId(), q);
+			if (boughtItem instanceof FishRod) {
+				userInv.rodDurability = 10;
+			}
 			boughtItem.addPrice(1);
 		}
 	}
