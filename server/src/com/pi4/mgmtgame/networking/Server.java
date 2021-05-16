@@ -49,10 +49,10 @@ public class Server {
 	private HashMap<Integer, Color> idToColorMap;
 	private volatile boolean gameCanStart = false;
 
-	public Server(int nbOfPlayers, int nbOfBots) {
+	public Server(int port, int nbOfPlayers, int nbOfBots) {
 		System.out.println("----Server----");
 		try {
-			serverSocket = new ServerSocket(51769);
+			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Exception in Server constructor.");
@@ -934,8 +934,45 @@ public class Server {
 		}
 	}
 
+	private static void printUsage() {
+		System.out.println("Usage:");
+		System.out.println("./gradle server:run --args '[nbOfPlayers] [nbOfBots] [port=51769]'");
+	}
+
 	public static void main(String[] args) {
-		Server gameServer = new Server(2, 3);
+		int port;
+		int p;
+		int b;
+
+		if (args.length < 2) {
+			System.out.println("Missing argument");
+			printUsage();
+			return;
+		}
+		try {
+			p = Integer.valueOf(args[0]);
+		} catch (Exception e) {
+			System.out.println("Invalid number of players");
+			printUsage();
+			return;
+		}
+		try {
+			b = Integer.valueOf(args[1]);
+		} catch (Exception e) {
+			System.out.println("Invalid number of bots");
+			printUsage();
+			return;
+		}
+		try {
+			port = Integer.valueOf(args[2]);
+			if (port < 0 || port > 65535) {
+				System.out.println("Invalid port number, defaulting to 51769");
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			port = 51769;
+		}
+		Server gameServer = new Server(port, p, b);
 		gameServer.acceptConnections();
 	}
 }
