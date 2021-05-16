@@ -76,8 +76,6 @@ Il est aussi possible de commencer un jeu solo avec des bots en lançant un serv
 
 ## Contributions
 
-Les contributions
-
 ---
 
 
@@ -162,6 +160,10 @@ Les contributions
 
 - Amélioration et finition du **réseau**
 
+- Testing, debugging et balancing de l'inflation du prix des structures et ressources
+
+- Partie *Fonctionnement du jeu* du README
+
 
 
 #### Alassane SY:
@@ -220,4 +222,66 @@ Les contributions
 
 ---
 
-magic.
+Le jeu a été réalisé avec **LibGDX**, une librairie graphique spécialisée en jeux vidéos. Cette dernière nous permet de faciliter l'affichage des sprites du jeu en considérant chaque objet comme des **acteurs** dans une **scène**. On peut modifier leur position sur la scène, leurs propriétés graphiques, capturer les inputs de l'utilisateur (touches du clavier, clics de souris, scroll de la molette...). On peut utiliser des acteurs préfaits de libGDX comme des boutons, des checkbox, des barres de défilement... Elle nous permet également de jouer de la musique.
+
+La classe **ManagementGame** est la classe principale du jeu. Elle est instanciée par **DesktopLauncher**, et c'est cette classe qui charge les ressources du jeu grâce à **MyAssetManager**. Elle charge ensuite **MainMenuScreen**, écran sur lequel l'utilisateur peut rentrer une IP et un port pour se connecter à un serveur, ou quitter le jeu.
+
+La classe **Server** est un serveur dédié pour le jeu. Elle est executée séparément du reste du jeu, a son propre *main()*, etc. On peut la démarrer avec un port, un nombre de joueurs et de bots spécifiques. C'est elle qui se charge de garder la **Map** et les **Inventory** des joueurs. Elle attend en permanence des rêquetes des clients, qui veulent par exemple récupérer la **Map** pour l'affichage, effectue l'action appropriée, et renvoie un status.
+
+La classe **MainGameScreen** est instanciée par **MainMenuScreen** lorsque le joueur se connecte a un serveur. C'est elle qui se charge de l'affichage de la scène de jeu, de récupérer les input des utilisateurs, de mettre a jour constemment la carte et l'inventaire du joueur, etc.
+
+La communication réseau avec **Server** se fait grâce a **ServerInteraction**. Cette classe agit un peu comme une API. C'est elle qui se connecte au socket de **Server**. Elle possède plusieurs méthodes synchronisées que le jeu peut appeller a n'importe quel moment a travers son instance, comme *getMap()*, *getInventory()*, *requestBuyTerrain()*, *requestBuildStructure()*, etc. Ces fonctions vont envoyer un ID unique a **Server**, qui va à son tour executer sa méthode du même nom. Appeler **ServerInteraction**.buyItem(params) revient donc a executer **Server**.buyItem(params).
+
+Le jeu est en grande partie sécurisé contre les tentatives de triche. Toutes les valeurs sensibles sont stockées côté serveur, et toutes les modifications à ces valeurs sont contrôlées par le serveur pour déterminer si elles sont autorisées. Par exemple, si le serveur reçoit une requête d'un joueur pour acheter un terrain, mais que ce n'est pas son tour, alors la requête est ignorée.
+
+La carte du jeu, **Map**, est composée de deux tableaux de **Block**, les cases du jeu: un tableau pour les structures comme les champs ou les enclots, et un pour les environnements comme les plaines ou les lacs. Les structures sont dessinées par dessus les environnements. Chaque **Block** est responsable de gérer les inputs de l'utilisateur qu'il reçoit. Le principe d'hérédité a énormément été utilisé.
+Voici l'arbre d'hérédité pour les blocks:
+- Block
+    - Structure
+        - Field
+        - HQ
+        - Pasture
+        - Sprinkler
+        - TreeField
+    - Environment
+        - Plain
+        - Lake
+Et pour les ressources:
+- Resources
+    - Animal
+        - Sheep
+        - Cow
+    - Plant
+        - Carrot
+        - Potato
+        - Wheat
+        - Wood
+    - Grain
+        - CarrotSeeds
+        - PotatoSeeds
+        - WheatSeeds
+        - TreeSeeds
+    - Item
+        - Crickets
+        - Repulsive
+        - FishRod
+    - Product
+        - Meat
+        - Leather
+        - Wool
+
+Ceci permet une flexibilité raisonnable: si on veut ajouter un objet, il suffit d'ajouter une classe qui étend Item, et de faire quelques modifications mineures comme l'ajouter dans l'inventaire.
+**Map** est sérialisable, comme tout les blocks et toutes les ressources. C'est ça qui permet au serveur de transférer facilement au client la carte, son inventaire, etc.
+
+**com.warmwaffes.noise.prime.PerlinNoise** est une librairie ajouté au projet pour nous permettre de générer du bruit de perlin pour la génération procédurale de la carte, afin d'avoir des lacs et des forêts aléatoires, mais avec moins de chaos qu'une vraie fonction de bruit aléatoire.
+
+
+## Difficultés et problèmes non résolus
+
+---
+
+Malgré la résolution de multiples bugs de concurrence des threads, il exite toujours dans le jeu un bug lié à la sérialisation de l'inventaire qui provoque un *StreamCorruptedException* et provoque un crash du jeu. Ce bug n'est pas fréquent, et semble arriver de manière totalement arbitraire et aléatoire, ce qui le rend très difficile à traquer.
+
+Nous avons également eu une instance d'un bug lié a la librairie **LibGDX** elle même et qui n'a jamais pu être reproduit.
+
+---

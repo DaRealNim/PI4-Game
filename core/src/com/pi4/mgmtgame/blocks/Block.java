@@ -55,12 +55,15 @@ public class Block extends Group implements Serializable {
     }
 
     protected void updateMap(AssetManager manager, ServerInteraction server) {
-        Map map = (Map) getParent();
-        Map serverMap = server.getMap();
-        serverMap.updateActors(manager, server, popupStage);
-        Stage stage = getStage();
-        map.remove();
-        stage.addActor(serverMap);
+        try {
+            Map map = (Map) getParent();
+            Map serverMap = server.getMap();
+            serverMap.updateActors(manager, server, popupStage);
+            Stage stage = getStage();
+            stage.addActor(serverMap);
+            map.remove();
+        } catch (NullPointerException e) {
+        }
     }
 
 	public int getGridX() {

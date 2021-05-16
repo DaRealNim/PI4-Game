@@ -54,7 +54,6 @@ public class ServerInteraction {
 			clientSideConnection.dataOut.writeInt(0);
 			clientSideConnection.dataOut.flush();
 			map = (Map) clientSideConnection.objIn.readObject();
-			clientSideConnection.objIn.skipBytes(clientSideConnection.objIn.available());
 			storedMap = map;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,7 +86,6 @@ public class ServerInteraction {
 			clientSideConnection.dataOut.writeInt(2);
 			clientSideConnection.dataOut.flush();
 			inv = (Inventory) clientSideConnection.objIn.readObject();
-			clientSideConnection.objIn.skipBytes(clientSideConnection.objIn.available());
 			storedInventory = inv;
 		} catch (Exception e) {
 			e.printStackTrace();
