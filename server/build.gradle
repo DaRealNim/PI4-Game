@@ -1,25 +1,13 @@
 sourceCompatibility = 1.7
 sourceSets.main.java.srcDirs = [ "src/" ]
-sourceSets.main.resources.srcDirs = ["../core/assets"]
 
-project.ext.mainClassName = "com.pi4.mgmtgame.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../core/assets")
+project.ext.mainClassName = "com.pi4.mgmtgame.networking.Server"
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
-    workingDir = project.assetsDir
     ignoreExitValue = true
-}
-
-task debug(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
-    classpath = sourceSets.main.runtimeClasspath
-    standardInput = System.in
-    workingDir = project.assetsDir
-    ignoreExitValue = true
-    debug = true
 }
 
 task dist(type: Jar) {
@@ -33,7 +21,9 @@ task dist(type: Jar) {
     with jar
 }
 
+dependencies {
+    implementation project(":core")
+}
+
 
 dist.dependsOn classes
-
-eclipse.project.name = appName + "-desktop"
