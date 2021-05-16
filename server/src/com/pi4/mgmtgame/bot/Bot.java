@@ -306,6 +306,8 @@ public class Bot {
   private void buyTerrainAt(Coord c)
   {
     Environment terrain = map.getEnvironmentAt(c.x, c.y);
+    if (terrain == null)
+        return;
     int terrainCost = terrain.getPrice();
 
     if (canBuyTerrainAt(c))

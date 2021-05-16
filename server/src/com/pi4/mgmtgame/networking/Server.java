@@ -624,25 +624,21 @@ public class Server {
 
 			for(Plant p : getInventory().getPlants()) {
 				if (p.getPrice() < 400)
-					p.addPrice(Map.rand_range(3,8));
+					p.addPrice(Map.rand_range(5, 15));
 			}
 			for(Product p : getInventory().getProduct()) {
 				if (p.getPrice() < 700)
-					p.addPrice(Map.rand_range(5,10));
+					p.addPrice(Map.rand_range(5, 20));
+			}
+			for(Grain p : getInventory().getSeeds()) {
+				if (p.getPrice() > 10)
+					p.subPrice(Map.rand_range(0, 15));
 			}
 
 			for(int i=0; i<invArray.length; i++) {
 				if (!hasPlayerLost[i] && invArray[i].getMoney() < 0) {
 					hasPlayerLost[i] = true;
-					// remainingPlayers--;
-					// if (remainingPlayers == 0) {
-					// 	System.out.println("No player remaining, closing server in 5 seconds...");
-					// 	try {
-					// 		Thread.sleep(5000);
-					// 	} catch(InterruptedException e) {
-					// 	}
-					// 	System.exit(0);
-					// }
+					remainingPlayers--;
 				}
 			}
 			for(int i=0; i<bots.length; i++) {

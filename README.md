@@ -30,7 +30,7 @@ Le **but du jeu** est d'être le **dernier joueur avec un solde positif**, pour 
 
 ### **Serveur**
 
-``./gradlew server:run [port] [nbOfPlayers] [nbOfBots]`` Pour instancier un serveur
+``./gradlew server:run --args '[nbOfPlayers] [nbOfBots] [port=51769]'`` Pour instancier un serveur
 
 Le jeu commencera une fois que tous les joueurs se connectent.
 
@@ -64,9 +64,9 @@ Il est aussi possible de commencer un jeu solo avec des bots en lançant un serv
 
 - Différents types d'**Animaux**: il est possible d'élever des vaches ou des moutons dans des enclos. Les animaux se nourissent du blé présent dans votre inventaire. Attention: plus les enclos sont pleins, plus les animaux consomment de blé! Les animaux produisent de la viande à chaque tour, ainsi que du cuir pour les vaches, ou de la laine pour les moutons.
 
-- **Pêche**
+- **Pêche**: si un joueur possède une canne à pêche et un morceau de lac, il peut y pécher des **poissons**. Le rendement de la pêche est aléatoire, mais le poisson se vend pour un bon prix sur le marché. La pêche est donc un excellent moyen d'arrondir ses fins de mois!
 
-- **Sabotage** des autres joueurs
+- **Sabotage** des autres joueurs: le monde de l'agriculture est rude, il faut redoubler d'imagination pour vaincre la concurrence. Il est possible d'acheter des tubes de criquets sur le marché et les lacher astucieusement dans les champs des voisins. Un champ infesté de criquets verra sa production diminuer exponentiellement, jusqu'à ne plus rien produire du tout! Les criquets se propagent également aux champs voisins. Il est donc impératif d'acheter et d'appliquer un **répulsif** sur chaque champ infecté le plus rapidement possible afin de limite les dégats.
 
 - Différents types de **Structures** qui donnent des bonus: construire ses champs à côté de sources d'eau leur procure un bonus de pousse. Voilà pourquoi, en plus de la pêche, s'étendre près de lacs est une bonne initiative! Malheureusement, tout le monde n'a pas cette chance. Voilà pourquoi le joueur peut également construire un arroseur automatique qui va simuler la présence d'un lac et donner aux champs voisins un boost!
 

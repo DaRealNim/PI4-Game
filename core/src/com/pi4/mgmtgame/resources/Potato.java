@@ -2,7 +2,7 @@ package com.pi4.mgmtgame.resources;
 
 public class Potato extends Plant {
 	static final int basePrice = 1;
-	static int potatoPrice = 10;
+	static int potatoPrice = 20;
 
 	public int getPrice() {
 		return potatoPrice;
