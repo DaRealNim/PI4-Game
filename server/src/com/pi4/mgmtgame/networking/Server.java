@@ -173,7 +173,8 @@ public class Server {
 					} catch (SocketException | EOFException e) {
 						System.out.println("Player " + playerID + " disconnected");
 						players[playerID] = null;
-						remainingPlayers--;
+						if (!hasPlayerLost[playerID])
+							remainingPlayers--;
 						if (remainingPlayers == 0) {
 							System.out.println("No player remaining, closing server...");
 							System.exit(0);

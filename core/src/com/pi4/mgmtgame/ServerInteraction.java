@@ -25,6 +25,8 @@ public class ServerInteraction {
 	private int storedInternalTurn = -1;
 	private int hqX;
 	private int hqY;
+	private Map storedMap;
+	private Inventory storedInventory;
 	private HashMap<Integer, java.awt.Color> idToColorMap;
 
 	public ServerInteraction(String ip, String port) throws ConnectException {
@@ -46,17 +48,19 @@ public class ServerInteraction {
 
 	public synchronized Map getMap() {
 		// System.out.println("getMap()");
-		Map map = null;
+		Map map = storedMap;
 
 		try {
 			clientSideConnection.dataOut.writeInt(0);
 			clientSideConnection.dataOut.flush();
 			map = (Map) clientSideConnection.objIn.readObject();
+			clientSideConnection.objIn.skipBytes(clientSideConnection.objIn.available());
+			storedMap = map;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		// System.out.println("end getMap()");
+		// System.out.println("---- end getMap()");
 		return (map);
 	}
 
@@ -78,16 +82,18 @@ public class ServerInteraction {
 
 	public synchronized Inventory getInventory() {
 		// System.out.println("getInventory()");
-		Inventory inv = null;
+		Inventory inv = storedInventory;
 		try {
 			clientSideConnection.dataOut.writeInt(2);
 			clientSideConnection.dataOut.flush();
 			inv = (Inventory) clientSideConnection.objIn.readObject();
+			clientSideConnection.objIn.skipBytes(clientSideConnection.objIn.available());
+			storedInventory = inv;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		// System.out.println("end getInventory()");
+		// System.out.println("----- end getInventory()");
 		return (inv);
 	}
 
